@@ -5,8 +5,7 @@ import Footer from '../../components/Footer/Footer'
 const Home = () => {
   return (
     <div>
-        <Navbar />
-        <Footer />
+        <h1 className='py-20'>this is home page</h1>
     </div>
   )
 }
