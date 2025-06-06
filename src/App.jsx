@@ -3,6 +3,7 @@ import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Home from './Pages/Home';
 import Navbar from './components/Navbar/Navbar';
+import Footer from './components/Footer/Footer'
 import News from './Pages/News';
 import Reports from './Pages/Reports';
 import Blog from './Pages/Blog';
@@ -31,6 +32,7 @@ function App() {
           <Route path='/about' element={<About />} />
           <Route path='/contact' element={<Contact />} />
         </Routes>
+        <Footer />
       </BrowserRouter>
     </div>
   );
