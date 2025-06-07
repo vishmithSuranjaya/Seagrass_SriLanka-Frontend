@@ -4,11 +4,10 @@ import Nav from 'react-bootstrap/Nav';
 
 export default function Footer() {
   return (
-    <div className="fixed bottom-0 left-0 right-0 w-full bg-green-700 text-white">
-      <footer className="px-8 py-10">
+    <div className="w-full bg-green-700 text-white left-0 right-0">
+      <footer className="max-w-7xl mx-auto px-8 py-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
-          
-          {/* Column 1: Logo with image */}
+          {/* Column 1: Logo */}
           <div>
             <div className="mb-4">
               <img
@@ -24,11 +23,21 @@ export default function Footer() {
           <div>
             <h2 className="text-xl font-bold mb-2">Quick Links</h2>
             <ul className="space-y-1 text-base">
-              <li><Nav.Link as={Link} to="/" className="hover:text-lime-300 text-white transition-colors duration-200">Home</Nav.Link></li>
-              <li><Nav.Link as={Link} to="/news" className="hover:text-lime-300 text-white transition-colors duration-200">News</Nav.Link></li>
-              <li><Nav.Link as={Link} to="/reports" className="hover:text-lime-300 text-white transition-colors duration-200">Reports</Nav.Link></li>
-              <li><Nav.Link as={Link} to="/blogs" className="hover:text-lime-300 text-white transition-colors duration-200">Blogs</Nav.Link></li>
-              <li><Nav.Link as={Link} to="/articles" className="hover:text-lime-300 text-white transition-colors duration-200">Articles</Nav.Link></li>
+              <li>
+                <Nav.Link as={Link} to="/" className="hover:text-lime-300 text-white transition-colors duration-200">Home</Nav.Link>
+              </li>
+              <li>
+                <Nav.Link as={Link} to="/news" className="hover:text-lime-300 text-white transition-colors duration-200">News</Nav.Link>
+              </li>
+              <li>
+                <Nav.Link as={Link} to="/reports" className="hover:text-lime-300 text-white transition-colors duration-200">Reports</Nav.Link>
+              </li>
+              <li>
+                <Nav.Link as={Link} to="/blogs" className="hover:text-lime-300 text-white transition-colors duration-200">Blogs</Nav.Link>
+              </li>
+              <li>
+                <Nav.Link as={Link} to="/articles" className="hover:text-lime-300 text-white transition-colors duration-200">Articles</Nav.Link>
+              </li>
             </ul>
           </div>
 
@@ -36,10 +45,18 @@ export default function Footer() {
           <div>
             <h2 className="text-xl font-bold mb-2">Services</h2>
             <ul className="space-y-1 text-base">
-              <li><Nav.Link as={Link} to="/news" className="hover:text-lime-300 text-white transition-colors duration-200">News</Nav.Link></li>
-              <li><Nav.Link as={Link} to="/reports" className="hover:text-lime-300 text-white transition-colors duration-200">Reports</Nav.Link></li>
-              <li><Nav.Link as={Link} to="/blogs" className="hover:text-lime-300 text-white transition-colors duration-200">Blog</Nav.Link></li>
-              <li><Nav.Link as={Link} to="/courses" className="hover:text-lime-300 text-white transition-colors duration-200">Courses</Nav.Link></li>
+              <li>
+                <Nav.Link as={Link} to="/news" className="hover:text-lime-300 text-white transition-colors duration-200">News</Nav.Link>
+              </li>
+              <li>
+                <Nav.Link as={Link} to="/reports" className="hover:text-lime-300 text-white transition-colors duration-200">Reports</Nav.Link>
+              </li>
+              <li>
+                <Nav.Link as={Link} to="/blogs" className="hover:text-lime-300 text-white transition-colors duration-200">Blog</Nav.Link>
+              </li>
+              <li>
+                <Nav.Link as={Link} to="/courses" className="hover:text-lime-300 text-white transition-colors duration-200">Courses</Nav.Link>
+              </li>
             </ul>
           </div>
 
@@ -58,7 +75,7 @@ export default function Footer() {
           {/* Column 5: Social */}
           <div>
             <h2 className="text-xl font-bold mb-2">Social</h2>
-            <div className="flex space-x-6 mt-4 pl-10">
+            <div className="flex space-x-6 mt-4">
               <Nav.Link as={Link} to="/facebook" aria-label="Facebook">
                 <Facebook className="hover:text-lime-300 transition-colors duration-200" />
               </Nav.Link>

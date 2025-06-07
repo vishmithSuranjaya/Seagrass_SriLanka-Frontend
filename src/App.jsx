@@ -11,8 +11,7 @@ import Gallery from './Pages/Gallery';
 import Courses from './Pages/Courses';
 import Products from './Pages/Products';
 import About from './Pages/About';
-import Contact from './Pages/Contact';
-
+import SeagrassIdentify from './Pages/SeagrassIdentify';
 
 
 function App() {
@@ -30,7 +29,7 @@ function App() {
           <Route path='/courses' element={<Courses />} />
           <Route path='/product' element={<Products />} />
           <Route path='/about' element={<About />} />
-          <Route path='/contact' element={<Contact />} />
+          <Route path='/identify seagrass' element={<SeagrassIdentify />} />
         </Routes>
         <Footer />
       </BrowserRouter>

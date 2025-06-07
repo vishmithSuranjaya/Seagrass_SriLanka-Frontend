@@ -12,7 +12,7 @@ const Navbar = () => {
   const toggleMode = () => setIsDark((prev) => !prev);
   const toggleMenu = () => setMenuOpen((prev) => !prev);
 
-  const navLinks = ["Home", "News", "Reports", "Blog", "Gallery", "Courses", "Product", "About", "Contact"];
+  const navLinks = ["Home", "News", "Reports", "Blog", "Gallery", "Courses", "Product", "About", "Identify Seagrass"];
 
   return (
     <nav className={`fixed top-0 left-0 w-full z-50 shadow-md ${isDark ? "bg-gray-900" : "bg-white"}`}>
