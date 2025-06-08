@@ -1,6 +1,7 @@
 // src/components/About.jsx
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 const FloatingIcon = ({ src, style }) => (
   <img
@@ -29,7 +30,24 @@ const About = () => {
         className="flex flex-col md:flex-row items-center justify-between bg-white/80 backdrop-blur-md rounded-3xl overflow-hidden shadow-xl border border-green-100 mb-10 mt-[-100px] relative z-10"
       >
         <div className="md:w-1/2 w-full p-10 text-gray-800">
+        {/* Breadcrumb Navigation */}
+              <nav className="text-sm text-gray-600 mb-6 items-left justify-start pl-6">
+                <ul className="flex space-x-2 justify-left items-left">
+                  <li>
+                    <Link to="/" className="text-black hover:underline">
+                      Home
+                    </Link>
+                    <span className="mx-1">/</span>
+                  </li>
+                  <li>
+                    <Link to="/blog" className="text-black hover:underline">
+                      About
+                    </Link>
+                  </li>
+                </ul>
+              </nav>
           <h2 className="text-4xl font-bold text-green-800 mb-4">
+            
             What is Seagrass Sri Lanka?
           </h2>
           <p className="text-lg leading-relaxed">
@@ -51,7 +69,7 @@ const About = () => {
         </div>
       </motion.div>
 
-      {/* 👨‍🔬 Lead Researcher Section */}
+      {/*Lead Researcher Section */}
       <div className="text-center mb-12 relative z-10">
         <h1 className="text-5xl font-bold text-green-800 drop-shadow-lg">About Our Lead Researcher</h1>
         <p className="mt-3 text-lg text-gray-600 italic">“In the silence of the seagrass meadows, he listens to the ocean’s heartbeat.”</p>

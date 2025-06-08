@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
-import diverImg from '../../assets/register.jpg';
+import diverImg from '../../assets/register.webp';
 import { useNavigate } from 'react-router-dom';
 
 const RegisterForm = ({ isOpen, onClose, switchToLogin }) => {

@@ -61,12 +61,37 @@ function AppWrapper() {
   );
 }
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import BlogFullView from './Pages/BlogFullView';
+
 
 function App() {
   return (
+<<<<<<< HEAD
+    <div>
+      <BrowserRouter>
+        <Navbar /> 
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path='/news' element={<News />} />
+          <Route path='/reports' element={<Reports />} />
+          <Route path='/blog' element={<Blog />} />
+          <Route path='/gallery' element={<Gallery />} />
+          <Route path='/courses' element={<Courses />} />
+          <Route path='/product' element={<Products />} />
+          <Route path='/about' element={<About />} />
+          <Route path='/identify seagrass' element={<SeagrassIdentify />} />
+          <Route path='/blogFullView/:id' element={<BlogFullView />} />
+        </Routes>
+        <Footer />
+      </BrowserRouter>
+    </div>
+=======
     <BrowserRouter>
       <AppWrapper />
     </BrowserRouter>
+>>>>>>> dev
   );
 }
 
