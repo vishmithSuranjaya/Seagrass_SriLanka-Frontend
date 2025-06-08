@@ -4,12 +4,10 @@ import { motion } from 'framer-motion';
 
 const FloatingIcon = ({ src, style }) => (
   <img
-    src={src}
-    alt="floating"
+   
     className={`absolute w-12 h-12 opacity-50 animate-float z-0 ${style}`}
   />
 );
-
 
 const About = () => {
   return (
@@ -21,18 +19,15 @@ const About = () => {
       </svg>
 
       {/* Floating Ocean Icons */}
-      <FloatingIcon src="/fish1.png" style="top-[20%] left-[10%]" />
-      <FloatingIcon src="/seaweed.png" style="top-[60%] left-[5%]" />
-      <FloatingIcon src="/bubble.png" style="top-[40%] right-[10%]" />
+      
 
-      {/* 🌿 Seagrass Introduction - Image on Right */}
+      {/* 🌿 Seagrass Introduction */}
       <motion.div 
         initial={{ opacity: 0, y: 50 }} 
         whileInView={{ opacity: 1, y: 0 }} 
         transition={{ duration: 0.8 }} 
         className="flex flex-col md:flex-row items-center justify-between bg-white/80 backdrop-blur-md rounded-3xl overflow-hidden shadow-xl border border-green-100 mb-10 mt-[-100px] relative z-10"
       >
-        {/* 📝 Text Section */}
         <div className="md:w-1/2 w-full p-10 text-gray-800">
           <h2 className="text-4xl font-bold text-green-800 mb-4">
             What is Seagrass Sri Lanka?
@@ -47,8 +42,6 @@ const About = () => {
             research archives, and a souvenir store.
           </p>
         </div>
-
-        {/* 🌱 Image Section */}
         <div className="md:w-1/2 w-full h-[400px] md:h-auto">
           <img
             src="/sg.png"
@@ -80,7 +73,6 @@ const About = () => {
             className="rounded-3xl shadow-lg border-4 border-green-300"
           />
         </div>
-
         <div className="md:w-2/3 w-full space-y-5">
           <h2 className="text-3xl font-bold text-green-900">Dr. Ashen Jayawardena</h2>
           <h4 className="text-md font-medium text-green-700">Ocean Ecologist | Lead Researcher | Seagrass Guardian</h4>
@@ -93,37 +85,77 @@ const About = () => {
         </div>
       </motion.div>
 
-      {/*  Contact Info */}
-      <motion.div 
-        initial={{ opacity: 0, y: 50 }} 
-        whileInView={{ opacity: 1, y: 0 }} 
-        transition={{ duration: 1.2 }} 
-        className="max-w-4xl mx-auto mt-20 p-6 bg-green-50 rounded-xl shadow-inner border border-green-200 relative z-10"
+     
+
+<motion.section
+  initial={{ opacity: 0, y: 60 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true, amount: 0.3 }}
+  transition={{ duration: 0.8, ease: "easeOut" }}
+  className="bg-gradient-to-b from-blue-50 to-green-100 py-16 px-6 md:px-12 mt-25 relative z-5" // same as About Us background
+>
+  <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
+    
+    {/* Left Side: Contact Form */}
+    <form className="space-y-5">
+      <input
+        type="text"
+        placeholder="Your Name"
+        className="w-full bg-gradient-to-b from-blue-50 to-green-100 border border-gray-300 p-3 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+      />
+      <input
+        type="email"
+        placeholder="Your Email"
+        className="w-full bg-gradient-to-b from-blue-50 to-green-100 border border-gray-300 p-3 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+      />
+      <input
+        type="tel"
+        placeholder="Phone Number"
+        className="w-full bg-gray-100 border border-gray-300 p-3 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+      />
+      <textarea
+        rows="5"
+        placeholder="Your Message"
+        className="w-full bg-gray-100 border border-gray-300 p-3 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+      ></textarea>
+      <button
+        type="submit"
+        className="bg-green-600 hover:bg-green-700 transition text-white font-semibold py-2 px-6 rounded-md text-sm"
       >
-        <h3 className="text-2xl font-semibold text-green-800 mb-4">Contact Information</h3>
-        <div className="grid md:grid-cols-2 gap-6 text-gray-700 text-md">
-          <div>
-            <p><i className="fas fa-envelope text-green-700 mr-2"></i><strong>Email:</strong> ashen.j@oceanresearch.lk</p>
-            <p><i className="fas fa-phone text-green-700 mr-2"></i><strong>Phone:</strong> +94 71 987 6543</p>
-          </div>
-          <div>
-            <p><i className="fas fa-map-marker-alt text-green-700 mr-2"></i><strong>Location:</strong> Matara, Sri Lanka</p>
-            <p><i className="fab fa-linkedin text-green-700 mr-2"></i><strong>LinkedIn:</strong> <a href="#" className="underline text-green-800">linkedin.com/in/ashen-ocean</a></p>
-          </div>
-        </div>
-      </motion.div>
+        Send Message
+      </button>
+    </form>
+
+    {/* Right Side: Researcher Contact Info */}
+    <div className="text-gray-800 text-sm">
+      <h3 className="text-2xl font-bold text-green-700 mb-4">Research Contact</h3>
+      <p className="mb-4">
+        If you're interested in collaborating, discussing your research idea, or seeking project mentorship, feel free to reach out. I'm always open to exchanging ideas and working together on innovative solutions.
+      </p>
+      <div className="space-y-3">
+        <p><strong>Name:</strong> Ashen Jayasuriya</p>
+        <p><strong>Email:</strong> <span className="text-green-700">ashen.j@oceanresearch.lk</span></p>
+        <p><strong>Phone:</strong> +94 71 987 6543</p>
+        <p><strong>Location:</strong> Southern Province, Sri Lanka</p>
+        <p>
+          <strong>LinkedIn:</strong>{" "}
+          <a
+            href="https://linkedin.com/in/ashen-ocean"
+            className="text-green-700 hover:underline"
+            target="_blank"
+            rel="noreferrer"
+          >
+            linkedin.com/in/ashen-ocean
+          </a>
+        </p>
+      </div>
+    </div>
+
+  </div>
+</motion.section>
 
     </div>
   );
 };
 
 export default About;
-
-// Add this CSS to your global stylesheet or tailwind.config.js theme
-// .animate-float {
-//   @apply animate-[float_4s_ease-in-out_infinite];
-// }
-// @keyframes float {
-//   0%, 100% { transform: translateY(0); }
-//   50% { transform: translateY(-15px); }
-// }
