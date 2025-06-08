@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Home from './Pages/HomePage/Home';
+import Home from './Pages/Home';
 import Navbar from './components/Navbar/Navbar';
+import Footer from './components/Footer/Footer'
 import News from './Pages/News';
 import Reports from './Pages/Reports';
 import Blog from './Pages/Blog';
@@ -10,9 +11,7 @@ import Gallery from './Pages/Gallery';
 import Courses from './Pages/Courses';
 import Products from './Pages/Products';
 import About from './Pages/About';
-import Contact from './Pages/Contact';
-import Footer from './components/Footer/Footer';
-
+import SeagrassIdentify from './Pages/SeagrassIdentify';
 
 
 function App() {
@@ -30,7 +29,7 @@ function App() {
           <Route path='/courses' element={<Courses />} />
           <Route path='/product' element={<Products />} />
           <Route path='/about' element={<About />} />
-          <Route path='/contact' element={<Contact />} />
+          <Route path='/identify seagrass' element={<SeagrassIdentify />} />
         </Routes>
         <Footer />
       </BrowserRouter>

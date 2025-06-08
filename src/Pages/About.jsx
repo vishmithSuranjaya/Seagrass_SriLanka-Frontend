@@ -10,6 +10,7 @@ const FloatingIcon = ({ src, style }) => (
   />
 );
 
+
 const About = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-green-100 text-gray-800 font-serif px-4 pt-36 pb-24 relative overflow-hidden">
