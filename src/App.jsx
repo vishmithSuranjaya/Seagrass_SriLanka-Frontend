@@ -11,6 +11,7 @@ import Courses from './Pages/Courses';
 import Products from './Pages/Products';
 import About from './Pages/About';
 import Contact from './Pages/Contact';
+import Footer from './components/Footer/Footer';
 
 
 
@@ -31,6 +32,7 @@ function App() {
           <Route path='/about' element={<About />} />
           <Route path='/contact' element={<Contact />} />
         </Routes>
+        <Footer />
       </BrowserRouter>
     </div>
   );
