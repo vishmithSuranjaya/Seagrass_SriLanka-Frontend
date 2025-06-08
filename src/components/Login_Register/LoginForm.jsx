@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
-import diverImg from "../../assets/login.jpg";
+import diverImg from "../../assets/login.webp";
 import { useNavigate } from 'react-router-dom';
 
 const LoginForm = ({ isOpen, onClose, switchToRegister }) => {
@@ -31,7 +31,7 @@ const LoginForm = ({ isOpen, onClose, switchToRegister }) => {
 
         {/* Image Section */}
         <div className="hidden md:block md:w-1/2">
-          <img src={diverImg} alt="Diver" className="h-150 w-full object-cover" />
+          <img src={diverImg} alt="Diver" className="h-150 max-h-screen w-full object-cover" />
         </div>
 
         {/* Form Section */}

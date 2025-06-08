@@ -1,5 +1,5 @@
 import React from "react";
-import Banner from "../assets/banner.jpg"; // Make sure this path is correct
+import Banner from "../assets/banner.webp"; // Make sure this path is correct
 import imag1 from "../assets/Photo-1.jpg";
 import imag2 from "../assets/PC290412.jpg";
 import imag3 from "../assets/Photo-6.jpg";
@@ -7,7 +7,7 @@ import imag4 from "../assets/seagrass_leaves.jpg";
 
 const Home = () => {
   return (
-    <div className="w-full">
+    <div className="w-full ">
       {/* Banner Section */}
       <div className="w-full">
         <img

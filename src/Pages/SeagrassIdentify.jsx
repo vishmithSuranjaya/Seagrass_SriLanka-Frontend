@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { toast, ToastContainer } from 'react-toastify';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 
 const SeagrassIdentify = () => {
   const [image, setImage] = useState(null);
@@ -7,12 +8,12 @@ const SeagrassIdentify = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (file && file.type.startsWith('image/')) {
+    if (file && file.type.startsWith("image/")) {
       setImage(file);
       const previewURL = URL.createObjectURL(file);
       setPreview(previewURL);
     } else {
-      alert('Please select a valid image.');
+      alert("Please select a valid image.");
     }
   };
 
@@ -30,25 +31,53 @@ const SeagrassIdentify = () => {
   }, [preview]);
 
   const handleIdentify = () => {
-  if (!image) {
-    toast.error("Please upload an image before identifying.");
-    return;
-  }
-  console.log("Identifying seagrass from image:", image);
-  toast.success("Image submitted for identification!");
-};
+    if (!image) {
+      toast.error("Please upload an image before identifying.");
+      return;
+    }
+    console.log("Identifying seagrass from image:", image);
+    toast.success("Image submitted for identification!");
+  };
 
   return (
-    <div className="min-h-screen bg-white px-6 py-10 flex flex-col items-center mt-25">
+    <div className="min-h-screen px-6 py-10 flex flex-col mt-25">
       {/*react toast container */}
       <ToastContainer />
+
+      {/* Breadcrumb Navigation */}
+      <nav className="text-sm text-gray-600 mb-6 items-left justify-start font-serif">
+        <ul className="flex space-x-2 justify-left items-left">
+          <li>
+            <Link to="/" className="text-black hover:underline">
+              Home
+            </Link>
+            <span className="mx-1">/</span>
+          </li>
+          <li>
+            <Link to="/identify seagrass" className="text-black hover:underline">
+              Identify Seagrass
+            </Link>
+          </li>
+        </ul>
+      </nav>
 
       {/* Description */}
       <div className="max-w-full mb-10">
         <p className="text-gray-900 text-sm sm:text-lg font-poppins leading-relaxed">
-          Seagrasses are flowering marine plants found in shallow coastal waters, forming dense underwater meadows. Sri Lanka hosts about 15 species of seagrasses, distributed along its northern, eastern, western, and southern coastlines. These plants play a crucial role in maintaining healthy marine ecosystems by providing habitat and nursery grounds for fish, sea turtles, and other marine life.
-          <br></br><br></br>
-Beyond biodiversity support, seagrass meadows help stabilize coastlines, prevent erosion, and capture significant amounts of carbon, contributing to climate change mitigation. However, seagrasses face threats from coastal development, pollution, and climate change, making their identification and conservation critical for sustaining coastal environments.
+          Seagrasses are flowering marine plants found in shallow coastal
+          waters, forming dense underwater meadows. Sri Lanka hosts about 15
+          species of seagrasses, distributed along its northern, eastern,
+          western, and southern coastlines. These plants play a crucial role in
+          maintaining healthy marine ecosystems by providing habitat and nursery
+          grounds for fish, sea turtles, and other marine life.
+          <br></br>
+          <br></br>
+          Beyond biodiversity support, seagrass meadows help stabilize
+          coastlines, prevent erosion, and capture significant amounts of
+          carbon, contributing to climate change mitigation. However, seagrasses
+          face threats from coastal development, pollution, and climate change,
+          making their identification and conservation critical for sustaining
+          coastal environments.
         </p>
       </div>
 
@@ -72,7 +101,9 @@ Beyond biodiversity support, seagrass meadows help stabilize coastlines, prevent
                 📁 Browse Image
               </label>
               {image && (
-                <span className="ml-3 text-sm text-gray-600 block sm:inline mt-2 sm:mt-0">{image.name}</span>
+                <span className="ml-3 text-sm text-gray-600 block sm:inline mt-2 sm:mt-0">
+                  {image.name}
+                </span>
               )}
             </div>
 

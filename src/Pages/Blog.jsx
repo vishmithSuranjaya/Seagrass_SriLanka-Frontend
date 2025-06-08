@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { IoMdClose } from "react-icons/io";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -11,14 +11,18 @@ const Blog = () => {
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
 
-  {/**navigate to the full view of a blog */}
+  {
+    /**navigate to the full view of a blog */
+  }
   const navigate = useNavigate();
 
   const handleSeeMore = (id) => {
     navigate(`/blogFullView/${id}`);
   };
 
-  {/**to handle the post button */}
+  {
+    /**to handle the post button */
+  }
   const handlePost = (e) => {
     e.preventDefault();
 
@@ -52,10 +56,27 @@ const Blog = () => {
   };
 
   return (
-    <div>
+    <div className="py-30">
       <ToastContainer position="top-right" autoClose={3000} />
 
-      <h1 className="mt-24 mb-10 text-[#1B7B19] text-4xl font-bold text-center">
+      {/* Breadcrumb Navigation */}
+      <nav className="text-sm text-gray-600 mb-6 items-left justify-start pl-6 font-serif">
+        <ul className="flex space-x-2 justify-left items-left">
+          <li>
+            <Link to="/" className="text-black hover:underline">
+              Home
+            </Link>
+            <span className="mx-1">/</span>
+          </li>
+          <li>
+            <Link to="/blog" className="text-black hover:underline">
+              Blog
+            </Link>
+          </li>
+        </ul>
+      </nav>
+
+      <h1 className="mt-2 mb-10 text-[#1B7B19] text-4xl font-bold text-center">
         Blogs
       </h1>
 
