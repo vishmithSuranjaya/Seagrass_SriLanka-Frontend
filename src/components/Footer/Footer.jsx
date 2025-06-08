@@ -4,7 +4,7 @@ import Nav from 'react-bootstrap/Nav';
 
 export default function Footer() {
   return (
-    <div className="w-full bg-green-700 text-white left-0 right-0">
+    <div className="w-full bg-[#1B7B19] text-white left-0 right-0">
       <footer className="max-w-7xl mx-auto px-8 py-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
           {/* Column 1: Logo */}

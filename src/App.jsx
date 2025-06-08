@@ -13,6 +13,10 @@ import Products from './Pages/Products';
 import About from './Pages/About';
 import SeagrassIdentify from './Pages/SeagrassIdentify';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import BlogFullView from './Pages/BlogFullView';
+
 
 function App() {
   
@@ -30,6 +34,7 @@ function App() {
           <Route path='/product' element={<Products />} />
           <Route path='/about' element={<About />} />
           <Route path='/identify seagrass' element={<SeagrassIdentify />} />
+          <Route path='/blogFullView/:id' element={<BlogFullView />} />
         </Routes>
         <Footer />
       </BrowserRouter>

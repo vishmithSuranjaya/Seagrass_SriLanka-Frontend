@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
 
 const SeagrassIdentify = () => {
   const [image, setImage] = useState(null);
@@ -29,19 +30,23 @@ const SeagrassIdentify = () => {
   }, [preview]);
 
   const handleIdentify = () => {
-    if (!image) {
-      alert("Please upload an image before identifying.");
-      return;
-    }
-    console.log("Identifying seagrass from image:", image);
-  };
+  if (!image) {
+    toast.error("Please upload an image before identifying.");
+    return;
+  }
+  console.log("Identifying seagrass from image:", image);
+  toast.success("Image submitted for identification!");
+};
 
   return (
     <div className="min-h-screen bg-white px-6 py-10 flex flex-col items-center mt-25">
+      {/*react toast container */}
+      <ToastContainer />
+
       {/* Description */}
       <div className="max-w-full mb-10">
         <p className="text-gray-900 text-sm sm:text-lg font-poppins leading-relaxed">
-          🌿 Seagrasses are flowering marine plants found in shallow coastal waters, forming dense underwater meadows. Sri Lanka hosts about 15 species of seagrasses, distributed along its northern, eastern, western, and southern coastlines. These plants play a crucial role in maintaining healthy marine ecosystems by providing habitat and nursery grounds for fish, sea turtles, and other marine life.
+          Seagrasses are flowering marine plants found in shallow coastal waters, forming dense underwater meadows. Sri Lanka hosts about 15 species of seagrasses, distributed along its northern, eastern, western, and southern coastlines. These plants play a crucial role in maintaining healthy marine ecosystems by providing habitat and nursery grounds for fish, sea turtles, and other marine life.
           <br></br><br></br>
 Beyond biodiversity support, seagrass meadows help stabilize coastlines, prevent erosion, and capture significant amounts of carbon, contributing to climate change mitigation. However, seagrasses face threats from coastal development, pollution, and climate change, making their identification and conservation critical for sustaining coastal environments.
         </p>

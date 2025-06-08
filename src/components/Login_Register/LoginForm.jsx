@@ -31,7 +31,7 @@ const LoginForm = ({ isOpen, onClose, switchToRegister }) => {
 
         {/* Image Section */}
         <div className="hidden md:block md:w-1/2">
-          <img src={diverImg} alt="Diver" className="h-full w-full object-cover" />
+          <img src={diverImg} alt="Diver" className="h-150 w-full object-cover" />
         </div>
 
         {/* Form Section */}

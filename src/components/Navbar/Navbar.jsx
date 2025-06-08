@@ -112,7 +112,7 @@ const Navbar = () => {
                 setShowLogin(true);
                 console.log("Subscribe clicked (mobile): showLogin =", true);
               }}
-              className="bg-green-700 text-white text-base px-5 py-2 rounded-md hover:bg-green-800 hover:scale-105 transition duration-200"
+              className="bg-[#1B7B19] text-white text-base px-5 py-2 rounded-md hover:bg-green-800 hover:scale-105 transition duration-200"
             >
               Subscribe
             </button>
