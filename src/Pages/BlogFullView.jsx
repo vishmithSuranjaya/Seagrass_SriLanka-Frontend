@@ -1,30 +1,44 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
+import Breadcrumb from '../components/breadcrumb/BreadCrumb';
+import testImg from '../assets/Photo-1.jpg'
+import Blog from '../assets/blog.jpg'
 
 const BlogFullView = () => {
   const { id } = useParams();
 
   return (
-    <div className="px-6 py-30">
+    <div className="mt-25 px-6">
       {/* Breadcrumb Navigation */}
-      <nav className="text-sm text-gray-600 mb-6 font-serif">
-        <ul className="flex space-x-2">
-          <li>
-            <Link to="/" className="text-black hover:underline">
-              Home
-            </Link>
-            <span className="mx-1">/</span>
-          </li>
-          <li>
-            <Link to="/blog" className="text-black hover:underline">
-              Blogs
-            </Link>
-            <span className="mx-1">/</span>
-          </li>
-          <li className="text-black">{id}</li>
-        </ul>
-      </nav>
+      <Breadcrumb />
 
+      {/* blog full view */}
+      <div className='w-3/4 h-200  mx-auto p-10'>
+
+         {/* div for the user profile image and the username, date time get from database and the title*/}
+         <div className='grid grid-rows items-center gap-2'>
+
+          {/*user profile image and the username,data time */}
+          <div className='flex flex-wrap items-center gap-4'>
+            <img src={testImg} alt="profile_image" className='w-16 h-16 rounded-full'/>
+            
+            <div className='grid grid-col p-0'>
+              <h5 className='font-bold font-serif text-lg'>John Doe</h5>
+            <time datetime="2025-06-10" className='text-sm font-semibold'>2025-06-10</time>
+
+            </div>
+          </div>
+          <h4 className='underline font-serif font-semibold'>
+            For other uses, see Research (disambiguation). "Researched" redirects here. For the organisation, see ResearchED. "Researcher" redirects here. For other uses, see Researcher (disambiguation).
+          </h4>
+         </div>
+
+         {/*image for the blog */}
+         <div>
+          <img src={Blog} alt="" className='w-full h-100 rounded-md'/>
+         </div>
+
+      </div>
      
     </div>
   );
