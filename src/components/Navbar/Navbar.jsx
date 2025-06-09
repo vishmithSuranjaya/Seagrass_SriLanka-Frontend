@@ -16,7 +16,7 @@ const Navbar = () => {
   const toggleMode = () => setIsDark((prev) => !prev);
   const toggleMenu = () => setMenuOpen((prev) => !prev);
 
-  const navLinks = ["Home", "News", "Reports", "Blog", "Gallery", "Courses", "Product", "About", "Identify Seagrass"];
+  const navLinks = ["Home", "News", "Reports", "Blog", "Gallery", "Courses", "Product", "About", "Identify-Seagrass"];
 
   return (
     <>
@@ -71,7 +71,7 @@ const Navbar = () => {
                 setShowLogin(true);
                 console.log("Subscribe clicked: showLogin =", true);
               }}
-              className="hidden md:block bg-green-700 text-white text-base px-4 py-2 rounded-md hover:bg-green-800 hover:scale-105 transition duration-200"
+              className="hidden md:block bg-[#1B7B19] text-white text-base px-4 py-2 rounded-md hover:bg-green-800 hover:scale-105 transition duration-200"
             >
               Subscribe
             </button>
