@@ -6,22 +6,6 @@ import Nav from 'react-bootstrap/Nav';
 
 export default function Footer() {
   return (
-<<<<<<< HEAD
-    <div className="w-full bg-[#1B7B19] text-white left-0 right-0">
-      <footer className="max-w-7xl mx-auto px-8 py-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
-          
-          {/* Column 1: Logo with image */}
-          <div>
-            <div className="mb-4">
-              <img
-                src="/seagrass-logo.png"
-                alt="Seagrass Logo"
-                className="mx-auto sm:mx-0 h-24 sm:h-28 object-contain"
-              />
-              <h1 className="text-2xl font-bold mt-3">Seagrass Sri Lanka</h1>
-            </div>
-=======
     <div className="w-full bg-green-700 text-white">
       <footer className="max-w-7xl mx-auto px-6 py-10">
         <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
@@ -34,7 +18,6 @@ export default function Footer() {
               className="h-24 sm:h-28 object-contain mb-3"
             />
             <h1 className="text-2xl font-bold">Seagrass Sri Lanka</h1>
->>>>>>> dev
           </div>
 
           {/* Column 2: Quick Links */}
