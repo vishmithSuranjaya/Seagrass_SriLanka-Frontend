@@ -6,7 +6,11 @@ import Nav from 'react-bootstrap/Nav';
 
 export default function Footer() {
   return (
+<<<<<<< HEAD
     <div className="w-full bg-green-700 text-white">
+=======
+    <div className="w-full bg-[#1B7B19] text-white font-semibold">
+>>>>>>> 5c62edc54b6dc8ce34474428a3d315c057f6b81a
       <footer className="max-w-7xl mx-auto px-6 py-10">
         <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
 

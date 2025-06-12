@@ -3,6 +3,7 @@ import { IoMdClose } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import BreadCrumb from "../components/breadcrumb/BreadCrumb";
 
 const Blog = () => {
   const [showModal, setShowModal] = useState(false);
@@ -56,25 +57,14 @@ const Blog = () => {
   };
 
   return (
-    <div className="py-30">
+    <div className="mt-25 px-6">
       <ToastContainer position="top-right" autoClose={3000} />
 
       {/* Breadcrumb Navigation */}
-      <nav className="text-sm text-gray-600 mb-6 items-left justify-start pl-6 font-serif">
-        <ul className="flex space-x-2 justify-left items-left">
-          <li>
-            <Link to="/" className="text-black hover:underline">
-              Home
-            </Link>
-            <span className="mx-1">/</span>
-          </li>
-          <li>
-            <Link to="/blog" className="text-black hover:underline">
-              Blog
-            </Link>
-          </li>
-        </ul>
-      </nav>
+      <div>
+        <BreadCrumb />
+      </div>
+
 
       <h1 className="mt-2 mb-10 text-[#1B7B19] text-4xl font-bold text-center">
         Blogs

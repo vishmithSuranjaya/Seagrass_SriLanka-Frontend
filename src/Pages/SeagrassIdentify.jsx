@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import BreadCrumb from "../components/breadcrumb/BreadCrumb";
 
 const SeagrassIdentify = () => {
   const [image, setImage] = useState(null);
@@ -40,30 +41,18 @@ const SeagrassIdentify = () => {
   };
 
   return (
-    <div className="min-h-screen px-6 py-10 flex flex-col mt-25">
+    <div className="min-h-screen px-6 flex flex-col mt-25">
       {/*react toast container */}
       <ToastContainer />
 
       {/* Breadcrumb Navigation */}
-      <nav className="text-sm text-gray-600 mb-6 items-left justify-start font-serif">
-        <ul className="flex space-x-2 justify-left items-left">
-          <li>
-            <Link to="/" className="text-black hover:underline">
-              Home
-            </Link>
-            <span className="mx-1">/</span>
-          </li>
-          <li>
-            <Link to="/identify seagrass" className="text-black hover:underline">
-              Identify Seagrass
-            </Link>
-          </li>
-        </ul>
-      </nav>
+      <div className="pb-10">
+        <BreadCrumb />
+      </div>
 
       {/* Description */}
       <div className="max-w-full mb-10">
-        <p className="text-gray-900 text-sm sm:text-lg font-poppins leading-relaxed">
+        <p className="text-gray-900 text-sm sm:text-lg font-poppins leading-relaxed font-serif">
           Seagrasses are flowering marine plants found in shallow coastal
           waters, forming dense underwater meadows. Sri Lanka hosts about 15
           species of seagrasses, distributed along its northern, eastern,
