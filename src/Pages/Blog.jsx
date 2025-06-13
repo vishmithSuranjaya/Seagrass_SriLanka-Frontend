@@ -5,6 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import BreadCrumb from "../components/breadcrumb/BreadCrumb";
 import axios from "axios";
+import AddBlogModal from "../components/AddNewBlog/AddNewBlog";
 
 const Blog = () => {
   const [showModal, setShowModal] = useState(false);
@@ -53,7 +54,7 @@ const Blog = () => {
     formData.append("image", imageFile);
 
     try {
-      await axios.post("http://localhost:8000/api/blogs/", formData, {
+      await axios.post("http://localhost:8000/api/blogs/blogs", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -130,96 +131,28 @@ const Blog = () => {
       </div>
 
       {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-5xl h-[550px] overflow-y-auto relative">
-            <button
-              onClick={() => setShowModal(false)}
-              className="absolute top-4 right-4 text-gray-600 hover:text-red-600 transition"
-            >
-              <IoMdClose size={24} />
-            </button>
-
-            <h2 className="text-2xl font-bold mb-4 text-[#1B7B19]">
-              Add a New Blog
-            </h2>
-
-            <form
-              onSubmit={handlePost}
-              className="flex flex-col md:flex-row gap-6"
-            >
-              <div className="w-full md:w-1/3 flex flex-col items-center justify-center border border-dashed border-gray-400 rounded p-4">
-                {imagePreview ? (
-                  <img
-                    src={imagePreview}
-                    alt="Preview"
-                    className="w-full h-48 object-cover rounded mb-4"
-                  />
-                ) : (
-                  <div className="w-full h-48 flex items-center justify-center text-gray-500 mb-4 bg-gray-100 rounded">
-                    No image selected
-                  </div>
-                )}
-                <div className="flex flex-col gap-2 w-full items-center">
-                  <label className="bg-[#1B7B19] text-white px-4 py-2 rounded cursor-pointer hover:bg-green-800 transition">
-                    Browse Image
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageChange}
-                      className="hidden"
-                    />
-                  </label>
-                  {imagePreview && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setImageFile(null);
-                        setImagePreview(null);
-                      }}
-                      className="px-4 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600 transition"
-                    >
-                      Clear Image
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              <div className="w-full md:w-2/3">
-                <input
-                  type="text"
-                  placeholder="Blog Title"
-                  className="w-full mb-4 p-2 border border-gray-300 rounded"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                />
-                <textarea
-                  placeholder="Blog Content"
-                  className="w-full mb-4 p-2 border border-gray-300 rounded h-70"
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                ></textarea>
-
-                <div className="flex justify-end gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setShowModal(false)}
-                    className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-                  >
-                    Optimize
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-4 py-2 bg-[#1B7B19] text-white rounded hover:bg-green-800"
-                  >
-                    Post
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <AddBlogModal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        onPost={async (formData) => {
+          try {
+            await axios.post("http://localhost:8000/api/blogs/post/", formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+                // Authorization: `Bearer ` // replace with the actual token, this is to store as user_id
+              },
+            });
+            toast.success("Blog posted successfully!");
+            setShowModal(false);
+            fetchBlogs(); // Refresh blog list
+            return true;
+          } catch (error) {
+            toast.error("Failed to post blog.");
+            console.error(error);
+            return false;
+          }
+        }}
+      />
     </div>
   );
 };

@@ -17,7 +17,7 @@ const BlogFullView = () => {
       const fetchBlog = async () => {
         try {
           const response = await fetch(
-            `http://localhost:8000/api/blogs/blogs/${id}/`
+            `http://localhost:8000/api/blogs/${id}/`
           );
           if (!response.ok)
             throw new Error(`HTTP error! Status: ${response.status}`);
