@@ -27,7 +27,7 @@ export default function Footer() {
               <li><Nav.Link as={Link} to="/" className="hover:text-lime-300 text-white">Home</Nav.Link></li>
               <li><Nav.Link as={Link} to="/news" className="hover:text-lime-300 text-white">News</Nav.Link></li>
               <li><Nav.Link as={Link} to="/reports" className="hover:text-lime-300 text-white">Reports</Nav.Link></li>
-              <li><Nav.Link as={Link} to="/blogs" className="hover:text-lime-300 text-white">Blogs</Nav.Link></li>
+              <li><Nav.Link as={Link} to="/blog" className="hover:text-lime-300 text-white">Blogs</Nav.Link></li>
               <li><Nav.Link as={Link} to="/articles" className="hover:text-lime-300 text-white">Articles</Nav.Link></li>
             </ul>
           </div>

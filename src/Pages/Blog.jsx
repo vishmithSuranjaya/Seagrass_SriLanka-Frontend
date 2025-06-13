@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IoMdClose } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import BreadCrumb from "../components/breadcrumb/BreadCrumb";
+import axios from "axios";
 
 const Blog = () => {
   const [showModal, setShowModal] = useState(false);
@@ -11,20 +12,29 @@ const Blog = () => {
   const [content, setContent] = useState("");
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [blogs, setBlogs] = useState([]);
 
-  {
-    /**navigate to the full view of a blog */
-  }
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchBlogs();
+  }, []);
+
+  const fetchBlogs = async () => {
+    try {
+      const response = await axios.get("http://localhost:8000/api/blogs/blogs");
+      setBlogs(response.data);
+    } catch (error) {
+      toast.error("Failed to fetch blogs.");
+      console.error(error);
+    }
+  };
 
   const handleSeeMore = (id) => {
     navigate(`/blogFullView/${id}`);
   };
 
-  {
-    /**to handle the post button */
-  }
-  const handlePost = (e) => {
+  const handlePost = async (e) => {
     e.preventDefault();
 
     if (!title.trim() || !content.trim()) {
@@ -37,15 +47,28 @@ const Blog = () => {
       return;
     }
 
-    console.log("Posting blog:", { title, content, imageFile });
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("content", content);
+    formData.append("image", imageFile);
 
-    // Reset form
-    setShowModal(false);
-    setTitle("");
-    setContent("");
-    setImageFile(null);
-    setImagePreview(null);
-    toast.success("Blog posted successfully!");
+    try {
+      await axios.post("http://localhost:8000/api/blogs/", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      toast.success("Blog posted successfully!");
+      setShowModal(false);
+      setTitle("");
+      setContent("");
+      setImageFile(null);
+      setImagePreview(null);
+      fetchBlogs(); // refresh list
+    } catch (error) {
+      toast.error("Failed to post blog.");
+      console.error(error);
+    }
   };
 
   const handleImageChange = (e) => {
@@ -60,50 +83,46 @@ const Blog = () => {
     <div className="mt-25 px-6">
       <ToastContainer position="top-right" autoClose={3000} />
 
-      {/* Breadcrumb Navigation */}
-      <div>
-        <BreadCrumb />
-      </div>
-
+      <BreadCrumb />
 
       <h1 className="mt-2 mb-10 text-[#1B7B19] text-4xl font-bold text-center">
         Blogs
       </h1>
 
-      {/* Add blogs section */}
-      <div className="w-4/5 max-w-6xl mx-auto  p-4">
+      {/* Add Blog Button */}
+      <div className="w-4/5 max-w-6xl mx-auto p-4">
         <button
           onClick={() => setShowModal(true)}
           className="bg-[#1B7B19] text-white text-base px-5 py-2 rounded-md hover:bg-green-800 hover:scale-105 transition duration-200"
         >
-          Add Blogs
+          Add Blog
         </button>
       </div>
 
-      {/* Blog Posts Placeholder */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-4/5 max-w-6xl mx-auto mt-10">
-        {[1, 2, 3].map((id) => (
+      {/* Blogs */}
+      <div className="flex flex-col gap-6 w-4/5 max-w-6xl mx-auto mt-10 mb-8 hover:scale-105 transition-transform duration-200 hover:shadow-lg transition-shadow duration-300">
+        {blogs.map((blog) => (
           <div
-            key={id}
-            className="bg-white shadow-md rounded-lg overflow-hidden"
+            key={blog.blog_id}
+            className="bg-white shadow-md rounded-lg overflow-hidden flex flex-col md:flex-row"
           >
             <img
-              src="https://via.placeholder.com/400x200"
+              src={blog.image} // assuming it's a full URL; if not, prepend server domain
               alt="Blog"
-              className="w-full h-48 object-cover"
+              className="w-full md:w-1/3 h-64 object-cover"
             />
-            <div className="p-4">
-              <h3 className="text-lg font-bold text-[#1B7B19] mb-2">
-                Blog Title {id}
+            <div className="p-4 w-full">
+              <h3 className="text-2xl font-bold text-[#1B7B19] mb-2 ">
+                {blog.title}
               </h3>
-              <p className="text-sm text-gray-600 mb-2">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              <p className="text-lg text-gray-900 mb-2 line-clamp-3 font-serif">
+                {blog.content}
               </p>
               <button
-                className="text-sm text-[#1B7B19] hover:underline"
-                onClick={() => handleSeeMore(id)}
+                className="text-lg text-[#1B7B19] hover:underline pt-5 font-serif"
+                onClick={() => handleSeeMore(blog.blog_id)}
               >
-                See More
+                see more
               </button>
             </div>
           </div>
@@ -114,7 +133,6 @@ const Blog = () => {
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-5xl h-[550px] overflow-y-auto relative">
-            {/* Close Button */}
             <button
               onClick={() => setShowModal(false)}
               className="absolute top-4 right-4 text-gray-600 hover:text-red-600 transition"
@@ -130,7 +148,6 @@ const Blog = () => {
               onSubmit={handlePost}
               className="flex flex-col md:flex-row gap-6"
             >
-              {/* Image Upload Column */}
               <div className="w-full md:w-1/3 flex flex-col items-center justify-center border border-dashed border-gray-400 rounded p-4">
                 {imagePreview ? (
                   <img
@@ -143,7 +160,6 @@ const Blog = () => {
                     No image selected
                   </div>
                 )}
-
                 <div className="flex flex-col gap-2 w-full items-center">
                   <label className="bg-[#1B7B19] text-white px-4 py-2 rounded cursor-pointer hover:bg-green-800 transition">
                     Browse Image
@@ -154,7 +170,6 @@ const Blog = () => {
                       className="hidden"
                     />
                   </label>
-
                   {imagePreview && (
                     <button
                       type="button"
@@ -170,7 +185,6 @@ const Blog = () => {
                 </div>
               </div>
 
-              {/* Form Column */}
               <div className="w-full md:w-2/3">
                 <input
                   type="text"

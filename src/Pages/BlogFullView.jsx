@@ -1,45 +1,88 @@
-import React from 'react';
-import { useParams, Link } from 'react-router-dom';
-import Breadcrumb from '../components/breadcrumb/BreadCrumb';
-import testImg from '../assets/Photo-1.jpg'
-import Blog from '../assets/blog.jpg'
+import React, { useEffect, useState } from "react";
+import { useParams, useLocation } from "react-router-dom";
+import Breadcrumb from "../components/breadcrumb/BreadCrumb";
+import testImg from "../assets/Photo-1.jpg";
+import placeholderBlogImg from "../assets/blog.jpg";
+import LikeCommentComp from "../components/Reactions/LikeCommentComp";
 
 const BlogFullView = () => {
   const { id } = useParams();
+  const location = useLocation();
+  const [blog, setBlog] = useState(location.state?.blog || null);
+  const [loading, setLoading] = useState(!blog);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (!blog) {
+      const fetchBlog = async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:8000/api/blogs/blogs/${id}/`
+          );
+          if (!response.ok)
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          const data = await response.json();
+          setBlog(data);
+        } catch (err) {
+          setError(err.message);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchBlog();
+    }
+  }, [blog, id]);
+
+  if (loading) return <p className="text-center mt-10">Loading blog...</p>;
+  if (error)
+    return <p className="text-center mt-10 text-red-500">Error: {error}</p>;
 
   return (
     <div className="mt-25 px-6">
-      {/* Breadcrumb Navigation */}
       <Breadcrumb />
 
-      {/* blog full view */}
-      <div className='w-3/4 h-200  mx-auto p-10'>
-
-         {/* div for the user profile image and the username, date time get from database and the title*/}
-         <div className='grid grid-rows items-center gap-2'>
-
-          {/*user profile image and the username,data time */}
-          <div className='flex flex-wrap items-center gap-4'>
-            <img src={testImg} alt="profile_image" className='w-16 h-16 rounded-full'/>
-            
-            <div className='grid grid-col p-0'>
-              <h5 className='font-bold font-serif text-lg'>John Doe</h5>
-            <time datetime="2025-06-10" className='text-sm font-semibold'>2025-06-10</time>
-
+      <div className="w-3/4 mx-auto p-10">
+        {/* Profile and Title Section */}
+        <div className="grid gap-4 mb-6">
+          <div className="flex items-center gap-4">
+            <img
+              src={testImg}
+              alt="profile"
+              className="w-16 h-16 rounded-full"
+            />
+            <div>
+              <h5 className="font-bold font-serif text-lg">
+                {blog.author || "Unknown Author"}
+              </h5>
+              <time className="text-sm font-semibold">
+                {blog.date} <br />
+                {blog.time}
+              </time>
             </div>
           </div>
-          <h4 className='underline font-serif font-semibold'>
-            For other uses, see Research (disambiguation). "Researched" redirects here. For the organisation, see ResearchED. "Researcher" redirects here. For other uses, see Researcher (disambiguation).
+          <h4 className="underline font-serif font-semibold text-xl">
+            {blog.title}
           </h4>
-         </div>
+        </div>
 
-         {/*image for the blog */}
-         <div>
-          <img src={Blog} alt="" className='w-full h-100 rounded-md'/>
-         </div>
+        {/* Blog Image */}
+        <div className="mb-6">
+          <img
+            src={blog.image_url || placeholderBlogImg}
+            alt="blog"
+            className="w-full max-h-[400px] object-cover rounded-md"
+          />
+        </div>
 
+        {/* Blog Content */}
+        <div className="prose max-w-none text-gray-800 text-lg leading-relaxed font-serif">
+          {blog.content}
+        </div>
+
+        {/*like, comment and share buttons */}
+        <LikeCommentComp blog_id={blog.comment_id} cmtCount={blog.comment_id}/>
       </div>
-     
     </div>
   );
 };
