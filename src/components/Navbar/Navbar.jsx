@@ -1,165 +1,155 @@
-import React, { useState, useContext } from 'react';
-import { IoMdClose } from 'react-icons/io';
-import diverImg from '../../assets/login.webp';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import ForgotPassword from './ForgotPassword';
-import { AuthContext } from './AuthContext';
+import React, { useState, useContext } from "react";
+import { Link } from "react-router-dom";
+import logo from "../../assets/logo.png";
+import { MdWbSunny } from "react-icons/md";
+import { IoMdMoon } from "react-icons/io";
+import { HiMenu, HiX } from "react-icons/hi";
+import LoginForm from "../Login_Register/LoginForm";
+import RegisterForm from "../Login_Register/RegisterForm";
+import { AuthContext } from "../Login_Register/AuthContext";
 
-const LoginForm = ({ isOpen, onClose, switchToRegister }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showForgotPopup, setShowForgotPopup] = useState(false);
+const Navbar = () => {
+  const [isDark, setIsDark] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
 
-  const { login } = useContext(AuthContext);
-  const navigate = useNavigate();
+  const { user, logout } = useContext(AuthContext);
 
-  if (!isOpen) return null;
+  const toggleMode = () => setIsDark((prev) => !prev);
+  const toggleMenu = () => setMenuOpen((prev) => !prev);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      const res = await axios.post('http://localhost:8000/api/auth/token/', {
-        email,
-        password,
-      });
-
-      const { access, refresh } = res.data;
-
-      localStorage.setItem('access_token', access);
-      localStorage.setItem('refresh_token', refresh);
-
-      const userRes = await axios.get('http://localhost:8000/api/auth/profile/', {
-        headers: {
-          Authorization: `Bearer ${access}`,
-        },
-      });
-
-      const user = userRes.data;
-      login(user);
-
-      toast.success('✅ Login successful!');
-      setEmail('');
-      setPassword('');
-
-      setTimeout(() => {
-        onClose();
-        navigate(user?.is_staff ? '/admin/' : '/');
-      }, 1500);
-    } catch (err) {
-      toast.error('❌ Invalid credentials or server error.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  const navLinks = [
+    "Home", "News", "Reports", "Blog", "Gallery",
+    "Courses", "Product", "About", "Identify Seagrass"
+  ];
 
   return (
     <>
-      <ToastContainer />
+      <nav className={`fixed top-0 left-0 w-full z-50 shadow-md ${isDark ? "bg-gray-900" : "bg-white"}`}>
 
-      {/* Login Modal */}
-      <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/30">
-        <div className="relative w-full max-w-3xl mx-4 bg-white rounded-lg shadow-xl flex flex-col md:flex-row overflow-hidden h-[90vh]">
-          {/* Close button */}
-          <button
-            onClick={onClose}
-            className="absolute top-3 right-3 text-gray-500 hover:text-red-600 z-10"
-          >
-            <IoMdClose size={24} />
-          </button>
+        <div className="flex items-center justify-between px-6 lg:px-12 h-20">
+          <img src={logo} alt="Logo" className="h-16 w-auto" />
+          <ul className={`hidden md:flex space-x-6 text-base font-semibold ${isDark ? "text-white" : "text-gray-800"}`}>
 
-          {/* Image */}
-          <div className="hidden md:block md:w-1/2">
-            <img
-              src={diverImg}
-              alt="Login"
-              className="h-full w-full object-cover"
-            />
-          </div>
+            {navLinks.map((item) => (
+              <li key={item}>
+                <Link
+                  to={`/${item.toLowerCase() === "home" ? "" : item.toLowerCase()}`}
 
-          {/* Form */}
-          <div className="w-full md:w-1/2 p-6 md:p-10 flex flex-col justify-center">
-            <p
-              onClick={() => {
-                onClose();
-                navigate('/');
-              }}
-              className="text-xs text-gray-400 mb-4 hover:text-green-500 transition-all duration-200 cursor-pointer tracking-wide flex items-center gap-1"
+                  className="hover:text-green-500 hover:underline underline-offset-4 transition duration-200"
+                >
+                  {item}
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          <div className="flex items-center gap-4">
+            <button
+              onClick={toggleMode}
+              className="text-xl hover:scale-110 transition duration-200"
+              aria-label="Toggle dark mode"
             >
-              <span className="text-lg">←</span> Back to Homepage
-            </p>
+              {isDark ? (
+                <MdWbSunny className="text-yellow-400" />
+              ) : (
+                <IoMdMoon className="text-black" />
+              )}
+            </button>
 
-            <h2 className="text-3xl font-bold text-green-700 mb-6">
-              Welcome Back!
-            </h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="text-sm font-medium">Email</label>
-                <input
-                  type="email"
-                  className="w-full border px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium">Password</label>
-                <input
-                  type="password"
-                  className="w-full border px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="text-right text-sm">
-                <button
-                  type="button"
-                  className="text-gray-500 hover:text-green-500 transition-all duration-200"
-                  onClick={() => setShowForgotPopup(true)}
-                >
-                  Forgot Password?
-                </button>
-              </div>
-
+            {/* Login/Logout Button */}
+            {user ? (
               <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-black text-white py-2 rounded hover:bg-gray-900 transition"
+                onClick={logout}
+                className="hidden md:block bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition duration-200"
               >
-                {isSubmitting ? 'Signing In...' : 'Sign In'}
+                Logout
               </button>
+            ) : (
+              <button
+                onClick={() => {
+                  setShowRegister(false);
+                  setShowLogin(true);
+                }}
+                className="hidden md:block bg-green-700 text-white px-4 py-2 rounded-md hover:bg-green-800 transition duration-200"
+              >
+                Subscribe
+              </button>
+            )}
 
-              <p className="text-center text-sm text-gray-600 mt-4">
-                Don’t have an account?{' '}
-                <span
-                  onClick={() => {
-                    onClose();
-                    switchToRegister();
-                  }}
-                  className="text-green-600 font-semibold hover:underline cursor-pointer"
-                >
-                  Register
-                </span>
-              </p>
-            </form>
+            {/* Mobile Toggle */}
+            <button
+              className="md:hidden text-2xl"
+              onClick={toggleMenu}
+              aria-label="Toggle menu"
+            >
+              {menuOpen ? <HiX /> : <HiMenu />}
+            </button>
           </div>
         </div>
-      </div>
 
-      {/* Forgot Password Popup - Appears OVER the login modal */}
-      {showForgotPopup && (
-        <ForgotPassword onClose={() => setShowForgotPopup(false)} />
-      )}
+        {/* Mobile Menu */}
+        {menuOpen && (
+          <ul className={`md:hidden flex flex-col items-center space-y-4 py-6 text-base font-semibold ${isDark ? "bg-gray-900 text-white" : "bg-white text-gray-800"}`}>
+
+            {navLinks.map((item) => (
+              <li key={item}>
+                <Link
+                 to={`/${item.toLowerCase() === "home" ? "" : item.toLowerCase()}`}
+
+                  onClick={() => setMenuOpen(false)}
+                  className="hover:text-green-500 hover:underline underline-offset-4 transition duration-200"
+                >
+                  {item}
+                </Link>
+              </li>
+            ))}
+            {user ? (
+              <button
+                onClick={() => {
+                  logout();
+                  setMenuOpen(false);
+                }}
+                className="bg-red-600 text-white px-5 py-2 rounded-md hover:bg-red-700 transition duration-200"
+              >
+                Logout
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  setMenuOpen(false);
+                  setShowRegister(false);
+                  setShowLogin(true);
+                }}
+                className="bg-[#1B7B19] text-white px-5 py-2 rounded-md hover:bg-green-800 transition duration-200"
+              >
+                Subscribe
+              </button>
+            )}
+          </ul>
+        )}
+      </nav>
+
+      {/* Modals */}
+      <LoginForm
+        isOpen={showLogin}
+        onClose={() => setShowLogin(false)}
+        switchToRegister={() => {
+          setShowLogin(false);
+          setShowRegister(true);
+        }}
+      />
+      <RegisterForm
+        isOpen={showRegister}
+        onClose={() => setShowRegister(false)}
+        switchToLogin={() => {
+          setShowRegister(false);
+          setShowLogin(true);
+        }}
+      />
     </>
   );
 };
 
-export default LoginForm;
+export default Navbar;
