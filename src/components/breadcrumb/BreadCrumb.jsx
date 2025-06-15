@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 const Breadcrumb = () => {
   const location = useLocation();
-  const pathnames = location.pathname.split('/').filter(Boolean); // e.g. ['blogFullView', '1']
+  const pathnames = location.pathname.split('/').filter(Boolean); // ['identify seagrass']
 
   return (
     <nav aria-label="breadcrumb" className="text-sm text-gray-600 mb-6 pl-6 font-serif">
@@ -13,25 +13,16 @@ const Breadcrumb = () => {
           <span className="mx-1 text-gray-400">›</span>
         </li>
 
-        {/* Dynamic segments */}
         {pathnames.map((segment, index) => {
           const isLast = index === pathnames.length - 1;
 
-          // Handle segment labels and links
-          let label = segment;
-          let fullPath = '/' + pathnames.slice(0, index + 1).join('/');
+          // Decode URI and format label
+          let decodedSegment = decodeURIComponent(segment); // turns %20 to space
+          let label = decodedSegment
+            .replace(/-/g, ' ') // optional: convert dashes to spaces
+            .replace(/\b\w/g, char => char.toUpperCase()); // capitalize each word
 
-          // Override for specific known routes
-          if (segment === 'blog') {
-            label = 'Blog';
-            fullPath = '/blog';
-          } else if (segment === 'blogFullView') {
-            label = 'Blog';
-            fullPath = '/blog'; // Redirect back to the actual blog list
-          } else if (!isNaN(segment)) {
-            label = `Blog ${segment}`;
-            fullPath = `/blogFullView/${segment}`; // Optional: make last breadcrumb linkable
-          }
+          const fullPath = '/' + pathnames.slice(0, index + 1).join('/');
 
           return (
             <li key={index} className={isLast ? 'font-semibold text-black' : ''}>
