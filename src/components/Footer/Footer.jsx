@@ -6,7 +6,7 @@ import Nav from 'react-bootstrap/Nav';
 
 export default function Footer() {
   return (
-    <div className="w-full bg-[#1B7B19] text-white font-semibold">
+    <div className="footer bottom-0 w-full bg-[#1B7B19] text-white font-semibold">
       <footer className="max-w-7xl mx-auto px-6 py-10">
         <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
 
