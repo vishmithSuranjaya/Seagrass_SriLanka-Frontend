@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { AuthContext } from '../../components/Login_Register/AuthContext';
 import {
   FiHome,
   FiCalendar,
@@ -13,6 +14,7 @@ import {
   FiMenu,
 } from 'react-icons/fi';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
 
 const navLinks = [
   { icon: <FiHome />, label: 'Home', path: '/admin' },
@@ -29,10 +31,7 @@ const AdminHome = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/');
-  };
+    const { user, logout } = useContext(AuthContext);
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -54,8 +53,9 @@ const AdminHome = () => {
           transition={{ duration: 0.35 }}
           style={{ backgroundColor: '#1B7B19' }}
           className={`${
-            collapsed ? 'w-20' : 'w-64'
-          } fixed md:relative z-40 inset-y-0 left-0 text-white flex flex-col p-4 transition-all duration-300 h-full`}
+  collapsed ? 'w-20' : 'w-64'
+} fixed md:relative z-40 inset-y-0 left-0 text-white flex flex-col p-4 transition-all duration-300 h-full`}
+
         >
           {/* Toggle Arrow */}
           <div className="flex justify-end mb-2">
@@ -106,9 +106,10 @@ const AdminHome = () => {
               >
                 <Link
                   to={path}
-                  className={`flex items-center gap-3 ${
-                    location.pathname === path ? 'text-gray-300' : ''
-                  }`}
+                 className={`flex items-center gap-3 ${
+  location.pathname === path ? 'text-gray-300' : ''
+}`}
+
                   onClick={() => setMobileMenuOpen(false)} // Close on mobile
                 >
                   {icon}
@@ -123,7 +124,7 @@ const AdminHome = () => {
               transition={{ type: 'spring', stiffness: 260, damping: 20 }}
               className="hover:text-gray-300 flex items-center gap-3 mt-6 cursor-pointer"
               onClick={() => {
-                handleLogout();
+                logout()
                 setMobileMenuOpen(false);
               }}
             >
@@ -137,8 +138,9 @@ const AdminHome = () => {
       {/* Main Content */}
       <div
         className={`flex-1 flex flex-col ${
-          mobileMenuOpen ? 'blur-sm pointer-events-none select-none' : ''
-        } transition-all duration-300`}
+  mobileMenuOpen ? 'blur-sm pointer-events-none select-none' : ''
+} transition-all duration-300`}
+
       >
         {/* Top Bar */}
         <motion.header
