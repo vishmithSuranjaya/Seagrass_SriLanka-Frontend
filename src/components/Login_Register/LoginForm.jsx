@@ -28,7 +28,7 @@ const LoginForm = ({ isOpen, onClose, switchToRegister }) => {
         email,
         password,
       });
-
+console.log(res);
       const { access, refresh } = res.data;
 
       localStorage.setItem('access_token', access);
