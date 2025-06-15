@@ -1,9 +1,13 @@
 import React from 'react'
+import Breadcrumb from '../components/breadcrumb/BreadCrumb'
 
 const Products = () => {
   return (
-    <div>
-        <h1 className='py-20'>product</h1>
+    <div className='mt-25 px-6'>
+      {/*breadcrumb navigation */}
+      <div>
+        <Breadcrumb />
+      </div>
     </div>
   )
 }

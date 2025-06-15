@@ -1,11 +1,15 @@
-import React from 'react'
+import React from "react";
+import Breadcrumb from "../components/breadcrumb/BreadCrumb";
 
 const News = () => {
   return (
-    <div>
-        <h1 className='py-20'>News</h1>
+    <div className="mt-25 px-6">
+      {/* Breadcrumb Navigation */}
+      <div>
+        <Breadcrumb />
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default News
+export default News;

@@ -24,6 +24,7 @@ import AdminSettings from './Pages/Admin/AdminSettings';
 import AdminBlogs from './Pages/Admin/AdminBlogs';
 import { AuthProvider } from './components/Login_Register/AuthContext';
 
+
 function AppWrapper() {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
@@ -53,6 +54,7 @@ function AppWrapper() {
     </>
   );
 }
+
 
 function App() {
   return (

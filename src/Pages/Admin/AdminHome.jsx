@@ -48,7 +48,7 @@ const AdminHome = () => {
       {/* Sidebar */}
       {(mobileMenuOpen || window.innerWidth >= 768) && (
         <motion.aside
-          initial={{ x: -200, opacity: 0 }}
+          initial={{ x: -400, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.35 }}
           style={{ backgroundColor: '#1B7B19' }}
