@@ -5,8 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import ForgotPassword from './ForgotPassword';
-import { AuthContext } from './AuthContext';
+import ForgotPassword from '../Login_Register/ForgotPassword';
+import { AuthContext } from '../Login_Register/AuthContext';
 
 const LoginForm = ({ isOpen, onClose, switchToRegister }) => {
   const [email, setEmail] = useState('');
