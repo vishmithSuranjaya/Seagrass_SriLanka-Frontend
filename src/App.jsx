@@ -4,7 +4,6 @@ import {
   Route,
   Routes,
   useLocation,
-  Outlet,
 } from 'react-router-dom';
 import Home from './Pages/Home';
 import Navbar from './components/Navbar/Navbar';
@@ -23,7 +22,7 @@ import AdminEvents from './Pages/Admin/AdminEvents';
 import AdminUsers from './Pages/Admin/AdminUsers';
 import AdminSettings from './Pages/Admin/AdminSettings';
 import AdminBlogs from './Pages/Admin/AdminBlogs';
-
+import { AuthProvider } from './components/Login_Register/AuthContext';
 
 function AppWrapper() {
   const location = useLocation();
@@ -32,9 +31,7 @@ function AppWrapper() {
   return (
     <>
       {!isAdminRoute && <Navbar />}
-
       <Routes>
-        {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/news" element={<News />} />
         <Route path="/reports" element={<Reports />} />
@@ -44,32 +41,25 @@ function AppWrapper() {
         <Route path="/product" element={<Products />} />
         <Route path="/about" element={<About />} />
         <Route path="/identify seagrass" element={<SeagrassIdentify />} />
-
-        {/* Admin Layout with nested routes */}
         <Route path="/admin" element={<AdminHome />}>
-        <Route path="adminevents" element={<AdminEvents />} />
-        <Route path="adminnews" element={<AdminNews />} />
-        <Route path="adminblogs" element={<AdminBlogs />} />
-        <Route path="adminsettings" element={<AdminSettings />} />
-        <Route path="adminusers" element={<AdminUsers />} />
-        
+          <Route path="adminevents" element={<AdminEvents />} />
+          <Route path="adminnews" element={<AdminNews />} />
+          <Route path="adminblogs" element={<AdminBlogs />} />
+          <Route path="adminsettings" element={<AdminSettings />} />
+          <Route path="adminusers" element={<AdminUsers />} />
         </Route>
       </Routes>
-
       {!isAdminRoute && <Footer />}
     </>
   );
 }
 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import BlogFullView from './Pages/BlogFullView';
-
-
 function App() {
   return (
     <BrowserRouter>
-      <AppWrapper />
+      <AuthProvider>
+        <AppWrapper />
+      </AuthProvider>
     </BrowserRouter>
   );
 }

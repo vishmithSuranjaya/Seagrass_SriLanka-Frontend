@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import { MdWbSunny } from "react-icons/md";
@@ -6,6 +6,7 @@ import { IoMdMoon } from "react-icons/io";
 import { HiMenu, HiX } from "react-icons/hi";
 import LoginForm from "../Login_Register/LoginForm";
 import RegisterForm from "../Login_Register/RegisterForm";
+import { AuthContext } from "../Login_Register/AuthContext";
 
 const Navbar = () => {
   const [isDark, setIsDark] = useState(false);
@@ -13,35 +14,29 @@ const Navbar = () => {
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
 
+  const { user, logout } = useContext(AuthContext);
+
   const toggleMode = () => setIsDark((prev) => !prev);
   const toggleMenu = () => setMenuOpen((prev) => !prev);
 
-  const navLinks = ["Home", "News", "Reports", "Blog", "Gallery", "Courses", "Product", "About", "Identify Seagrass"];
+  const navLinks = [
+    "Home", "News", "Reports", "Blog", "Gallery",
+    "Courses", "Product", "About", "Identify Seagrass"
+  ];
 
   return (
     <>
-      {/* Navigation Bar */}
-      <nav
-        className={`fixed top-0 left-0 w-full z-50 shadow-md ${
-          isDark ? "bg-gray-900" : "bg-white"
-        }`}
-      >
-        <div className="flex items-center justify-between px-6 lg:px-12 h-20">
-          {/* Logo */}
-          <div className="flex items-center">
-            <img src={logo} alt="Logo" className="h-16 w-auto" />
-          </div>
+      <nav className={`fixed top-0 left-0 w-full z-50 shadow-md ${isDark ? "bg-gray-900" : "bg-white"}`}>
 
-          {/* Desktop Menu */}
-          <ul
-            className={`hidden md:flex space-x-6 text-base font-semibold ${
-              isDark ? "text-white" : "text-gray-800"
-            }`}
-          >
+        <div className="flex items-center justify-between px-6 lg:px-12 h-20">
+          <img src={logo} alt="Logo" className="h-16 w-auto" />
+          <ul className={`hidden md:flex space-x-6 text-base font-semibold ${isDark ? "text-white" : "text-gray-800"}`}>
+
             {navLinks.map((item) => (
               <li key={item}>
                 <Link
                   to={`/${item.toLowerCase() === "home" ? "" : item.toLowerCase()}`}
+
                   className="hover:text-green-500 hover:underline underline-offset-4 transition duration-200"
                 >
                   {item}
@@ -50,7 +45,6 @@ const Navbar = () => {
             ))}
           </ul>
 
-          {/* Controls */}
           <div className="flex items-center gap-4">
             <button
               onClick={toggleMode}
@@ -64,19 +58,27 @@ const Navbar = () => {
               )}
             </button>
 
-            {/* Subscribe (Login) Button */}
-            <button
-              onClick={() => {
-                setShowRegister(false);
-                setShowLogin(true);
-                console.log("Subscribe clicked: showLogin =", true);
-              }}
-              className="hidden md:block bg-green-700 text-white text-base px-4 py-2 rounded-md hover:bg-green-800 hover:scale-105 transition duration-200"
-            >
-              Subscribe
-            </button>
+            {/* Login/Logout Button */}
+            {user ? (
+              <button
+                onClick={logout}
+                className="hidden md:block bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition duration-200"
+              >
+                Logout
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  setShowRegister(false);
+                  setShowLogin(true);
+                }}
+                className="hidden md:block bg-green-700 text-white px-4 py-2 rounded-md hover:bg-green-800 transition duration-200"
+              >
+                Subscribe
+              </button>
+            )}
 
-            {/* Mobile Menu Toggle */}
+            {/* Mobile Toggle */}
             <button
               className="md:hidden text-2xl"
               onClick={toggleMenu}
@@ -89,15 +91,13 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {menuOpen && (
-          <ul
-            className={`md:hidden flex flex-col items-center space-y-4 py-6 text-base font-semibold ${
-              isDark ? "bg-gray-900 text-white" : "bg-white text-gray-800"
-            }`}
-          >
+          <ul className={`md:hidden flex flex-col items-center space-y-4 py-6 text-base font-semibold ${isDark ? "bg-gray-900 text-white" : "bg-white text-gray-800"}`}>
+
             {navLinks.map((item) => (
               <li key={item}>
                 <Link
-                  to={`/${item.toLowerCase() === "home" ? "" : item.toLowerCase()}`}
+                 to={`/${item.toLowerCase() === "home" ? "" : item.toLowerCase()}`}
+
                   onClick={() => setMenuOpen(false)}
                   className="hover:text-green-500 hover:underline underline-offset-4 transition duration-200"
                 >
@@ -105,46 +105,47 @@ const Navbar = () => {
                 </Link>
               </li>
             ))}
-            <button
-              onClick={() => {
-                setMenuOpen(false);
-                setShowRegister(false);
-                setShowLogin(true);
-                console.log("Subscribe clicked (mobile): showLogin =", true);
-              }}
-              className="bg-[#1B7B19] text-white text-base px-5 py-2 rounded-md hover:bg-green-800 hover:scale-105 transition duration-200"
-            >
-              Subscribe
-            </button>
+            {user ? (
+              <button
+                onClick={() => {
+                  logout();
+                  setMenuOpen(false);
+                }}
+                className="bg-red-600 text-white px-5 py-2 rounded-md hover:bg-red-700 transition duration-200"
+              >
+                Logout
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  setMenuOpen(false);
+                  setShowRegister(false);
+                  setShowLogin(true);
+                }}
+                className="bg-[#1B7B19] text-white px-5 py-2 rounded-md hover:bg-green-800 transition duration-200"
+              >
+                Subscribe
+              </button>
+            )}
           </ul>
         )}
       </nav>
 
-      {/* Login Modal */}
+      {/* Modals */}
       <LoginForm
         isOpen={showLogin}
-        onClose={() => {
-          setShowLogin(false);
-          console.log("Login modal closed");
-        }}
+        onClose={() => setShowLogin(false)}
         switchToRegister={() => {
           setShowLogin(false);
           setShowRegister(true);
-          console.log("Switching to Register modal");
         }}
       />
-
-      {/* Register Modal */}
       <RegisterForm
         isOpen={showRegister}
-        onClose={() => {
-          setShowRegister(false);
-          console.log("Register modal closed");
-        }}
+        onClose={() => setShowRegister(false)}
         switchToLogin={() => {
           setShowRegister(false);
           setShowLogin(true);
-          console.log("Switching to Login modal");
         }}
       />
     </>
