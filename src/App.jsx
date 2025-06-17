@@ -23,6 +23,7 @@ import AdminUsers from './Pages/Admin/AdminUsers';
 import AdminSettings from './Pages/Admin/AdminSettings';
 import AdminBlogs from './Pages/Admin/AdminBlogs';
 import { AuthProvider } from './components/Login_Register/AuthContext';
+import BlogFullView from './Pages/BlogFullView';
 
 
 function AppWrapper() {
@@ -42,6 +43,7 @@ function AppWrapper() {
         <Route path="/product" element={<Products />} />
         <Route path="/about" element={<About />} />
         <Route path="/identify seagrass" element={<SeagrassIdentify />} />
+        <Route path="/blogFullView/:id" element={<BlogFullView />} />
         <Route path="/admin" element={<AdminHome />}>
           <Route path="adminevents" element={<AdminEvents />} />
           <Route path="adminnews" element={<AdminNews />} />
