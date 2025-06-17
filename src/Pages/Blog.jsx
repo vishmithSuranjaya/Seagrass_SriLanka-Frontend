@@ -118,8 +118,10 @@ const Blog = () => {
       {/* Blogs */}
       <div className="flex flex-col gap-6 w-4/5 max-w-6xl mx-auto mt-10 mb-8 hover:scale-105 transition-transform duration-200 hover:shadow-lg transition-shadow duration-300">
         {isLoading
-          ? 
-            Array(1)
+
+          ? // Show 3 skeleton loaders while fetching
+            Array(2)
+            
               .fill(0)
               .map((_, index) => <Skeleton key={index} type="blog_list" />)
           : blogs.map((blog) => (

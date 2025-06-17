@@ -2,7 +2,15 @@ import { Link, useLocation } from 'react-router-dom';
 
 const Breadcrumb = () => {
   const location = useLocation();
-  const pathnames = location.pathname.split('/').filter(Boolean); // ['identify seagrass']
+  const pathnames = location.pathname.split('/').filter(Boolean);
+
+  // Custom route mapping
+  const routeMap = {
+    blogFullView: {
+      label: 'Blog',
+      to: '/blog', // where to actually go
+    },
+  };
 
   return (
     <nav aria-label="breadcrumb" className="text-sm text-gray-600 mb-6 pl-6 font-serif">
@@ -16,13 +24,18 @@ const Breadcrumb = () => {
         {pathnames.map((segment, index) => {
           const isLast = index === pathnames.length - 1;
 
-          // Decode URI and format label
-          let decodedSegment = decodeURIComponent(segment); // turns %20 to space
-          let label = decodedSegment
-            .replace(/-/g, ' ') // optional: convert dashes to spaces
-            .replace(/\b\w/g, char => char.toUpperCase()); // capitalize each word
+          let label = segment;
+          let to = '/' + pathnames.slice(0, index + 1).join('/');
 
-          const fullPath = '/' + pathnames.slice(0, index + 1).join('/');
+          // Apply custom route label and redirect if in routeMap
+          if (routeMap[segment]) {
+            label = routeMap[segment].label;
+            to = routeMap[segment].to;
+          } else {
+            label = decodeURIComponent(segment)
+              .replace(/-/g, ' ')
+              .replace(/\b\w/g, (char) => char.toUpperCase());
+          }
 
           return (
             <li key={index} className={isLast ? 'font-semibold text-black' : ''}>
@@ -30,9 +43,7 @@ const Breadcrumb = () => {
                 <span>{label}</span>
               ) : (
                 <>
-                  <Link to={fullPath} className="hover:underline text-black">
-                    {label}
-                  </Link>
+                  <Link to={to} className="hover:underline text-black">{label}</Link>
                   <span className="mx-1 text-gray-400">›</span>
                 </>
               )}
