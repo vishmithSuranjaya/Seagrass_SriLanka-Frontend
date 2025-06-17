@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import BreadCrumb from "../components/breadcrumb/BreadCrumb";
+import { motion, AnimatePresence } from "framer-motion";
 
 const SeagrassIdentify = () => {
   const [image, setImage] = useState(null);
@@ -92,21 +93,20 @@ const SeagrassIdentify = () => {
       </div>
 
       <div className="max-w-full mb-10">
-        <p className="text-gray-900 text-sm sm:text-lg font-poppins leading-relaxed font-serif">
-          Seagrasses are flowering marine plants found in shallow coastal
-          waters, forming dense underwater meadows. Sri Lanka hosts about 15
-          species of seagrasses, distributed along its northern, eastern,
-          western, and southern coastlines. These plants play a crucial role in
-          maintaining healthy marine ecosystems by providing habitat and nursery
-          grounds for fish, sea turtles, and other marine life.
-          <br></br>
-          <br></br>
-          Beyond biodiversity support, seagrass meadows help stabilize
-          coastlines, prevent erosion, and capture significant amounts of
-          carbon, contributing to climate change mitigation. However, seagrasses
-          face threats from coastal development, pollution, and climate change,
-          making their identification and conservation critical for sustaining
-          coastal environments.
+        <p className="text-gray-900 text-sm sm:text-xl font-poppins leading-relaxed font-serif">
+          Seagrasses are flowering marine plants found in shallow coastal waters,
+          forming dense underwater meadows. Sri Lanka hosts about 15 species of
+          seagrasses, distributed along its northern, eastern, western, and southern
+          coastlines. These plants play a crucial role in maintaining healthy marine
+          ecosystems by providing habitat and nursery grounds for fish, sea turtles,
+          and other marine life.
+          <br />
+          <br />
+          Beyond biodiversity support, seagrass meadows help stabilize coastlines,
+          prevent erosion, and capture significant amounts of carbon, contributing
+          to climate change mitigation. However, seagrasses face threats from coastal
+          development, pollution, and climate change, making their identification and
+          conservation critical for sustaining coastal environments.
         </p>
       </div>
 
@@ -140,7 +140,7 @@ const SeagrassIdentify = () => {
                 className="mt-3 sm:mt-0 sm:ml-4 bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-sm transition"
                 disabled={loading}
               >
-                 Clear
+                Clear
               </button>
             )}
           </div>
@@ -153,22 +153,38 @@ const SeagrassIdentify = () => {
             {loading ? "Identifying..." : "Identify Seagrass"}
           </button>
 
+          {/* Results Section with Framer Motion */}
           <div className="bg-white w-full mt-6 p-4 rounded-sm shadow-sm">
             <h2 className="font-semibold text-lg mb-2">Results</h2>
-            {result ? (
-              <div className="text-md text-gray-700 font-serif">
-                <p>
-                  <strong>Prediction:</strong> {result.prediction}
-                </p>
-                <p>
-                  <strong>Confidence:</strong> {result.confidence}
-                </p>
-              </div>
-            ) : (
-              <p className="text-gray-600 italic">
-                {image ? "Image ready for analysis." : "No results yet."}
-              </p>
-            )}
+            <AnimatePresence>
+              {result ? (
+                <motion.div
+                  key="result"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3 }}
+                  className="text-md text-gray-700 font-serif"
+                >
+                  <p>
+                    <strong>Prediction:</strong> {result.prediction}
+                  </p>
+                  <p>
+                    <strong>Confidence:</strong> {result.confidence}
+                  </p>
+                </motion.div>
+              ) : (
+                <motion.p
+                  key="no-result"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="text-gray-600 italic"
+                >
+                  {image ? "Image ready for analysis." : "No results yet."}
+                </motion.p>
+              )}
+            </AnimatePresence>
           </div>
 
           {(preview || annotatedImage) && (

@@ -38,6 +38,23 @@ const Skeleton = ({ type }) => {
     </div>
   );
 
+  case "product_list":
+      return (
+        <div className="p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 animate-pulse">
+          {/* Repeat 8 skeleton cards */}
+          {[...Array(8)].map((_, idx) => (
+            <div
+              key={idx}
+              className="border border-gray-200 rounded-lg shadow-sm p-4 flex flex-col items-center"
+            >
+              <div className="bg-gray-300 rounded-md w-full h-48 mb-4"></div>
+              <div className="bg-gray-300 h-5 w-3/4 rounded mb-2"></div>
+              <div className="bg-gray-300 h-4 w-1/2 rounded"></div>
+            </div>
+          ))}
+        </div>
+      );
+
   }
 };
 

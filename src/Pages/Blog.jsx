@@ -15,6 +15,7 @@ const Blog = () => {
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [blogs, setBlogs] = useState([]);
+  const access_token = localStorage.getItem('access_token'); // logged in user token for post, comment and to like a blog
 
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
@@ -85,7 +86,7 @@ const Blog = () => {
   };
 
   return (
-    <div className="mt-25 px-6">
+    <div className="mt-25 px-6 h-screen">
       <ToastContainer position="top-right" autoClose={3000} />
 
       <BreadCrumb />
@@ -108,7 +109,7 @@ const Blog = () => {
       <div className="flex flex-col gap-6 w-4/5 max-w-6xl mx-auto mt-10 mb-8 hover:scale-105 transition-transform duration-200 hover:shadow-lg transition-shadow duration-300">
         {isLoading
           ? // Show 3 skeleton loaders while fetching
-            Array(1)
+            Array(2)
               .fill(0)
               .map((_, index) => <Skeleton key={index} type="blog_list" />)
           : blogs.map((blog) => (
@@ -151,7 +152,7 @@ const Blog = () => {
               {
                 headers: {
                   "Content-Type": "multipart/form-data",
-                  // Authorization: `Bearer ` // replace with the actual token, this is to store as user_id
+                  //  Authorization: `Bearer ${access_token}` // replace with the actual token, this is to store as user_id
                 },
               }
             );

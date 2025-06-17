@@ -7,7 +7,7 @@ import imag4 from "../assets/seagrass_leaves.jpg";
 
 const Home = () => {
   return (
-    <div className="w-full ">
+    <div className="w-full">
       {/* Banner Section */}
       <div className="w-full">
         <img
