@@ -25,7 +25,7 @@ const Blog = () => {
 
   const fetchBlogs = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/api/blogs/blogs");
+      const response = await axios.get("http://localhost:8000/api/blogs/");
       setBlogs(response.data);
     } catch (error) {
       toast.error("Failed to fetch blogs.");
