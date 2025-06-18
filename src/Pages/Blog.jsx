@@ -116,7 +116,7 @@ const Blog = () => {
       </div>
 
       {/* Blogs */}
-      <div className="flex flex-col gap-6 w-4/5 max-w-6xl mx-auto mt-10 mb-8 hover:scale-105 transition-transform duration-200 hover:shadow-lg transition-shadow duration-300">
+      <div className="flex flex-col gap-6 w-4/5 max-w-6xl mx-auto mt-10 mb-8 ">
         {isLoading
 
           ? // Show 3 skeleton loaders while fetching
@@ -127,7 +127,7 @@ const Blog = () => {
           : blogs.map((blog) => (
               <div
                 key={blog.blog_id}
-                className="bg-white shadow-md rounded-lg overflow-hidden flex flex-col md:flex-row"
+                className="bg-white shadow-md rounded-lg overflow-hidden flex flex-col md:flex-row hover:scale-105 transition-transform duration-200 hover:shadow-lg transition-shadow duration-300"
               >
                 <img
                   src={blog.image}
