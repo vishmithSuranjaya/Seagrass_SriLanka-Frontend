@@ -25,7 +25,7 @@ const Blog = () => {
 
   const fetchBlogs = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/api/blogs/blogs");
+      const response = await axios.get("http://localhost:8000/api/blogs/");
       setBlogs(response.data);
     } catch (error) {
       toast.error("Failed to fetch blogs.");
@@ -57,10 +57,21 @@ const Blog = () => {
     formData.append("content", content);
     formData.append("image", imageFile);
 
+    console.log("FormData contents in handlePost:");
+    for (const [key, value] of formData.entries()) {
+      console.log(`${key}:`, value);
+    }
+
     try {
-      await axios.post("http://localhost:8000/api/blogs/blogs", formData, {
+      const token = localStorage.getItem("access_token"); 
+      if (!token) {
+        toast.error("Please log in to post a blog.");
+        return;
+      }
+      await axios.post("http://localhost:8000/api/blogs/post/", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
         },
       });
       toast.success("Blog posted successfully!");
@@ -105,16 +116,18 @@ const Blog = () => {
       </div>
 
       {/* Blogs */}
-      <div className="flex flex-col gap-6 w-4/5 max-w-6xl mx-auto mt-10 mb-8 hover:scale-105 transition-transform duration-200 hover:shadow-lg transition-shadow duration-300">
+      <div className="flex flex-col gap-6 w-4/5 max-w-6xl mx-auto mt-10 mb-8 ">
         {isLoading
+
           ? // Show 3 skeleton loaders while fetching
-            Array(1)
+            Array(2)
+            
               .fill(0)
               .map((_, index) => <Skeleton key={index} type="blog_list" />)
           : blogs.map((blog) => (
               <div
                 key={blog.blog_id}
-                className="bg-white shadow-md rounded-lg overflow-hidden flex flex-col md:flex-row"
+                className="bg-white shadow-md rounded-lg overflow-hidden flex flex-col md:flex-row hover:scale-105 transition-transform duration-200 hover:shadow-lg transition-shadow duration-300"
               >
                 <img
                   src={blog.image}
@@ -144,17 +157,24 @@ const Blog = () => {
         show={showModal}
         onClose={() => setShowModal(false)}
         onPost={async (formData) => {
+          // Log FormData contents
+          console.log("FormData contents in AddBlogModal onPost:");
+          for (const [key, value] of formData.entries()) {
+            console.log(`${key}:`, value);
+          }
+
           try {
-            await axios.post(
-              "http://localhost:8000/api/blogs/post/",
-              formData,
-              {
-                headers: {
-                  "Content-Type": "multipart/form-data",
-                  // Authorization: `Bearer ` // replace with the actual token, this is to store as user_id
-                },
-              }
-            );
+            const token = localStorage.getItem("access_token");
+            if (!token) {
+              toast.error("Please log in to post a blog.");
+              return false;
+            }
+            await axios.post("http://localhost:8000/api/blogs/post/", formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+                Authorization: `Bearer ${token}`,
+              },
+            });
             toast.success("Blog posted successfully!");
             setShowModal(false);
             fetchBlogs(); // Refresh blog list
