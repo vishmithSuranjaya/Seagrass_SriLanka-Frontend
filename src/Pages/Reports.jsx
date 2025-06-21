@@ -1,32 +1,8 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Breadcrumb from "../components/breadcrumb/BreadCrumb";
 
-// Dummy data
-const dummyReports = [
-  {
-    id: 1,
-    title:
-      "For other uses, see Research (disambiguation). “Researched” redirects here...",
-    description:
-      "Research is creative and systematic work undertaken to increase the stock of knowledge...",
-  },
-  {
-    id: 2,
-    title:
-      "This is a different research topic about technology and education...",
-    description:
-      "This study explores the integration of technology in education systems...",
-  },
-  {
-    id: 3,
-    title:
-      "Another perspective on scientific methodology and progress...",
-    description:
-      "This article discusses how scientific progress is driven by both creativity and empirical testing...",
-  },
-];
-
-// Skeleton component
+// Skeleton loading component
 const SkeletonReport = () => (
   <div className="bg-green-100 p-5 rounded-md shadow-md animate-pulse space-y-4">
     <div className="h-6 bg-green-300 rounded w-3/4"></div>
@@ -40,36 +16,38 @@ const Reports = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [hasSearched, setHasSearched] = useState(false);
   const [results, setResults] = useState([]);
-  const [isLoading, setIsLoading] = useState(true); // Start with loading = true
+  const [isLoading, setIsLoading] = useState(false);
 
-  // This handles the filtering (simulated API)
-  const performSearch = (query = "") => {
+  // Fetch from backend
+  const performSearch = async (query = "") => {
     setIsLoading(true);
     setHasSearched(true);
 
-    setTimeout(() => {
-      const filtered = dummyReports.filter(
-        (report) =>
-          report.title.toLowerCase().includes(query.toLowerCase()) ||
-          report.description.toLowerCase().includes(query.toLowerCase())
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/api/research/search/?q=${query}`
       );
-      setResults(filtered);
-      setIsLoading(false);
-    }, 1500);
+      setResults(response.data);
+    } catch (error) {
+      console.error("Error fetching articles:", error);
+      setResults([]);
+    }
+
+    setIsLoading(false);
   };
 
-  // Run search when page loads
+  // Fetch all articles on first load (optional)
   useEffect(() => {
-    performSearch(); // Default search with empty query
+    performSearch(""); // Load everything by default
   }, []);
 
-  // Triggered when user clicks search button
+  // Trigger search on button click
   const handleSearch = () => {
     performSearch(searchQuery);
   };
 
   return (
-    <div className="mt-24 px-6 md:px-20">
+    <div className="mt-24 px-6 md:px-20 mb-10">
       <Breadcrumb />
 
       <h1 className="text-4xl font-bold text-center text-green-700 mb-12">
@@ -96,10 +74,10 @@ const Reports = () => {
         </div>
       </div>
 
-      {/* Results or Skeleton */}
+      {/* Search Results */}
       {hasSearched && (
         <div className="space-y-6">
-          {isLoading ? (
+          {isLoading ?  (
             <>
               <SkeletonReport />
               <SkeletonReport />
@@ -108,21 +86,27 @@ const Reports = () => {
           ) : results.length > 0 ? (
             results.map((report) => (
               <div
-                key={report.id}
+                key={report.research_id}
                 className="bg-green-100 p-5 rounded-md shadow-md"
               >
-                <p className="text-sm text-gray-700 mb-2">
-                  <span className="font-bold">{report.title}</span>{" "}
-                  <a
-                    href="#"
-                    className="text-green-800 underline hover:text-green-600"
-                  >
-                    (disambiguation)
-                  </a>
+                <h2 className="text-xl font-bold text-green-800 underline mb-2">
+                    {report.title}
+                </h2>
+
+                <p className="text-gray-700 mb-3">
+                  {report.description.length > 250
+                    ? `${report.description.slice(0, 250)}...`
+                      : report.description}
                 </p>
-                <p className="text-gray-800 leading-relaxed">
-                  {report.description}
-                </p>
+
+                <a
+                  href={report.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+                >
+                  View Article
+                </a>
               </div>
             ))
           ) : (
