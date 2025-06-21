@@ -16,6 +16,7 @@ import Courses from './Pages/Courses';
 import Products from './Pages/Products';
 import About from './Pages/About';
 import SeagrassIdentify from './Pages/SeagrassIdentify';
+import ViewNews from './Pages/ViewNews';
 import AdminHome from './Pages/Admin/AdminHome';
 import AdminNews from './Pages/Admin/AdminNews';
 import AdminEvents from './Pages/Admin/AdminEvents';
@@ -56,6 +57,7 @@ function AppWrapper() {
     </>
   );
 }
+
 
 
 function App() {

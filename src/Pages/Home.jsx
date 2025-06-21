@@ -4,6 +4,7 @@ import imag1 from "../assets/Photo-1.jpg";
 import imag2 from "../assets/PC290412.jpg";
 import imag3 from "../assets/Photo-6.jpg";
 import imag4 from "../assets/seagrass_leaves.jpg";
+import NewsHomepage from "../components/news_homepage/NewsHomepage";
 
 const Home = () => {
   return (
@@ -19,9 +20,7 @@ const Home = () => {
 
       {/* this is to display some news from the db */}
       <div>
-        <h1 className="p-10 text-red-500 text-center">
-          news component comes here..
-        </h1>
+        <NewsHomepage />
       </div>
 
       {/* What is Seagrass Section */}
