@@ -1,5 +1,5 @@
 import React from "react";
-import Banner from "../assets/banner.jpg"; // Make sure this path is correct
+import Banner from "../assets/banner.webp"; // Make sure this path is correct
 import imag1 from "../assets/Photo-1.jpg";
 import imag2 from "../assets/PC290412.jpg";
 import imag3 from "../assets/Photo-6.jpg";
@@ -8,7 +8,7 @@ import NewsHomepage from "../components/news_homepage/NewsHomepage";
 
 const Home = () => {
   return (
-    <div className="w-full">
+    <div className="w-full ">
       {/* Banner Section */}
       <div className="w-full">
         <img
@@ -30,10 +30,10 @@ const Home = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-10">
           {/* Left: Text */}
           <div className="justify-center h-[400] ">
-            <h2 className="text-5xl sm:text-6xl font-bold mb-4 pb-4  text-[#1B7B19] text-center font-poppins">
+            <h2 className="text-5xl sm:text-6xl font-bold mb-4 pb-4  text-[#1B7B19] text-center font-serif">
               What is Seagrass?
             </h2>
-            <p className="text-gray-900 leading-relaxed text-xl text-left">
+            <p className="text-gray-900 leading-relaxed text-xl text-left font-serif">
               Seagrass refers to flowering plants that grow in shallow marine
               waters, forming dense underwater meadows. Often mistaken for
               seaweed, seagrasses are actually more closely related to land
@@ -79,14 +79,14 @@ const Home = () => {
       <div className="flex flex-wrap md:flex-nowrap px-4 py-8 gap-8">
         {/* Left Column - Heading */}
         <div className="w-full md:w-1/2 flex items-center justify-center">
-          <h2 className="text-5xl sm:text-6xl font-bold mb-4 text-[#1B7B19] text-center font-poppins">
+          <h2 className="text-5xl sm:text-6xl font-bold mb-4 text-[#1B7B19] text-center font-serif">
             Why We Need to <br /> Save Seagrass ?
           </h2>
         </div>
 
         {/* Right Column - Paragraph */}
         <div className="w-full md:w-1/2 flex items-center">
-          <p className="text-gray-900 leading-relaxed text-xl">
+          <p className="text-gray-900 leading-relaxed text-xl font-serif">
             Seagrass is essential for a healthy ocean and planet. It absorbs
             carbon dioxide, supports marine life, keeps water clean, and
             protects coastlines from erosion. Seagrass also helps global
