@@ -12,6 +12,7 @@ import Courses from './Pages/Courses';
 import Products from './Pages/Products';
 import About from './Pages/About';
 import SeagrassIdentify from './Pages/SeagrassIdentify';
+import ViewNews from './Pages/ViewNews';
 
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
           <Route path='/product' element={<Products />} />
           <Route path='/about' element={<About />} />
           <Route path='/identify seagrass' element={<SeagrassIdentify />} />
+          <Route path='/viewFullNews' element={<ViewNews />}/>
         </Routes>
         <Footer />
       </BrowserRouter>
