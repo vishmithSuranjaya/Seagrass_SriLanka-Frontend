@@ -1,14 +1,33 @@
-import { Link, useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation, useParams } from 'react-router-dom';
+import axios from 'axios';
 
 const Breadcrumb = () => {
   const location = useLocation();
+  const { id } = useParams(); // For blogFullView/:id
   const pathnames = location.pathname.split('/').filter(Boolean);
+  const [blogTitle, setBlogTitle] = useState('');
+
+  // Fetch blog title using blog ID
+  useEffect(() => {
+    const fetchTitle = async () => {
+      if (location.pathname.includes('blogFullView') && id) {
+        try {
+          const res = await axios.get(`http://localhost:8000/api/blogs/${id}/`);
+          setBlogTitle(res.data.title);
+        } catch (error) {
+          console.error('Failed to fetch blog title:', error);
+        }
+      }
+    };
+    fetchTitle();
+  }, [id, location.pathname]);
 
   // Custom route mapping
   const routeMap = {
     blogFullView: {
       label: 'Blog',
-      to: '/blog', // where to actually go
+      to: '/blog',
     },
   };
 
@@ -23,14 +42,14 @@ const Breadcrumb = () => {
 
         {pathnames.map((segment, index) => {
           const isLast = index === pathnames.length - 1;
-
           let label = segment;
           let to = '/' + pathnames.slice(0, index + 1).join('/');
 
-          // Apply custom route label and redirect if in routeMap
           if (routeMap[segment]) {
             label = routeMap[segment].label;
             to = routeMap[segment].to;
+          } else if (segment === id && blogTitle) {
+            label = blogTitle; // show blog title instead of ID
           } else {
             label = decodeURIComponent(segment)
               .replace(/-/g, ' ')

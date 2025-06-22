@@ -34,7 +34,7 @@ const Home = () => {
             <h2 className="text-5xl sm:text-6xl font-bold mb-4 pb-4  text-[#1B7B19] text-center font-serif">
               What is Seagrass?
             </h2>
-            <p className="text-gray-900 leading-relaxed text-xl text-left font-serif">
+            <p className="text-gray-900 leading-relaxed text-xl text-left font-serif text-justify">
               Seagrass refers to flowering plants that grow in shallow marine
               waters, forming dense underwater meadows. Often mistaken for
               seaweed, seagrasses are actually more closely related to land
@@ -87,7 +87,7 @@ const Home = () => {
 
         {/* Right Column - Paragraph */}
         <div className="w-full md:w-1/2 flex items-center">
-          <p className="text-gray-900 leading-relaxed text-xl font-serif">
+          <p className="text-gray-900 leading-relaxed text-xl font-serif text-justify">
             Seagrass is essential for a healthy ocean and planet. It absorbs
             carbon dioxide, supports marine life, keeps water clean, and
             protects coastlines from erosion. Seagrass also helps global
