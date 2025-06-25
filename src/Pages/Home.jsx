@@ -32,18 +32,14 @@ const Home = () => {
           {/* Left: Text */}
           <div className="justify-center h-[400] ">
             <h2 className="text-5xl sm:text-6xl font-bold mb-4 pb-4  text-[#1B7B19] text-center font-serif">
-              What is Seagrass?
+              Nature’s Underwater Wonder: Seagrass
             </h2>
             <p className="text-gray-900 leading-relaxed text-xl text-left font-serif">
-              Seagrass refers to flowering plants that grow in shallow marine
-              waters, forming dense underwater meadows. Often mistaken for
-              seaweed, seagrasses are actually more closely related to land
-              grasses and play a vital role in coastal ecosystems. Seagrass is
-              essential for a healthy ocean and planet. It absorbs carbon
-              dioxide, supports marine life, keeps water clean, and protects
-              coastlines from erosion. Seagrass also helps global fisheries, but
-              it's quickly disappearing due to pollution and human impact—making
-              its protection more important than ever.
+              Beneath the ocean’s surface lies a world of green — seagrass meadows, delicate yet powerful. These flowering plants sway gently with the tides, 
+              covering the sea floor like an underwater rainforest.They’re not seaweed, but true plants with roots, leaves, and even tiny blossoms. Quietly working behind the scenes, 
+              seagrass brings life to the ocean, offering a home to marine creatures and helping our planet breathe.Seagrass is beauty, balance, and life — all beneath the waves.
+
+
             </p>
           </div>
 
@@ -88,11 +84,9 @@ const Home = () => {
         {/* Right Column - Paragraph */}
         <div className="w-full md:w-1/2 flex items-center">
           <p className="text-gray-900 leading-relaxed text-xl font-serif">
-            Seagrass is essential for a healthy ocean and planet. It absorbs
-            carbon dioxide, supports marine life, keeps water clean, and
-            protects coastlines from erosion. Seagrass also helps global
-            fisheries, but it's quickly disappearing due to pollution and human
-            impact—making its protection more important than ever.
+            Seagrasses are the ocean’s hidden heroes.They fight climate change by absorbing carbon faster than rainforests, protect coastlines from erosion, and keep our waters clean. 
+            These underwater plants are home to fish, turtles, and countless marine creatures—and support millions of people who depend on the sea.
+            But seagrasses are disappearing fast due to pollution and human activity.Saving seagrass means saving marine life, protecting coastlines, and securing our planet’s future
           </p>
         </div>
       </div>
