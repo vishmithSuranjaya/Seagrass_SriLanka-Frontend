@@ -69,7 +69,7 @@ const Comments = (props) => {
 
             <button
               onClick={handleCommentSubmit}
-              className="mt-4 w-full bg-[#1B7B19] hover:bg-[#1d8c1b] text-white py-2 rounded"
+              className="mt-4 w-full bg-[#1B7B19] hover:bg-[#1d8c1b] text-white py-2 rounded hover:cursor-pointer"
             >
               Submit Comment
             </button>

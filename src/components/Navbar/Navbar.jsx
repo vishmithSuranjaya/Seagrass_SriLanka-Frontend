@@ -74,7 +74,7 @@ const Navbar = () => {
                 }}
                 className="hidden md:block bg-green-700 text-white px-4 py-2 rounded-md hover:bg-green-800 transition duration-200"
               >
-                Subscribe
+                Login
               </button>
             )}
 
@@ -124,7 +124,7 @@ const Navbar = () => {
                 }}
                 className="bg-[#1B7B19] text-white px-5 py-2 rounded-md hover:bg-green-800 transition duration-200"
               >
-                Subscribe
+                Login
               </button>
             )}
           </ul>

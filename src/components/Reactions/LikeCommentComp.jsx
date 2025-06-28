@@ -15,13 +15,32 @@ const LikeCommentComp = (props) => {
   const [comment, setComment] = useState("");
   const navigate = useNavigate();
 
-  const toggleLike = () => {
-    if (liked) {
-      setLikes((prev) => prev - 1);
-    } else {
-      setLikes((prev) => prev + 1);
-    }
-    setLiked(!liked);
+  const toggleLike = async () => {
+    const token = localStorage.getItem("access_token");
+
+  if (!token) {
+    toast.error("Please log in to like this post");
+    return;
+  }
+
+  try {
+    const response = await axios.post(
+      `http://localhost:8000/api/blogs/${props.blog_id}/like/`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    // Update UI with backend response
+    setLiked(response.data.liked);         // true or false
+    setLikes(response.data.like_count);    // updated count
+  } catch (error) {
+    console.error("Error toggling like:", error);
+    toast.error("Failed to like/unlike the blog");
+  }
   };
 
   // to fetch all the comments from the backend
