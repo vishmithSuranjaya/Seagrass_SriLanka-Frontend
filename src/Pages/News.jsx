@@ -5,7 +5,6 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useNavigate } from 'react-router-dom';
-import React from "react";
 import Breadcrumb from "../components/breadcrumb/BreadCrumb";
 
 

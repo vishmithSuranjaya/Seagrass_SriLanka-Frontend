@@ -5,6 +5,7 @@ import imag2 from "../assets/PC290412.jpg";
 import imag3 from "../assets/Photo-6.jpg";
 import imag4 from "../assets/seagrass_leaves.jpg";
 import NewsHomepage from "../components/news_homepage/NewsHomepage";
+import Blogs_Homepage from "../components/blogs_Homepage/Blogs_Homepage";
 
 const Home = () => {
   return (
@@ -74,7 +75,9 @@ const Home = () => {
         <hr className="w-full mb-6" />
       </div>
       {/* some blogs comes here */}
-      <h3 className="text-center text-red-500">Some blogs comes here..</h3>
+      <div>
+        <Blogs_Homepage />
+      </div>
 
       <div className="flex flex-wrap md:flex-nowrap px-4 py-8 gap-8">
         {/* Left Column - Heading */}
