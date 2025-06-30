@@ -24,7 +24,7 @@ const BlogFullView = () => {
           if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
           const data = await response.json();
           setBlog(data);
-          
+    
         } catch (err) {
           setError(err.message);
         } finally {
@@ -61,7 +61,7 @@ const BlogFullView = () => {
                 <img src={testImg} alt="profile" className="w-16 h-16 rounded-full" />
                 <div>
                   <h5 className="font-bold font-serif text-lg">{blog.full_name|| "Unknown Author"}</h5>
-                  
+                  <h1>{blog.user_has_liked}</h1>
                   <time className="text-sm font-semibold">
                     {blog.date} <br />
                     {blog.time}
@@ -103,7 +103,13 @@ const BlogFullView = () => {
         {/* Like and Comment Buttons */}
         <div className="text-base font-normal not-prose">
           {!loading && (
-          <LikeCommentComp blog_id={blog.blog_id} cmtCount={blog.comment_id} fetchBlog={fetchBlog}/>
+          <LikeCommentComp 
+            blog_id={blog.blog_id} 
+            cmtCount={blog.comment_id} 
+            fetchBlog={fetchBlog} 
+            like_count={blog.like_count}
+            user_has_liked={blog.user_has_liked}
+            />
         )}
         </div>
 

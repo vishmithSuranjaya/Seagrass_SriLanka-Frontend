@@ -21,7 +21,7 @@ const Home = () => {
   {/* White Wave */}
   <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-[0] z-10">
     <svg
-      className="relative block w-[calc(100%+1.3px)] h-[100px]"
+      className="relative block w-[calc(100%+1.3px)] h-[80px]"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 1200 120"
       preserveAspectRatio="none"

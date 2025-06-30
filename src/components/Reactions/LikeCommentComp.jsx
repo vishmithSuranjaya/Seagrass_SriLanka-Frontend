@@ -1,4 +1,4 @@
-import React, { use, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { AiOutlineLike } from "react-icons/ai";
 import { PiShareFat } from "react-icons/pi";
 import { BiComment } from "react-icons/bi";
@@ -7,45 +7,81 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const LikeCommentComp = (props) => {
-
   const blog_id = props.blog_id;
-  const [liked, setLiked] = useState(false);
-  const [likes, setLikes] = useState(Number(props.likeCount) || 0);
+  const [liked, setLiked] = useState(props.user_has_liked || false);
+  const [likes, setLikes] = useState(Number(props.like_count) || 0);
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [comment, setComment] = useState("");
   const navigate = useNavigate();
+  const [pendingLike, setPendingLike] = useState(null);
+  const debounceTimer = useRef(null);
 
-  const toggleLike = async () => {
+  //  Only initialize liked once (to prevent reverting back after user clicks)
+  useEffect(() => {
+    if (props.user_has_liked !== undefined) {
+      setLiked(props.user_has_liked);
+    }
+  }, []);
+
+  //  Debounced API sync
+  useEffect(() => {
+    if (pendingLike !== null) {
+      if (debounceTimer.current) clearTimeout(debounceTimer.current);
+
+      debounceTimer.current = setTimeout(async () => {
+        const token = localStorage.getItem("access_token");
+        console.log(token)
+        if (!token) return;
+
+        try {
+          const response = await axios.post(
+            `http://localhost:8000/api/blogs/${blog_id}/like/`,
+            {},
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json"
+              },
+            }
+          );
+
+          setLiked(response.data.liked);
+          setLikes(response.data.like_count);
+
+          //  Refresh full blog data from backend
+          if (props.fetchBlog) {
+            await props.fetchBlog();
+          }
+
+        } catch (err) {
+          toast.error("Failed to sync like with server");
+          setLiked((prev) => !prev);
+          setLikes((prev) => (pendingLike ? prev - 1 : prev + 1));
+        } finally {
+          setPendingLike(null);
+        }
+      }, 700);
+    }
+
+    return () => clearTimeout(debounceTimer.current);
+  }, [pendingLike]);
+
+  //  Optimistic UI update
+  const handleLikeClick = () => {
     const token = localStorage.getItem("access_token");
+    if (!token) {
+      toast.error("Please log in to like this post");
+      return;
+    }
 
-  if (!token) {
-    toast.error("Please log in to like this post");
-    return;
-  }
+    const newLiked = !liked;
+    const newLikes = newLiked ? likes + 1 : likes - 1;
 
-  try {
-    const response = await axios.post(
-      `http://localhost:8000/api/blogs/${props.blog_id}/like/`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    // Update UI with backend response
-    setLiked(response.data.liked);         // true or false
-    setLikes(response.data.like_count);    // updated count
-  } catch (error) {
-    console.error("Error toggling like:", error);
-    toast.error("Failed to like/unlike the blog");
-  }
+    setLiked(newLiked);
+    setLikes(newLikes);
+    setPendingLike(newLiked);
   };
 
-  // to fetch all the comments from the backend
-
-  // to handle the comment submittion
   const handleCommentSubmit = async () => {
     try {
       const token = localStorage.getItem("access_token");
@@ -53,7 +89,7 @@ const LikeCommentComp = (props) => {
         toast.error("Please log in to post a comment");
         return false;
       }
-      
+
       await axios.post(
         "http://localhost:8000/api/blogs/create/comment/",
         {
@@ -64,14 +100,14 @@ const LikeCommentComp = (props) => {
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type":"application/json"
+            "Content-Type": "application/json"
           },
         }
       );
       toast.success("Comment posted Successfully!");
       setShowCommentModal(false);
       await props.fetchBlog();
-      
+
     } catch (error) {
       toast.error("Failed to post comment");
       console.error(error);
@@ -90,7 +126,7 @@ const LikeCommentComp = (props) => {
               className={`hover:scale-105 transition duration-200 ${
                 liked ? "text-blue-600" : "text-gray-600"
               }`}
-              onClick={toggleLike}
+              onClick={handleLikeClick}
             />
             <span className="text-sm">{likes}</span>
           </div>
@@ -101,7 +137,6 @@ const LikeCommentComp = (props) => {
               className="hover:scale-105 transition duration-200 cursor-pointer"
               onClick={() => setShowCommentModal(true)}
             />
-            <span className="text-sm"></span>
           </div>
 
           {/* SHARE */}
@@ -109,30 +144,25 @@ const LikeCommentComp = (props) => {
             <PiShareFat className="hover:scale-105 transition duration-200" />
           </div>
         </div>
+
         {/* COMMENT MODAL */}
         {showCommentModal && (
-          <div className="fixed inset-0 z-50 bg- backdrop-blur pacity-50 flex justify-center items-center">
+          <div className="fixed inset-0 z-50 backdrop-blur bg-opacity-50 flex justify-center items-center">
             <div className="bg-white p-6 rounded-lg shadow-lg w-1/3 relative">
-              {/* Close Button */}
               <button
                 onClick={() => setShowCommentModal(false)}
                 className="absolute top-2 right-4 text-gray-500 hover:text-black text-2xl font-bold"
               >
                 &times;
               </button>
-
-              <h2 className="text-lg font-semibold mb-4 text-center">
-                Leave a Comment
-              </h2>
-
+              <h2 className="text-lg font-semibold mb-4 text-center">Leave a Comment</h2>
               <textarea
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
                 rows={4}
                 placeholder="Write your comment..."
                 className="w-full border border-gray-300 p-2 rounded-md resize-none"
-              ></textarea>
-
+              />
               <button
                 onClick={handleCommentSubmit}
                 className="mt-4 w-full bg-[#1B7B19] hover:bg-[#1d8c1b] text-white py-2 rounded"
