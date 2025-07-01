@@ -147,7 +147,7 @@ const Blog = () => {
                     className="text-lg text-[#1B7B19] hover:underline pt-5 font-serif hover:cursor-pointer"
                     onClick={() => handleSeeMore(blog.blog_id, blog.user_id)}
                   >
-                    see more
+                    read more
                   </button>
                 </div>
               </div>

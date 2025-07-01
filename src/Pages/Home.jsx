@@ -4,6 +4,8 @@ import imag1 from "../assets/Photo-1.jpg";
 import imag2 from "../assets/PC290412.jpg";
 import imag3 from "../assets/Photo-6.jpg";
 import imag4 from "../assets/seagrass_leaves.jpg";
+import NewsHomepage from "../components/news_homepage/NewsHomepage";
+import Blogs_Homepage from "../components/blogs_Homepage/Blogs_Homepage";
 
 const Home = () => {
   return (
@@ -37,10 +39,8 @@ const Home = () => {
 
 
       {/* this is to display some news from the db */}
-      <div>
-        <h1 className="p-10 text-red-500 text-center">
-          news component comes here..
-        </h1>
+      <div className="">
+        <NewsHomepage />
       </div>
 
       {/* What is Seagrass Section */}
@@ -51,18 +51,14 @@ const Home = () => {
           {/* Left: Text */}
           <div className="justify-center h-[400] ">
             <h2 className="text-5xl sm:text-6xl font-bold mb-4 pb-4  text-[#1B7B19] text-center font-serif">
-              What is Seagrass?
+              Nature’s Underwater Wonder: Seagrass
             </h2>
-            <p className="text-gray-900 leading-relaxed text-xl text-left font-serif text-justify">
-              Seagrass refers to flowering plants that grow in shallow marine
-              waters, forming dense underwater meadows. Often mistaken for
-              seaweed, seagrasses are actually more closely related to land
-              grasses and play a vital role in coastal ecosystems. Seagrass is
-              essential for a healthy ocean and planet. It absorbs carbon
-              dioxide, supports marine life, keeps water clean, and protects
-              coastlines from erosion. Seagrass also helps global fisheries, but
-              it's quickly disappearing due to pollution and human impact—making
-              its protection more important than ever.
+            <p className="text-gray-900 leading-relaxed text-xl text-left font-serif">
+              Beneath the ocean’s surface lies a world of green — seagrass meadows, delicate yet powerful. These flowering plants sway gently with the tides, 
+              covering the sea floor like an underwater rainforest.They’re not seaweed, but true plants with roots, leaves, and even tiny blossoms. Quietly working behind the scenes, 
+              seagrass brings life to the ocean, offering a home to marine creatures and helping our planet breathe.Seagrass is beauty, balance, and life — all beneath the waves.
+
+
             </p>
           </div>
 
@@ -94,7 +90,9 @@ const Home = () => {
         <hr className="w-full mb-6" />
       </div>
       {/* some blogs comes here */}
-      <h3 className="text-center text-red-500">Some blogs comes here..</h3>
+      <div>
+        <Blogs_Homepage />
+      </div>
 
       <div className="flex flex-wrap md:flex-nowrap px-4 py-8 gap-8">
         {/* Left Column - Heading */}
@@ -106,12 +104,10 @@ const Home = () => {
 
         {/* Right Column - Paragraph */}
         <div className="w-full md:w-1/2 flex items-center">
-          <p className="text-gray-900 leading-relaxed text-xl font-serif text-justify">
-            Seagrass is essential for a healthy ocean and planet. It absorbs
-            carbon dioxide, supports marine life, keeps water clean, and
-            protects coastlines from erosion. Seagrass also helps global
-            fisheries, but it's quickly disappearing due to pollution and human
-            impact—making its protection more important than ever.
+          <p className="text-gray-900 leading-relaxed text-xl font-serif">
+            Seagrasses are the ocean’s hidden heroes.They fight climate change by absorbing carbon faster than rainforests, protect coastlines from erosion, and keep our waters clean. 
+            These underwater plants are home to fish, turtles, and countless marine creatures—and support millions of people who depend on the sea.
+            But seagrasses are disappearing fast due to pollution and human activity.Saving seagrass means saving marine life, protecting coastlines, and securing our planet’s future
           </p>
         </div>
       </div>

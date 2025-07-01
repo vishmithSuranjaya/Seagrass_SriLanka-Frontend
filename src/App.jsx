@@ -16,6 +16,7 @@ import Courses from './Pages/Courses';
 import Products from './Pages/Products';
 import About from './Pages/About';
 import SeagrassIdentify from './Pages/SeagrassIdentify';
+import ViewNews from './Pages/ViewNews';
 import AdminHome from './Pages/Admin/AdminHome';
 import AdminNews from './Pages/Admin/AdminNews';
 import AdminEvents from './Pages/Admin/AdminEvents';
@@ -26,6 +27,8 @@ import { AuthProvider } from './components/Login_Register/AuthContext';
 import ProductFullView from './Pages/ProductFullView';
 import BlogFullView from './Pages/BlogFullView';
 
+// ← Added import for ProtectedRoute
+import ProtectedRoute from './components/Login_Register/ProtectedRoute';
 
 function AppWrapper() {
   const location = useLocation();
@@ -46,7 +49,16 @@ function AppWrapper() {
         <Route path="/identify seagrass" element={<SeagrassIdentify />} />
         <Route path='ViewfullProducttem' element={<ProductFullView />} />
         <Route path="/blogFullView/:id" element={<BlogFullView />} />
-        <Route path="/admin" element={<AdminHome />}>
+
+        {/* ← Changed /admin route to be wrapped in ProtectedRoute */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute adminOnly={true}>
+              <AdminHome />
+            </ProtectedRoute>
+          }
+        >
           <Route path="adminevents" element={<AdminEvents />} />
           <Route path="adminnews" element={<AdminNews />} />
           <Route path="adminblogs" element={<AdminBlogs />} />
