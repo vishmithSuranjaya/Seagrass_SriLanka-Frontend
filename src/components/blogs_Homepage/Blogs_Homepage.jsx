@@ -48,7 +48,7 @@ const Blogs_Homepage = () => {
                   to={`/blogFullView/${blog.blog_id}`}
                   className="text-[#1B7B19] hover:underline"
                 >
-                  Read More →
+                  read more 
                 </Link>
               </div>
             </div>

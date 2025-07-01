@@ -24,6 +24,7 @@ import AdminUsers from './Pages/Admin/AdminUsers';
 import AdminSettings from './Pages/Admin/AdminSettings';
 import AdminBlogs from './Pages/Admin/AdminBlogs';
 import { AuthProvider } from './components/Login_Register/AuthContext';
+import ProductFullView from './Pages/ProductFullView';
 import BlogFullView from './Pages/BlogFullView';
 
 // ← Added import for ProtectedRoute
@@ -46,6 +47,7 @@ function AppWrapper() {
         <Route path="/product" element={<Products />} />
         <Route path="/about" element={<About />} />
         <Route path="/identify seagrass" element={<SeagrassIdentify />} />
+        <Route path='ViewfullProducttem' element={<ProductFullView />} />
         <Route path="/blogFullView/:id" element={<BlogFullView />} />
 
         {/* ← Changed /admin route to be wrapped in ProtectedRoute */}

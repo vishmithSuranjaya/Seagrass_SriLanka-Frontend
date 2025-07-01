@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { IoMdClose } from "react-icons/io";
-import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import BreadCrumb from "../components/breadcrumb/BreadCrumb";
 import axios from "axios";
 import AddBlogModal from "../components/AddNewBlog/AddNewBlog";
 import Skeleton from "../components/Loader/Skeleton";
+import Pagination from "../components/pagination/Pagination"; 
 
 const Blog = () => {
   const [showModal, setShowModal] = useState(false);
@@ -15,9 +15,19 @@ const Blog = () => {
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [blogs, setBlogs] = useState([]);
-
-  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
+
+  const access_token = localStorage.getItem('access_token');
+  const navigate = useNavigate();
+
+  // PAGINATION STATE
+  const [currentPage, setCurrentPage] = useState(1);
+  const blogsPerPage = 4;
+
+  // Slice blogs for current page
+  const indexOfLastBlog = currentPage * blogsPerPage;
+  const indexOfFirstBlog = indexOfLastBlog - blogsPerPage;
+  const currentBlogs = blogs.slice(indexOfFirstBlog, indexOfLastBlog);
 
   useEffect(() => {
     fetchBlogs();
@@ -35,13 +45,14 @@ const Blog = () => {
     }
   };
 
-  const handleSeeMore = (id) => {
-    navigate(`/blogFullView/${id}`);
+  const handleSeeMore = (id, user_id) => {
+    navigate(`/blogFullView/${id}`, {
+      state: { user_id },
+    });
   };
 
   const handlePost = async (e) => {
     e.preventDefault();
-
     if (!title.trim() || !content.trim()) {
       toast.error("Blog title and content cannot be empty.");
       return;
@@ -57,23 +68,20 @@ const Blog = () => {
     formData.append("content", content);
     formData.append("image", imageFile);
 
-    console.log("FormData contents in handlePost:");
-    for (const [key, value] of formData.entries()) {
-      console.log(`${key}:`, value);
-    }
-
     try {
-      const token = localStorage.getItem("access_token"); 
+      const token = localStorage.getItem("access_token");
       if (!token) {
         toast.error("Please log in to post a blog.");
         return;
       }
+
       await axios.post("http://localhost:8000/api/blogs/post/", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,
         },
       });
+
       toast.success("Blog posted successfully!");
       setShowModal(false);
       setTitle("");
@@ -98,14 +106,12 @@ const Blog = () => {
   return (
     <div className="mt-25 px-6">
       <ToastContainer position="top-right" autoClose={3000} />
-
       <BreadCrumb />
 
       <h1 className="mt-2 mb-10 text-[#1B7B19] text-4xl font-bold text-center">
         Blogs
       </h1>
 
-      {/* Add Blog Button */}
       <div className="w-4/5 max-w-6xl mx-auto p-4">
         <button
           onClick={() => setShowModal(true)}
@@ -115,16 +121,12 @@ const Blog = () => {
         </button>
       </div>
 
-      {/* Blogs */}
       <div className="flex flex-col gap-6 w-4/5 max-w-6xl mx-auto mt-10 mb-8 ">
         {isLoading
-
-          ? // Show 3 skeleton loaders while fetching
-            Array(2)
-            
+          ? Array(4)
               .fill(0)
               .map((_, index) => <Skeleton key={index} type="blog_list" />)
-          : blogs.map((blog) => (
+          : currentBlogs.map((blog) => (
               <div
                 key={blog.blog_id}
                 className="bg-white shadow-md rounded-lg overflow-hidden flex flex-col md:flex-row hover:scale-105 transition-transform duration-200 hover:shadow-lg transition-shadow duration-300"
@@ -142,27 +144,31 @@ const Blog = () => {
                     {blog.content}
                   </p>
                   <button
-                    className="text-lg text-[#1B7B19] hover:underline pt-5 font-serif"
-                    onClick={() => handleSeeMore(blog.blog_id)}
+                    className="text-lg text-[#1B7B19] hover:underline pt-5 font-serif hover:cursor-pointer"
+                    onClick={() => handleSeeMore(blog.blog_id, blog.user_id)}
                   >
-                    see more
+                    read more
                   </button>
                 </div>
               </div>
             ))}
       </div>
 
+      {/* Pagination */}
+      {!isLoading && blogs.length > blogsPerPage && (
+        <Pagination
+          totalBlogs={blogs.length}
+          blogsPerPage={blogsPerPage}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
+      )}
+
       {/* Modal */}
       <AddBlogModal
         show={showModal}
         onClose={() => setShowModal(false)}
         onPost={async (formData) => {
-          // Log FormData contents
-          console.log("FormData contents in AddBlogModal onPost:");
-          for (const [key, value] of formData.entries()) {
-            console.log(`${key}:`, value);
-          }
-
           try {
             const token = localStorage.getItem("access_token");
             if (!token) {
@@ -177,7 +183,7 @@ const Blog = () => {
             });
             toast.success("Blog posted successfully!");
             setShowModal(false);
-            fetchBlogs(); // Refresh blog list
+            fetchBlogs();
             return true;
           } catch (error) {
             toast.error("Failed to post blog.");

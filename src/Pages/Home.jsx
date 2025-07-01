@@ -9,18 +9,37 @@ import Blogs_Homepage from "../components/blogs_Homepage/Blogs_Homepage";
 
 const Home = () => {
   return (
-    <div className="w-full ">
+    <div className="w-full">
       {/* Banner Section */}
-      <div className="w-full">
-        <img
-          src={Banner}
-          alt="Banner"
-          className="w-full h-[400px] object-cover my-20"
-        />
-      </div>
+  <div className="relative w-full mt-20">
+  {/* Banner Image */}
+  <img
+    src={Banner}
+    alt="Banner"
+    className="w-full h-[400px] object-cover"
+  />
+
+  {/* Bottom Wave */}
+  {/* White Wave */}
+  <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-[0] z-10">
+    <svg
+      className="relative block w-[calc(100%+1.3px)] h-[80px]"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 1200 120"
+      preserveAspectRatio="none"
+    >
+      <path
+        d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z"
+        className="fill-white"
+      />
+    </svg>
+  </div>
+</div>
+
+
 
       {/* this is to display some news from the db */}
-      <div>
+      <div className="">
         <NewsHomepage />
       </div>
 
