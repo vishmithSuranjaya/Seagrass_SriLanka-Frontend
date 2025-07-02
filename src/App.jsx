@@ -23,6 +23,8 @@ import AdminEvents from './Pages/Admin/AdminEvents';
 import AdminUsers from './Pages/Admin/AdminUsers';
 import AdminSettings from './Pages/Admin/AdminSettings';
 import AdminBlogs from './Pages/Admin/AdminBlogs';
+import AdminDashboard from './Pages/Admin/AdminDashboard';
+import AdminProducts from './Pages/Admin/AdminProducts';
 import { AuthProvider } from './components/Login_Register/AuthContext';
 import ProductFullView from './Pages/ProductFullView';
 import BlogFullView from './Pages/BlogFullView';
@@ -60,6 +62,8 @@ function AppWrapper() {
           }
         >
           <Route path="adminevents" element={<AdminEvents />} />
+          <Route path="adminProducts" element={<AdminProducts />} />
+          <Route path="adminDashboard" element={<AdminDashboard />} />
           <Route path="adminnews" element={<AdminNews />} />
           <Route path="adminblogs" element={<AdminBlogs />} />
           <Route path="adminsettings" element={<AdminSettings />} />
