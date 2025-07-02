@@ -1,25 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { motion } from 'framer-motion';
-import { AuthContext } from '../../components/Login_Register/AuthContext';
 import {
-  FiHome,
-  FiCalendar,
-  FiUsers,
-  FiFileText,
-  FiSettings,
-  FiGlobe,
-  FiLogOut,
-  FiChevronLeft,
-  FiChevronRight,
-  FiMenu,
+  FiHome, FiCalendar, FiUsers, FiFileText,
+  FiSettings, FiGlobe, FiLogOut,
+  FiChevronLeft, FiChevronRight, FiMenu,
 } from 'react-icons/fi';
+import { FaShoppingCart } from "react-icons/fa";
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { useContext } from 'react';
+import { AuthContext } from '../../components/Login_Register/AuthContext';
 
 const navLinks = [
-  { icon: <FiHome />, label: 'Home', path: '/admin' },
+  { icon: <FiHome />, label: 'Dashboard', path: '/admin/adminDashboard' },
   { icon: <FiCalendar />, label: 'Events', path: '/admin/adminevents' },
   { icon: <FiGlobe />, label: 'News', path: '/admin/adminnews' },
+  { icon: <FaShoppingCart  />, label: 'Products', path: '/admin/adminProducts' },
   { icon: <FiUsers />, label: 'Users', path: '/admin/adminusers' },
   { icon: <FiFileText />, label: 'Blogs', path: '/admin/adminblogs' },
   { icon: <FiSettings />, label: 'Settings', path: '/admin/adminsettings' },
@@ -30,8 +24,14 @@ const AdminHome = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const { user, logout } = useContext(AuthContext);
 
-    const { user, logout } = useContext(AuthContext);
+  // Redirect to dashboard if path is exactly /admin
+  useEffect(() => {
+    if (location.pathname === '/admin' || location.pathname === '/admin/') {
+      navigate('/admin/adminDashboard', { replace: true });
+    }
+  }, [location.pathname, navigate]);
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -53,11 +53,9 @@ const AdminHome = () => {
           transition={{ duration: 0.35 }}
           style={{ backgroundColor: '#1B7B19' }}
           className={`${
-  collapsed ? 'w-20' : 'w-64'
-} fixed md:relative z-40 inset-y-0 left-0 text-white flex flex-col p-4 transition-all duration-300 h-full`}
-
+            collapsed ? 'w-20' : 'w-64'
+          } fixed md:relative z-40 inset-y-0 left-0 text-white flex flex-col p-4 transition-all duration-300 h-full`}
         >
-          {/* Toggle Arrow */}
           <div className="flex justify-end mb-2">
             <button
               onClick={() => setCollapsed(!collapsed)}
@@ -67,7 +65,6 @@ const AdminHome = () => {
             </button>
           </div>
 
-          {/* Logo */}
           {!collapsed && (
             <motion.div
               initial={{ opacity: 0 }}
@@ -79,7 +76,6 @@ const AdminHome = () => {
             </motion.div>
           )}
 
-          {/* User Profile */}
           {!collapsed && (
             <motion.div
               initial={{ y: -10, opacity: 0 }}
@@ -95,7 +91,6 @@ const AdminHome = () => {
             </motion.div>
           )}
 
-          {/* Navigation */}
           <nav className="flex flex-col gap-5 text-white text-md font-semibold flex-grow">
             {navLinks.map(({ icon, label, path }) => (
               <motion.div
@@ -106,11 +101,10 @@ const AdminHome = () => {
               >
                 <Link
                   to={path}
-                 className={`flex items-center gap-3 ${
-  location.pathname === path ? 'text-gray-300' : ''
-}`}
-
-                  onClick={() => setMobileMenuOpen(false)} // Close on mobile
+                  className={`flex items-center gap-3 ${
+                    location.pathname === path ? 'text-gray-300' : ''
+                  }`}
+                  onClick={() => setMobileMenuOpen(false)}
                 >
                   {icon}
                   {!collapsed && <span>{label}</span>}
@@ -118,13 +112,12 @@ const AdminHome = () => {
               </motion.div>
             ))}
 
-            {/* Logout */}
             <motion.div
               whileHover={{ scale: 1.05, x: 5 }}
               transition={{ type: 'spring', stiffness: 260, damping: 20 }}
               className="hover:text-gray-300 flex items-center gap-3 mt-6 cursor-pointer"
               onClick={() => {
-                logout()
+                logout();
                 setMobileMenuOpen(false);
               }}
             >
@@ -135,14 +128,11 @@ const AdminHome = () => {
         </motion.aside>
       )}
 
-      {/* Main Content */}
       <div
         className={`flex-1 flex flex-col ${
-  mobileMenuOpen ? 'blur-sm pointer-events-none select-none' : ''
-} transition-all duration-300`}
-
+          mobileMenuOpen ? 'blur-sm pointer-events-none select-none' : ''
+        } transition-all duration-300`}
       >
-        {/* Top Bar */}
         <motion.header
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -155,7 +145,6 @@ const AdminHome = () => {
           </div>
         </motion.header>
 
-        {/* Page Content */}
         <motion.main
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

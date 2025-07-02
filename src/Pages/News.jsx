@@ -7,7 +7,6 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { useNavigate } from 'react-router-dom';
 import Breadcrumb from "../components/breadcrumb/BreadCrumb";
 
-
 const News = () => {
   const [year, setYear] = useState('');
   const [month, setMonth] = useState('');
@@ -18,6 +17,7 @@ const News = () => {
   const [loading, setLoading] = useState(true);
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
+  const [imageErrors, setImageErrors] = useState({});
 
   const yearRef = useRef(null);
   const monthRef = useRef(null);
@@ -67,27 +67,44 @@ const News = () => {
         setFilteredNews(publishedNews);
         setLoading(false);
       })
-      .catch(err => {
-        console.error('Error fetching news:', err);
-        setLoading(false);
-      });
+      .catch(() => setLoading(false));
   }, []);
+
+  const handleImageError = (newsIndex) => {
+    setImageErrors(prev => ({
+      ...prev,
+      [newsIndex]: true
+    }));
+  };
+
+  const getImageUrl = (news, index) => {
+    if (imageErrors[index]) {
+      return 'https://via.placeholder.com/400x200?text=Image+Not+Available';
+    }
+    if (news.image && (news.image.startsWith('http://') || news.image.startsWith('https://'))) {
+      return news.image;
+    }
+    if (news.image && news.image.startsWith('/')) {
+      return `http://localhost:8000${news.image}`;
+    }
+    if (news.image) {
+      return `http://localhost:8000/media/${news.image}`;
+    }
+    return 'https://via.placeholder.com/400x200?text=No+Image';
+  };
 
   const handleSearch = () => {
     let results = allNews;
-
     if (year) {
       results = results.filter(item =>
         new Date(item.created_at).getFullYear() === parseInt(year)
       );
     }
-
     if (month) {
       results = results.filter(item =>
         new Date(item.created_at).getMonth() + 1 === parseInt(month)
       );
     }
-
     setFilteredNews(results);
   };
 
@@ -96,28 +113,27 @@ const News = () => {
     setMonth('');
     setFilteredNews(allNews);
     setSelectedDate(null);
+    setImageErrors({});
   };
 
   const handleCalendarSelect = (date) => {
     setSelectedDate(date);
     setYear(date?.getFullYear() || '');
     setMonth(date ? date.getMonth() + 1 : '');
-
     const filtered = allNews.filter(item =>
       new Date(item.created_at).toISOString().split('T')[0] === date.toISOString().split('T')[0]
     );
-
     setFilteredNews(filtered);
     setShowCalendar(false);
   };
 
   return (
     <div className="p-4 max-w-6xl mx-auto relative">
-      {/* Calendar Button */}
+      <Breadcrumb />
       <div ref={calendarBtnRef} className="absolute left-0 mt-20 ml-4">
         <button
           onClick={() => setShowCalendar(!showCalendar)}
-          className="flex items-center gap-2 px-4 py-2 bg-[#1B7B19] text-gray-100 rounded-md"
+          className="flex items-center gap-2 px-4 py-2 bg-[#1B7B19] text-gray-100 rounded-md hover:bg-green-800 transition-colors"
         >
           <Calendar size={20} />
           Filter by Calendar
@@ -133,16 +149,11 @@ const News = () => {
           </div>
         )}
       </div>
-
-      {/* Title */}
       <h1 className="text-4xl font-bold text-center text-green-700 pt-32 mb-12">
         News And Updates
       </h1>
-
-      {/* Filters */}
       <div className="flex justify-center items-center mb-16">
         <div className="flex flex-wrap gap-6 items-end">
-          {/* Year Filter */}
           <div className="flex flex-col" ref={yearRef}>
             <label className="mb-1 font-medium text-gray-800">Year</label>
             <div className="relative w-44">
@@ -150,7 +161,7 @@ const News = () => {
                 type="text"
                 value={year}
                 readOnly
-                className="bg-gray-300 text-black px-4 py-3 rounded-l-md w-full text-lg"
+                className="bg-gray-300 text-black px-4 py-3 rounded-l-md w-full text-lg cursor-pointer"
                 placeholder="YYYY"
               />
               <button
@@ -158,7 +169,7 @@ const News = () => {
                   setShowYearDropdown(!showYearDropdown);
                   setShowMonthDropdown(false);
                 }}
-                className="absolute right-0 top-0 h-full px-3 bg-[#1B7B19] text-white rounded-r-md"
+                className="absolute right-0 top-0 h-full px-3 bg-[#1B7B19] text-white rounded-r-md hover:bg-green-800 transition-colors"
               >
                 <ChevronDown size={20} />
               </button>
@@ -180,8 +191,6 @@ const News = () => {
               )}
             </div>
           </div>
-
-          {/* Month Filter */}
           <div className="flex flex-col" ref={monthRef}>
             <label className="mb-1 font-medium text-gray-800">Month</label>
             <div className="relative w-44">
@@ -189,7 +198,7 @@ const News = () => {
                 type="text"
                 value={months.find(m => m.number === parseInt(month))?.name || ''}
                 readOnly
-                className="bg-gray-300 text-black px-4 py-3 rounded-l-md w-full text-lg"
+                className="bg-gray-300 text-black px-4 py-3 rounded-l-md w-full text-lg cursor-pointer"
                 placeholder="MM"
               />
               <button
@@ -197,7 +206,7 @@ const News = () => {
                   setShowMonthDropdown(!showMonthDropdown);
                   setShowYearDropdown(false);
                 }}
-                className="absolute right-0 top-0 h-full px-3 bg-[#1B7B19] text-white rounded-r-md"
+                className="absolute right-0 top-0 h-full px-3 bg-[#1B7B19] text-white rounded-r-md hover:bg-green-800 transition-colors"
               >
                 <ChevronDown size={20} />
               </button>
@@ -219,21 +228,19 @@ const News = () => {
               )}
             </div>
           </div>
-
-          {/* Search / Reset Buttons */}
           <div className="flex flex-col gap-2">
             <label className="opacity-0 mb-1">Search</label>
             <div className="flex gap-2">
               <button
                 onClick={handleSearch}
-                className="bg-[#1B7B19] hover:bg-green-800 text-white px-6 py-3 text-lg rounded-md"
+                className="bg-[#1B7B19] hover:bg-green-800 text-white px-6 py-3 text-lg rounded-md transition-colors"
               >
                 Search
               </button>
               {(year || month) && (
                 <button
                   onClick={handleReset}
-                  className="bg-gray-400 hover:bg-gray-600 text-white px-6 py-3 text-lg rounded-md"
+                  className="bg-gray-400 hover:bg-gray-600 text-white px-6 py-3 text-lg rounded-md transition-colors"
                 >
                   Reset
                 </button>
@@ -242,8 +249,6 @@ const News = () => {
           </div>
         </div>
       </div>
-
-      {/* News Cards */}
       {loading ? (
         <div className="flex flex-col gap-6">
           {Array.from({ length: 3 }).map((_, idx) => (
@@ -253,28 +258,36 @@ const News = () => {
       ) : (
         <>
           {filteredNews.length === 0 ? (
-            <p className="text-center text-gray-500">No news found for selected criteria.</p>
+            <p className="text-center text-gray-500 text-lg">No news found for selected criteria.</p>
           ) : (
             filteredNews.map((news, index) => (
               <div
-                key={index}
-                className="border rounded-lg shadow-md p-6 flex flex-col md:flex-row gap-6 items-start mb-12"
+                key={news.id || index}
+                className="border rounded-lg shadow-md p-6 flex flex-col md:flex-row gap-6 items-start mb-12 hover:shadow-lg transition-shadow duration-300"
               >
-                <img
-                  src={`http://localhost:8000/media/${news.image}`}
-                  alt="News Poster"
-                  className="w-full md:w-96 rounded-lg"
-                />
+                <div className="w-full md:w-96 flex-shrink-0">
+                  <img
+                    src={getImageUrl(news, index)}
+                    alt={news.title || "News Image"}
+                    className="w-full h-48 md:h-64 object-cover rounded-lg"
+                    onError={() => handleImageError(index)}
+                    loading="lazy"
+                  />
+                </div>
                 <div className="flex-1 flex flex-col justify-between">
                   <div>
-                    <p className="text-green-700 font-semibold mb-2 text-lg">{news.title}</p>
-                    <p className="mb-3 font-medium">{new Date(news.created_at).toDateString()}</p>
-                    <div className="text-sm mb-3 leading-relaxed">{news.content}</div>
+                    <h2 className="text-green-700 font-semibold mb-2 text-xl">{news.title}</h2>
+                    <p className="mb-3 font-medium text-gray-600">
+                      {new Date(news.created_at).toDateString()}
+                    </p>
+                    <div className="text-gray-700 mb-3 leading-relaxed line-clamp-4">
+                      {news.content}
+                    </div>
                   </div>
                   <div className="flex justify-end">
                     <button
                       onClick={() => navigate('/viewFullNews', { state: { news } })}
-                      className="bg-[#1B7B19] hover:bg-green-800 text-white px-5 mt-10 py-2 rounded-md"
+                      className="bg-[#1B7B19] hover:bg-green-800 text-white px-5 mt-4 py-2 rounded-md transition-colors"
                     >
                       See more
                     </button>

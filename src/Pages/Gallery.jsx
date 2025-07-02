@@ -6,6 +6,7 @@ const Gallery = () => {
   const [images, setImages] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [popupImage, setPopupImage] = useState(null);
+  const [imageErrors, setImageErrors] = useState({});
 
   useEffect(() => {
     const fetchGalleryImages = async () => {
@@ -25,9 +26,28 @@ const Gallery = () => {
     fetchGalleryImages();
   }, []);
 
+  const handleImageError = (id) => {
+    setImageErrors((prev) => ({ ...prev, [id]: true }));
+  };
+
+  const getImageUrl = (img) => {
+    if (imageErrors[img.image_id]) {
+      return "https://via.placeholder.com/400x400?text=Image+Not+Available";
+    }
+    if (img.image?.startsWith("http://") || img.image?.startsWith("https://")) {
+      return img.image;
+    }
+    if (img.image?.startsWith("/")) {
+      return `http://localhost:8000${img.image}`;
+    }
+    if (img.image) {
+      return `http://localhost:8000/media/${img.image}`;
+    }
+    return "https://via.placeholder.com/400x400?text=No+Image";
+  };
+
   return (
     <div className="relative">
-      {/* Main gallery container */}
       <div className="mt-24 px-4 sm:px-10 lg:px-20 pb-20 max-w-7xl mx-auto transition duration-200">
         <Breadcrumb />
         <h1 className="text-4xl font-bold text-center text-green-700 mb-12">
@@ -49,9 +69,10 @@ const Gallery = () => {
             >
               <div className="aspect-square overflow-hidden">
                 <img
-                  src={img.image}
+                  src={getImageUrl(img)}
                   alt={img.caption}
                   className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                  onError={() => handleImageError(img.image_id)}
                 />
               </div>
               {img.caption && (
@@ -64,10 +85,9 @@ const Gallery = () => {
         </div>
       </div>
 
-      {/* Popup modal (centered, scrollable if needed) */}
       {popupImage && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
-          <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl p-4 border border-gray-300 max-h-[90vh] overflow-y-auto">
+          <div className="relative max-w-auto bg-white rounded-2xl shadow-2xl p-4 border border-gray-300 max-h-[90vh] overflow-y-auto">
             <button
               onClick={() => setPopupImage(null)}
               aria-label="Close popup"
@@ -76,11 +96,12 @@ const Gallery = () => {
               &times;
             </button>
 
-            <div className="w-full aspect-square rounded-lg overflow-hidden">
+            <div className="rounded-lg overflow-hidden mb-4 h-[550px]">
               <img
-                src={popupImage.image}
+                src={getImageUrl(popupImage)}
                 alt={popupImage.caption}
                 className="w-full h-full object-cover"
+                onError={() => handleImageError(popupImage.image_id)}
               />
             </div>
 
