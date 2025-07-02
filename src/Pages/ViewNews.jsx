@@ -5,16 +5,38 @@ const ViewFullNews = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [newsData, setNewsData] = useState(null);
+  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     // Check if news data is passed from the previous page
     if (location.state && location.state.news) {
       setNewsData(location.state.news);
     } else {
-      // Fallback: fetch from backend using news_id from URL params or redirect
-      navigate('/'); // Redirect back if no data (optional)
+      // Fallback: redirect back if no data
+      navigate('/news');
     }
   }, [location, navigate]);
+
+  // Function to get proper image URL (same logic as in News.jsx)
+  const getImageUrl = (news) => {
+    if (imageError) {
+      return 'https://via.placeholder.com/800x400?text=Image+Not+Available';
+    }
+    if (news.image && (news.image.startsWith('http://') || news.image.startsWith('https://'))) {
+      return news.image;
+    }
+    if (news.image && news.image.startsWith('/')) {
+      return `http://localhost:8000${news.image}`;
+    }
+    if (news.image) {
+      return `http://localhost:8000/media/${news.image}`;
+    }
+    return 'https://via.placeholder.com/800x400?text=No+Image';
+  };
+
+  const handleImageError = () => {
+    setImageError(true);
+  };
 
   if (!newsData) {
     return <p className="text-center mt-20 text-gray-500">Loading news details...</p>;
@@ -24,7 +46,7 @@ const ViewFullNews = () => {
     <div className="max-w-4xl mx-auto p-6 mt-20">
       <button
         onClick={() => navigate(-1)}
-        className="mb-6 text-white bg-[#1B7B19] px-4 py-2 rounded hover:bg-green-800"
+        className="mb-6 text-white bg-[#1B7B19] px-4 py-2 rounded hover:bg-green-800 transition-colors"
       >
         ← Back
       </button>
@@ -33,9 +55,11 @@ const ViewFullNews = () => {
       <p className="text-gray-600 mb-4 font-medium">{new Date(newsData.created_at).toDateString()}</p>
       
       <img
-        src={`http://localhost:8000/media/${newsData.image}`}
-        alt="News"
+        src={getImageUrl(newsData)}
+        alt={newsData.title || "News Image"}
         className="w-full h-auto mb-6 rounded-md shadow-md"
+        onError={handleImageError}
+        loading="lazy"
       />
 
       <div className="text-lg leading-relaxed text-gray-800 whitespace-pre-line">

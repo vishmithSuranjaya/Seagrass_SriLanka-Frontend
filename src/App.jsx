@@ -29,6 +29,7 @@ import { AuthProvider } from './components/Login_Register/AuthContext';
 import ProductFullView from './Pages/ProductFullView';
 import BlogFullView from './Pages/BlogFullView';
 
+
 // ← Added import for ProtectedRoute
 import ProtectedRoute from './components/Login_Register/ProtectedRoute';
 
@@ -51,6 +52,7 @@ function AppWrapper() {
         <Route path="/identify seagrass" element={<SeagrassIdentify />} />
         <Route path='ViewfullProducttem' element={<ProductFullView />} />
         <Route path="/blogFullView/:id" element={<BlogFullView />} />
+        <Route path="/viewFullNews" element={<ViewNews />} /> 
 
         {/* ← Changed /admin route to be wrapped in ProtectedRoute */}
         <Route
