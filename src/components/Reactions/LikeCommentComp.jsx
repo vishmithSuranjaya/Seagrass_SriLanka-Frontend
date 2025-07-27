@@ -54,6 +54,7 @@ const LikeCommentComp = (props) => {
           }
 
         } catch (err) {
+          console.error("Like sync error:", err.response?.data || err.message);
           toast.error("Failed to sync like with server");
           setLiked((prev) => !prev);
           setLikes((prev) => (pendingLike ? prev - 1 : prev + 1));

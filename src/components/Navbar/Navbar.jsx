@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import { MdWbSunny } from "react-icons/md";
@@ -16,7 +16,12 @@ const Navbar = () => {
 
   const { user, logout } = useContext(AuthContext);
 
-  const toggleMode = () => setIsDark((prev) => !prev);
+  const toggleMode = () => {
+    // setIsDark((prev) => !prev)
+    const newMode = !isDark;
+    setIsDark(newMode);
+    localStorage.setItem("theme", newMode ? "light" : "dark"); /// theme saved in localstorage
+  };
   const toggleMenu = () => setMenuOpen((prev) => !prev);
 
   const navLinks = [

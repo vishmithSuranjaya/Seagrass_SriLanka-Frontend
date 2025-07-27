@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Banner from "../assets/banner.webp"; // Make sure this path is correct
 import imag1 from "../assets/Photo-1.jpg";
 import imag2 from "../assets/PC290412.jpg";

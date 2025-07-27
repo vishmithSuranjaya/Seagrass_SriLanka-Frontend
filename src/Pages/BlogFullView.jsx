@@ -41,7 +41,7 @@ const BlogFullView = () => {
   }
 
   return (
-    <div className="mt-25 px-6">
+    <div className="mt-24 px-20">
       <Breadcrumb />
 
       <div className="w-3/4 mx-auto p-10">
