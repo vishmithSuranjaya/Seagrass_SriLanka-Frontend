@@ -7,19 +7,19 @@ import axios from "axios";
 import AddBlogModal from "../components/AddNewBlog/AddNewBlog";
 import Skeleton from "../components/Loader/Skeleton";
 import Pagination from "../components/pagination/Pagination";
+import { IoMdClose } from "react-icons/io"; // Import the close icon
 
 const Blog = () => {
   const [showModal, setShowModal] = useState(false);
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [imageFile, setImageFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
+  // Removed title, content, imageFile, imagePreview from here
+  // as they are now managed internally by AddBlogModal for its undo/redo feature.
+  // The onPost prop will receive the final formData.
   const [blogs, setBlogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  /* Search‑related state */
+  /* Search-related state */
   const [searchKeyword, setSearchKeyword] = useState(""); // what user is typing
-  const [searchQuery, setSearchQuery]   = useState("");   // confirmed on button click
+  const [searchQuery, setSearchQuery] = useState(""); // confirmed on button click
 
   /* Pagination */
   const [currentPage, setCurrentPage] = useState(1);
@@ -27,46 +27,43 @@ const Blog = () => {
 
   const navigate = useNavigate();
 
-  /* Fetch blogs once */
+  /* Fetch blogs once on component mount and when modal closes after post */
+  const fetchBlogs = async () => {
+    setIsLoading(true);
+    try {
+      const { data } = await axios.get("http://localhost:8000/api/blogs/");
+      setBlogs(data);
+    } catch (err) {
+      toast.error("Failed to fetch blogs.");
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    (async () => {
-      try {
-        const { data } = await axios.get("http://localhost:8000/api/blogs/");
-        setBlogs(data);
-      } catch (err) {
-        toast.error("Failed to fetch blogs.");
-        console.error(err);
-      } finally {
-        setIsLoading(false);
-      }
-    })();
+    fetchBlogs();
   }, []);
 
-  
   const handleSeeMore = (blog_id, user_id) =>
     navigate(`/blogFullView/${blog_id}`, { state: { user_id } });
 
-  const handlePost = async e => {
-    e.preventDefault();
-    if (!title.trim() || !content.trim()) {
+  // Modified handlePost to accept formData directly from AddBlogModal
+  const handlePost = async (formData) => {
+    if (!formData.get("title").trim() || !formData.get("content").trim()) {
       toast.error("Blog title and content cannot be empty.");
-      return;
+      return false; // Indicate failure to modal
     }
-    if (!imageFile) {
+    if (!formData.get("image")) {
       toast.error("Please upload an image for the blog.");
-      return;
+      return false; // Indicate failure to modal
     }
-
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("content", content);
-    formData.append("image", imageFile);
 
     try {
       const token = localStorage.getItem("access_token");
       if (!token) {
         toast.error("Please log in to post a blog.");
-        return;
+        return false; // Indicate failure to modal
       }
       await axios.post("http://localhost:8000/api/blogs/post/", formData, {
         headers: {
@@ -76,43 +73,35 @@ const Blog = () => {
       });
       toast.success("Blog posted successfully!");
       setShowModal(false);
-      setTitle("");
-      setContent("");
-      setImageFile(null);
-      setImagePreview(null);
-      /* Refresh list */
-      const { data } = await axios.get("http://localhost:8000/api/blogs/");
-      setBlogs(data);
+      fetchBlogs(); // Refresh blogs after successful post
+      return true; // Indicate success to modal
     } catch (err) {
       toast.error("Failed to post blog.");
       console.error(err);
-    }
-  };
-
-  const handleImageChange = e => {
-    const file = e.target.files[0];
-    if (file) {
-      setImageFile(file);
-      setImagePreview(URL.createObjectURL(file));
+      return false; // Indicate failure to modal
     }
   };
 
   /* -------------------------------- Search & Pagination ----------------- */
 
+  // Function to clear the search bar and reset results
+  const handleClearSearch = () => {
+    setSearchKeyword("");
+    setSearchQuery(""); // Clear the actual filter
+    setCurrentPage(1); // Reset to the first page
+  };
 
   const filteredBlogs = blogs
-    .filter(blog => blog.status === "active")
+    .filter((blog) => blog.status === "active")
     .filter(
-      blog =>
+      (blog) =>
         blog.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         blog.content.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-
-  const indexOfLastBlog   = currentPage * blogsPerPage;
-  const indexOfFirstBlog  = indexOfLastBlog - blogsPerPage;
-  const currentBlogs      = filteredBlogs.slice(indexOfFirstBlog, indexOfLastBlog);
-
+  const indexOfLastBlog = currentPage * blogsPerPage;
+  const indexOfFirstBlog = indexOfLastBlog - blogsPerPage;
+  const currentBlogs = filteredBlogs.slice(indexOfFirstBlog, indexOfLastBlog);
 
   return (
     <div className="mt-24 px-20 min-h-screen">
@@ -131,30 +120,36 @@ const Blog = () => {
           Add Blog
         </button>
 
-        <div className="flex items-center">
-          
-          
-
+        <div className="relative flex items-center w-full md:w-auto">
           <input
             type="text"
             placeholder="Search blogs..."
             value={searchKeyword}
-            onChange={e => setSearchKeyword(e.target.value)}
-            onKeyDown={e => {
+            onChange={(e) => setSearchKeyword(e.target.value)}
+            onKeyDown={(e) => {
               if (e.key === "Enter") {
                 setSearchQuery(searchKeyword);
                 setCurrentPage(1);
               }
             }}
-            className="flex-grow px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none"
+            className="flex-grow pr-10 pl-4 py-2 border border-gray-300 rounded-l-md focus:outline-none w-full"
           />
+          {searchKeyword && ( // Conditionally render the clear icon
+            <button
+              type="button"
+              onClick={handleClearSearch}
+              className="absolute right-24 text-gray-500 hover:text-gray-700 transition-colors duration-200"
+              aria-label="Clear search"
+            >
+              <IoMdClose size={20} />
+            </button>
+          )}
           <button
-            className="h-full  bg-green-600 py-2 px-5 text-white rounded-r-md hover:bg-green-700 transition-colors duration-200 hover:cursor-pointer"
-            onClick={() =>{
+            className="h-full bg-green-600 py-2 px-5 text-white rounded-r-md hover:bg-green-700 transition-colors duration-200 hover:cursor-pointer"
+            onClick={() => {
               setSearchQuery(searchKeyword);
               setCurrentPage(1);
-            }
-            }
+            }}
             disabled={isLoading}
           >
             {isLoading ? "Loading..." : "Search"}
@@ -169,7 +164,7 @@ const Blog = () => {
             .fill(0)
             .map((_, idx) => <Skeleton key={idx} type="blog_list" />)
         ) : currentBlogs.length ? (
-          currentBlogs.map(blog => (
+          currentBlogs.map((blog) => (
             <div
               key={blog.blog_id}
               className="bg-white shadow-md rounded-lg overflow-hidden flex flex-col md:flex-row hover:scale-105 transition-transform duration-200 hover:shadow-lg"
@@ -212,17 +207,14 @@ const Blog = () => {
         />
       )}
 
-      {/* Add‑blog modal ------------------------------------------------------ */}
+      {/* Add-blog modal ------------------------------------------------------ */}
       <AddBlogModal
         show={showModal}
         onClose={() => setShowModal(false)}
-        onPost={handlePost}
-        onImageChange={handleImageChange}
-        title={title}
-        setTitle={setTitle}
-        content={content}
-        setContent={setContent}
-        imagePreview={imagePreview}
+        onPost={handlePost} // Pass handlePost directly
+        // Removed individual state props (title, content, imagePreview, etc.)
+        // because AddBlogModal now manages these internally with its undo/redo logic.
+        // It will pass the complete formData back via onPost.
       />
     </div>
   );
