@@ -145,7 +145,7 @@ const Blog = () => {
             </button>
           )}
           <button
-            className="h-full bg-green-600 py-2 px-5 text-white rounded-r-md hover:bg-green-700 transition-colors duration-200 hover:cursor-pointer"
+            className="h-full bg-[#1B7B19] py-2 px-5 text-white rounded-r-md hover:bg-green-700 transition-colors duration-200 hover:cursor-pointer"
             onClick={() => {
               setSearchQuery(searchKeyword);
               setCurrentPage(1);
