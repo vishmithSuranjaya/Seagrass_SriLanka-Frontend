@@ -1,489 +1,431 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, FileText, Clock, User, X, Save, Eye, EyeOff, Image } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Pencil, Trash2, Eye, EyeOff } from 'lucide-react';
 
-function AdminNews() {
-  const [news, setNews] = useState([]);
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [selectedNews, setSelectedNews] = useState(null);
-  const [loading, setLoading] = useState(false);
-
-  // Mock data - replace with actual API calls
-  useEffect(() => {
-    // Simulate fetching news from API
-    const mockNews = [
-      {
-        news_id: '1',
-        title: 'Revolutionary AI Technology Breakthrough',
-        content: 'Scientists have made a groundbreaking discovery in artificial intelligence that could transform how we interact with technology. This new development promises to revolutionize various industries including healthcare, education, and transportation. The research team spent over three years developing this innovative approach that combines machine learning with quantum computing principles.',
-        created_at: '2024-06-20T10:30:00Z',
-        updated_at: '2024-06-21T14:15:00Z',
-        image: null,
-        admin_id: 'admin123',
-        is_published: true
-      },
-      {
-        news_id: '2',
-        title: 'Local Community Wins Environmental Award',
-        content: 'The Kalutara community has been recognized with a prestigious environmental conservation award for their outstanding efforts in sustainable development and green initiatives. The award ceremony took place last week, highlighting the community\'s dedication to preserving natural resources and promoting eco-friendly practices.',
-        created_at: '2024-06-18T16:45:00Z',
-        updated_at: '2024-06-18T16:45:00Z',
-        image: null,
-        admin_id: 'admin456',
-        is_published: false
-      },
-      {
-        news_id: '3',
-        title: 'New Digital Infrastructure Project Launched',
-        content: 'A major digital infrastructure project has been launched to improve connectivity and digital services across the region. This initiative aims to bridge the digital divide and provide better access to online resources for all citizens.',
-        created_at: '2024-06-15T09:20:00Z',
-        updated_at: '2024-06-19T11:30:00Z',
-        image: null,
-        admin_id: 'admin123',
-        is_published: true
-      }
-    ];
-    setNews(mockNews);
-  }, []);
-
-  const handleAddNews = () => {
-    setSelectedNews(null);
-    setShowAddModal(true);
-  };
-
-  const handleEditNews = (newsItem) => {
-    setSelectedNews(newsItem);
-    setShowEditModal(true);
-  };
-
-  const handleDeleteNews = (newsItem) => {
-    setSelectedNews(newsItem);
-    setShowDeleteModal(true);
-  };
-
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
-
-  const truncateContent = (content, maxLength = 150) => {
-    if (content.length <= maxLength) return content;
-    return content.substring(0, maxLength) + '...';
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">News Management</h1>
-              <p className="text-gray-600 mt-2">Create, edit, and manage news articles</p>
-            </div>
-            <button
-              onClick={handleAddNews}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg flex items-center gap-2 transition-colors"
-            >
-              <Plus size={20} />
-              Add New Article
-            </button>
-          </div>
-        </div>
-
-        {/* Statistics */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Total Articles</p>
-                <p className="text-3xl font-bold text-gray-900">{news.length}</p>
-              </div>
-              <FileText size={32} className="text-blue-600" />
-            </div>
-          </div>
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Published</p>
-                <p className="text-3xl font-bold text-green-600">{news.filter(n => n.is_published).length}</p>
-              </div>
-              <Eye size={32} className="text-green-600" />
-            </div>
-          </div>
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Drafts</p>
-                <p className="text-3xl font-bold text-orange-600">{news.filter(n => !n.is_published).length}</p>
-              </div>
-              <EyeOff size={32} className="text-orange-600" />
-            </div>
-          </div>
-        </div>
-
-        {/* News List */}
-        <div className="bg-white rounded-lg shadow-sm">
-          <div className="p-6 border-b border-gray-200">
-            <h2 className="text-xl font-semibold text-gray-900">All Articles</h2>
-          </div>
-          <div className="divide-y divide-gray-200">
-            {news.map((newsItem) => (
-              <NewsItem
-                key={newsItem.news_id}
-                news={newsItem}
-                onEdit={handleEditNews}
-                onDelete={handleDeleteNews}
-                formatDate={formatDate}
-                truncateContent={truncateContent}
-              />
-            ))}
-          </div>
-        </div>
-
-        {news.length === 0 && (
-          <div className="text-center py-12">
-            <FileText size={64} className="mx-auto text-gray-400 mb-4" />
-            <h3 className="text-xl font-semibold text-gray-600 mb-2">No articles found</h3>
-            <p className="text-gray-500 mb-6">Start by creating your first news article</p>
-            <button
-              onClick={handleAddNews}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg inline-flex items-center gap-2"
-            >
-              <Plus size={20} />
-              Add New Article
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* Modals */}
-      {showAddModal && (
-        <NewsModal
-          isOpen={showAddModal}
-          onClose={() => setShowAddModal(false)}
-          news={null}
-          onSave={(newsData) => {
-            // Add news logic here
-            console.log('Adding news:', newsData);
-            const newNews = {
-              ...newsData,
-              news_id: Date.now().toString(),
-              created_at: new Date().toISOString(),
-              updated_at: new Date().toISOString(),
-              admin_id: 'current_admin_id'
-            };
-            setNews([newNews, ...news]);
-            setShowAddModal(false);
-          }}
-          title="Add New Article"
-        />
-      )}
-
-      {showEditModal && (
-        <NewsModal
-          isOpen={showEditModal}
-          onClose={() => setShowEditModal(false)}
-          news={selectedNews}
-          onSave={(newsData) => {
-            // Update news logic here
-            console.log('Updating news:', newsData);
-            setNews(news.map(n => 
-              n.news_id === selectedNews.news_id 
-                ? { ...n, ...newsData, updated_at: new Date().toISOString() }
-                : n
-            ));
-            setShowEditModal(false);
-          }}
-          title="Edit Article"
-        />
-      )}
-
-      {showDeleteModal && (
-        <DeleteConfirmModal
-          isOpen={showDeleteModal}
-          onClose={() => setShowDeleteModal(false)}
-          news={selectedNews}
-          onConfirm={() => {
-            // Delete news logic here
-            console.log('Deleting news:', selectedNews?.news_id);
-            setNews(news.filter(n => n.news_id !== selectedNews?.news_id));
-            setShowDeleteModal(false);
-          }}
-        />
-      )}
-    </div>
-  );
-}
-
-// News Item Component
-function NewsItem({ news, onEdit, onDelete, formatDate, truncateContent }) {
-  return (
-    <div className="p-6 hover:bg-gray-50 transition-colors">
-      <div className="flex items-start justify-between">
-        <div className="flex-1">
-          <div className="flex items-center gap-3 mb-2">
-            <h3 className="text-lg font-semibold text-gray-900">{news.title}</h3>
-            <div className="flex items-center gap-2">
-              {news.is_published ? (
-                <span className="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full flex items-center gap-1">
-                  <Eye size={12} />
-                  Published
-                </span>
-              ) : (
-                <span className="px-2 py-1 bg-orange-100 text-orange-800 text-xs font-medium rounded-full flex items-center gap-1">
-                  <EyeOff size={12} />
-                  Draft
-                </span>
-              )}
-              {news.image && (
-                <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full flex items-center gap-1">
-                  <Image size={12} />
-                  Image
-                </span>
-              )}
-            </div>
-          </div>
-          
-          <p className="text-gray-600 mb-3">{truncateContent(news.content)}</p>
-          
-          <div className="flex items-center gap-4 text-sm text-gray-500">
-            <div className="flex items-center gap-1">
-              <Clock size={14} />
-              <span>Created: {formatDate(news.created_at)}</span>
-            </div>
-            {news.updated_at !== news.created_at && (
-              <div className="flex items-center gap-1">
-                <Clock size={14} />
-                <span>Updated: {formatDate(news.updated_at)}</span>
-              </div>
-            )}
-            <div className="flex items-center gap-1">
-              <User size={14} />
-              <span>Admin ID: {news.admin_id}</span>
-            </div>
-          </div>
-        </div>
-        
-        <div className="flex gap-2 ml-4">
-          <button
-            onClick={() => onEdit(news)}
-            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-            title="Edit article"
-          >
-            <Edit size={16} />
-          </button>
-          <button
-            onClick={() => onDelete(news)}
-            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-            title="Delete article"
-          >
-            <Trash2 size={16} />
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// News Modal Component
-function NewsModal({ isOpen, onClose, news, onSave, title }) {
+const AdminNews = () => {
+  const [newsList, setNewsList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [formData, setFormData] = useState({
     title: '',
     content: '',
     image: null,
-    is_published: true
+    is_published: true,
   });
+  const [editingNewsId, setEditingNewsId] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [showNewsModal, setShowNewsModal] = useState(false);
+  const [selectedNews, setSelectedNews] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const navigate = useNavigate();
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const newsPerPage = 5;
+
+  const token = localStorage.getItem('access_token'); 
 
   useEffect(() => {
-    if (news) {
-      setFormData({
-        title: news.title || '',
-        content: news.content || '',
-        image: news.image || null,
-        is_published: news.is_published ?? true
-      });
-    } else {
-      setFormData({
-        title: '',
-        content: '',
-        image: null,
-        is_published: true
-      });
-    }
-  }, [news]);
+    fetchNewsList();
+  }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!formData.title.trim() || !formData.content.trim()) {
-      alert('Please fill in all required fields');
-      return;
+  const fetchNewsList = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/api/news/admin/list/', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch news');
+      }
+      const data = await response.json();
+      setNewsList(data.data || []);
+      setLoading(false);
+    } catch (err) {
+      setError('Error fetching news articles');
+      setLoading(false);
     }
-    onSave(formData);
   };
 
-  const handleImageUpload = (e) => {
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleImageChange = (e) => {
     const file = e.target.files[0];
+    setFormData({ ...formData, image: file });
     if (file) {
-      // In a real implementation, you would upload the file to your server
-      // For now, we'll just store the file name
-      setFormData({ ...formData, image: file.name });
+      const reader = new FileReader();
+      reader.onloadend = () => setImagePreview(reader.result);
+      reader.readAsDataURL(file);
+    } else {
+      setImagePreview(null);
     }
   };
 
-  if (!isOpen) return null;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const data = new FormData();
+    data.append('title', formData.title);
+    data.append('content', formData.content);
+    if (formData.image) {
+      data.append('image', formData.image);
+    }
+    data.append('is_published', formData.is_published ? 'true' : 'false');
+    // Set admin_id and user_id automatically from localStorage (or AuthContext)
+    const adminId = localStorage.getItem('admin_id');
+    const userId = localStorage.getItem('user_id');
+    if (adminId) data.append('admin_id', adminId);
+    if (userId) data.append('user_id', userId);
+
+    try {
+      const url = editingNewsId
+        ? `http://localhost:8000/api/news/admin/${editingNewsId}/update/`
+        : 'http://localhost:8000/api/news/admin/add/';
+      const method = editingNewsId ? 'PUT' : 'POST';
+
+      const response = await fetch(url, {
+        method,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: data,
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        fetchNewsList();
+        resetForm();
+        alert(editingNewsId ? 'News updated successfully' : 'News created successfully');
+      } else {
+        setError(result.errors ? JSON.stringify(result.errors) : (result.message || 'Failed to save news'));
+      }
+    } catch (err) {
+      setError('Error saving news article');
+    }
+  };
+
+  const handleEdit = (news) => {
+    setFormData({
+      title: news.title,
+      content: news.content,
+      image: null,
+      is_published: news.is_published,
+    });
+    setEditingNewsId(news.news_id);
+    setImagePreview(news.image ? `http://localhost:8000${news.image}` : null);
+  };
+
+  const handleDelete = async (newsId) => {
+    if (!window.confirm('Are you sure you want to delete this news article?')) return;
+
+    try {
+      const response = await fetch(`http://localhost:8000/api/news/admin/${newsId}/delete/`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        fetchNewsList();
+        alert('News deleted successfully');
+      } else {
+        const result = await response.json();
+        setError(result.errors ? JSON.stringify(result.errors) : (result.message || 'Failed to delete news'));
+      }
+    } catch (err) {
+      setError('Error deleting news article');
+    }
+  };
+
+  const handleTogglePublish = async (newsId, isPublished) => {
+    try {
+      const response = await fetch(`http://localhost:8000/api/news/admin/${newsId}/update/`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ is_published: !isPublished }),
+      });
+
+      if (response.ok) {
+        fetchNewsList();
+        alert(`News ${isPublished ? 'unpublished' : 'published'} successfully`);
+      } else {
+        const result = await response.json();
+        setError(result.message || 'Failed to toggle publish status');
+      }
+    } catch (err) {
+      setError('Error toggling publish status');
+    }
+  };
+
+  const resetForm = () => {
+    setFormData({
+      title: '',
+      content: '',
+      image: null,
+      is_published: true,
+    });
+    setEditingNewsId(null);
+    setImagePreview(null);
+  };
+
+  // Automatically clear error after 7 seconds
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => setError(null), 7000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
+  // Filtered news based on search
+  const filteredNewsList = newsList.filter(
+    (news) =>
+      news.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      news.content.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Pagination logic for filtered news
+  const totalPages = Math.ceil(filteredNewsList.length / newsPerPage);
+  const newsToShow = filteredNewsList.slice((currentPage - 1) * newsPerPage, currentPage * newsPerPage);
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="text-2xl font-semibold text-gray-900">{title}</h2>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-          >
-            <X size={20} />
-          </button>
-        </div>
-
-        <div className="p-6 space-y-6">
+    <div className="p-4 max-w-6xl mx-auto">
+      <h1 className="text-4xl font-bold text-center text-green-700 mb-12">
+        Admin News Management
+      </h1>
+      {/* News Search Bar */}
+      <div className="flex justify-center mb-8 gap-2">
+        <input
+          type="text"
+          placeholder="Search news by title or content..."
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          className="w-full max-w-xl px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+        />
+        <button
+          onClick={() => {
+            setSearchTerm(searchInput);
+            setCurrentPage(1);
+          }}
+          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md"
+        >
+          Search
+        </button>
+        <button
+          onClick={() => {
+            setSearchInput("");
+            setSearchTerm("");
+            setCurrentPage(1);
+          }}
+          className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md"
+        >
+          Clear
+        </button>
+      </div>
+      <div className="mb-12 bg-white p-6 rounded-lg shadow-md">
+        <h2 className="text-2xl font-semibold mb-4">
+          {editingNewsId ? 'Edit News Article' : 'Create New Article'}
+        </h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Article Title *
-            </label>
+            <label className="block mb-1 font-medium text-gray-800">Title</label>
             <input
               type="text"
+              name="title"
               value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Enter article title (max 200 characters)"
-              maxLength={200}
+              onChange={handleInputChange}
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               required
+              maxLength="200"
             />
-            <p className="text-xs text-gray-500 mt-1">{formData.title.length}/200 characters</p>
           </div>
-
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Content *
-            </label>
+            <label className="block mb-1 font-medium text-gray-800">Content</label>
             <textarea
+              name="content"
               value={formData.content}
-              onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-              rows={12}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Write your article content here (max 2000 characters)"
-              maxLength={2000}
+              onChange={handleInputChange}
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              rows="6"
               required
+              maxLength="10000"
             />
-            <p className="text-xs text-gray-500 mt-1">{formData.content.length}/2000 characters</p>
           </div>
-
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Featured Image
-            </label>
-            <div className="flex items-center gap-4">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-              />
-              {formData.image && (
-                <span className="text-sm text-green-600 flex items-center gap-1">
-                  <Image size={16} />
-                  {formData.image}
-                </span>
-              )}
-            </div>
-            <p className="text-xs text-gray-500 mt-1">Upload an image to accompany your article</p>
-          </div>
-
-          <div className="flex items-center">
+            <label className="block mb-1 font-medium text-gray-800">Image</label>
             <input
-              type="checkbox"
-              id="is_published"
-              checked={formData.is_published}
-              onChange={(e) => setFormData({ ...formData, is_published: e.target.checked })}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              type="file"
+              name="image"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="w-full px-4 py-2 border rounded-md"
             />
-            <label htmlFor="is_published" className="ml-2 text-sm font-medium text-gray-700">
-              Publish article immediately
+            {imagePreview && (
+              <img
+                src={imagePreview}
+                alt="Preview"
+                className="mt-2 w-48 h-32 object-cover rounded-md"
+              />
+            )}
+          </div>
+          <div>
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                name="is_published"
+                checked={formData.is_published}
+                onChange={(e) => setFormData({ ...formData, is_published: e.target.checked })}
+                className="h-4 w-4"
+              />
+              Publish Immediately
             </label>
           </div>
-
-          <div className="flex justify-end gap-3 pt-6 border-t">
+          <div className="flex gap-4">
             <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+              type="submit"
+              className="bg-[#1B7B19] hover:bg-green-800 text-white px-6 py-2 rounded-md transition-colors"
             >
-              Cancel
+              {editingNewsId ? 'Update Article' : 'Create Article'}
             </button>
-            <button
-              type="button"
-              onClick={handleSubmit}
-              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 transition-colors"
-            >
-              <Save size={16} />
-              {news ? 'Update Article' : 'Create Article'}
-            </button>
+            {editingNewsId && (
+              <button
+                type="button"
+                onClick={resetForm}
+                className="bg-gray-400 hover:bg-gray-600 text-white px-6 py-2 rounded-md transition-colors"
+              >
+                Cancel Edit
+              </button>
+            )}
           </div>
-        </div>
+        </form>
+        {error && <p className="text-red-500 mt-4">{error}</p>}
+      </div>
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <h2 className="text-2xl font-semibold mb-4">News Articles</h2>
+        {loading ? (
+          <p>Loading...</p>
+        ) : filteredNewsList.length === 0 ? (
+          <p className="text-gray-500">No news articles found.</p>
+        ) : (
+          <>
+            <div className="space-y-4">
+              {newsToShow.map((news) => (
+                <div
+                  key={news.news_id}
+                  className="flex items-center justify-between border-b py-4"
+                >
+                  <div className="flex items-center gap-4 cursor-pointer" onClick={() => { setSelectedNews(news); setShowNewsModal(true); }}>
+                    <img
+                      src={
+                        news.image
+                          ? `http://localhost:8000${news.image}`
+                          : '/no-image.png'
+                      }
+                      alt={news.title}
+                      className="w-24 h-16 object-cover rounded-md"
+                      onError={(e) => (e.target.src = '/no-image.png')}
+                    />
+                    <div>
+                      <h3 className="font-semibold">{news.title}</h3>
+                      <p className="text-gray-600 text-sm">
+                        {new Date(news.created_at).toDateString()} |{' '}
+                        {news.is_published ? 'Published' : 'Unpublished'}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleEdit(news)}
+                      className="p-2 text-blue-600 hover:text-blue-800"
+                      title="Edit"
+                    >
+                      <Pencil size={20} />
+                    </button>
+                    <button
+                      onClick={() => handleTogglePublish(news.news_id, news.is_published)}
+                      className="p-2 text-gray-600 hover:text-gray-800"
+                      title={news.is_published ? 'Unpublish' : 'Publish'}
+                    >
+                      {news.is_published ? <EyeOff size={20} /> : <Eye size={20} />}
+                    </button>
+                    <button
+                      onClick={() => handleDelete(news.news_id)}
+                      className="p-2 text-red-600 hover:text-red-800"
+                      title="Delete"
+                    >
+                      <Trash2 size={20} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex justify-center mt-6 gap-2">
+                <button
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className={`px-3 py-1 rounded ${currentPage === 1 ? 'bg-gray-200 text-gray-400' : 'bg-green-100 text-green-700 hover:bg-green-200'}`}
+                >
+                  Prev
+                </button>
+                {[...Array(totalPages)].map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setCurrentPage(idx + 1)}
+                    className={`px-3 py-1 rounded ${currentPage === idx + 1 ? 'bg-green-600 text-white' : 'bg-green-100 text-green-700 hover:bg-green-200'}`}
+                  >
+                    {idx + 1}
+                  </button>
+                ))}
+                <button
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className={`px-3 py-1 rounded ${currentPage === totalPages ? 'bg-gray-200 text-gray-400' : 'bg-green-100 text-green-700 hover:bg-green-200'}`}
+                >
+                  Next
+                </button>
+              </div>
+            )}
+          </>
+        )}
+        {/* News Modal */}
+        {showNewsModal && selectedNews && (
+          <div className="fixed inset-0 flex items-center justify-center z-50" style={{backdropFilter: 'blur(6px)'}}>
+            <div className="bg-white rounded-lg p-8 max-w-2xl w-full relative shadow-2xl overflow-y-auto max-h-[90vh]">
+              <button
+                className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-2xl"
+                onClick={() => setShowNewsModal(false)}
+                aria-label="Close"
+              >
+                &times;
+              </button>
+              <h2 className="text-3xl font-bold mb-4 text-center break-words">{selectedNews.title}</h2>
+              <img
+                src={selectedNews.image ? `http://localhost:8000${selectedNews.image}` : '/no-image.png'}
+                alt={selectedNews.title}
+                className="w-full h-64 object-cover rounded-md mb-6 border"
+                onError={(e) => (e.target.src = '/no-image.png')}
+              />
+              <div className="mb-4 max-h-60 overflow-y-auto px-1">
+                <p className="text-gray-700 whitespace-pre-line text-lg">{selectedNews.content}</p>
+              </div>
+              <div className="flex flex-col sm:flex-row sm:justify-between text-gray-500 text-sm border-t pt-3 mt-4">
+                <span>{selectedNews.created_at ? new Date(selectedNews.created_at).toDateString() : ''} | {selectedNews.is_published ? 'Published' : 'Unpublished'}</span>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
-}
-
-// Delete Confirmation Modal Component
-function DeleteConfirmModal({ isOpen, onClose, news, onConfirm }) {
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg max-w-md w-full">
-        <div className="p-6">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-              <Trash2 size={24} className="text-red-600" />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900">Delete Article</h3>
-              <p className="text-gray-600">This action cannot be undone.</p>
-            </div>
-          </div>
-
-          <div className="mb-6">
-            <p className="text-gray-600">
-              Are you sure you want to delete the article "{news?.title}"?
-            </p>
-          </div>
-
-          <div className="flex justify-end gap-3">
-            <button
-              onClick={onClose}
-              className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={onConfirm}
-              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
-            >
-              Delete Article
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+};
 
 export default AdminNews;
