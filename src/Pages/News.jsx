@@ -253,7 +253,8 @@ const News = () => {
         <p className="text-center text-gray-500 text-lg">No news found for selected criteria.</p>
       ) : (
         <>
-          {currentNews.map((news, index) => (
+          {currentNews
+            .map((news, index) => (
             <div
               key={news.id || index}
               className="border rounded-lg shadow-md p-6 flex flex-col md:flex-row gap-6 items-start mb-12 hover:shadow-lg transition-shadow"
@@ -271,7 +272,7 @@ const News = () => {
                 <div>
                   <h2 className="text-green-700 font-semibold mb-2 text-xl">{news.title}</h2>
                   <p className="mb-3 font-medium text-gray-600">
-                    {new Date(news.created_at).toDateString()}
+                    {new Date(news.updated_at || news.created_at).toDateString()}
                   </p>
                   <div className="text-gray-700 mb-3 leading-relaxed line-clamp-4">
                     {news.content}

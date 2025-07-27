@@ -86,7 +86,7 @@ const SeagrassIdentify = () => {
   };
 
   return (
-    <div className="min-h-screen px-6 flex flex-col mt-25 mb-10">
+    <div className="min-h-screen px-20 flex flex-col mt-24 mb-10">
       <ToastContainer />
       <div className="pb-10">
         <BreadCrumb />
