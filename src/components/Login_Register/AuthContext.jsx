@@ -24,10 +24,17 @@ export const AuthProvider = ({ children }) => {
   navigate('/');        
 };
 
+//  New helper to update user after profile changes
+  const updateUser = (updatedUser) => {
+    setUser(updatedUser);
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+  };
+
+
 
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout,  updateUser }}>
       {children}
     </AuthContext.Provider>
   );

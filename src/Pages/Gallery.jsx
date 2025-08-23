@@ -59,7 +59,7 @@ const Gallery = () => {
   };
 
   return (
-    <div className="mt-24 px-20 relative">
+    <div className="mt-24 px-20 relative min-h-screen">
       <Breadcrumb />
       <div className=" sm:px-10 lg:px-20 pb-20 max-w-7xl mx-auto transition duration-200">
         

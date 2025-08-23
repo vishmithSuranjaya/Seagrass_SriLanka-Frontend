@@ -33,6 +33,9 @@ import AdminResearch from './Pages/Admin/AdminResearch';
 
 // ← Added import for ProtectedRoute
 import ProtectedRoute from './components/Login_Register/ProtectedRoute';
+import DashboardLayout from './components/userProfile/DashboardLayout';
+import BlogsPage from './components/userProfile/BlogsPage';
+import UserSettings from './components/userProfile/UserSettings';
 
 function AppWrapper() {
   const location = useLocation();
@@ -54,7 +57,21 @@ function AppWrapper() {
         <Route path='ViewfullProducttem' element={<ProductFullView />} />
         <Route path="/blogFullView/:id" element={<BlogFullView />} />
         <Route path="/viewFullNews" element={<ViewNews />} /> 
-
+        
+        {/* <Route path="/user/blogs" element={<BlogsPage />} /> */}
+        <Route
+          path="/user"
+          element={
+            <ProtectedRoute>
+              <DashboardLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="dashboard" element={<DashboardLayout />} />
+          <Route path="blogs" element={<BlogsPage />} />
+          <Route path="/user/settings" element={<UserSettings />} />
+        </Route>
+        
         {/* ← Changed /admin route to be wrapped in ProtectedRoute */}
         <Route
           path="/admin"
