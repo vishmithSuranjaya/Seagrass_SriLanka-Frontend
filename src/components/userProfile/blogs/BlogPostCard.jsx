@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "../../Login_Register/AuthContext";
 import { toast } from "react-toastify";
+import EditBlogModal from "./EditBlogModel";
 
 const BlogPostCard = () => {
   const [blogs, setBlogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
-  const navigate = useNavigate();
+
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [selectedBlog, setSelectedBlog] = useState(null);
 
   useEffect(() => {
     fetchBlogs();
@@ -49,8 +52,15 @@ const BlogPostCard = () => {
     }
   };
 
-  const handleEdit = (blog_id) => {
-    navigate(`/editBlog/${blog_id}`);
+  const handleEdit = (blog) => {
+    setSelectedBlog(blog);
+    setIsEditOpen(true);
+  };
+
+  const handleUpdate = (updatedBlog) => {
+    setBlogs((prev) =>
+      prev.map((b) => (b.blog_id === updatedBlog.blog_id ? updatedBlog : b))
+    );
   };
 
   return (
@@ -87,7 +97,7 @@ const BlogPostCard = () => {
                   </Link>
                   <div className="flex gap-2">
                     <button
-                      onClick={() => handleEdit(blog.blog_id)}
+                      onClick={() => handleEdit(blog)}
                       className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md"
                     >
                       Edit
@@ -105,6 +115,14 @@ const BlogPostCard = () => {
           ))
         )}
       </div>
+
+      {/*  Edit Modal */}
+      <EditBlogModal
+        isOpen={isEditOpen}
+        onClose={() => setIsEditOpen(false)}
+        blog={selectedBlog}
+        onUpdate={handleUpdate}
+      />
     </div>
   );
 };
