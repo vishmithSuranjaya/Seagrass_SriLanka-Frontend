@@ -47,7 +47,7 @@ const Reports = () => {
   };
 
   return (
-    <div className="mt-24 px-6 md:px-20 mb-10">
+    <div className="mt-24 px-6 md:px-20 mb-10 min-h-screen">
       <Breadcrumb />
 
       <h1 className="text-4xl font-bold text-center text-green-700 mb-12">
