@@ -36,6 +36,8 @@ import ProtectedRoute from './components/Login_Register/ProtectedRoute';
 import DashboardLayout from './components/userProfile/DashboardLayout';
 import BlogsPage from './components/userProfile/BlogsPage';
 import UserSettings from './components/userProfile/UserSettings';
+import Calendar from './components/calender/Calender';
+import NewsDetailView from './components/calender/NewsDetailView';
 
 function AppWrapper() {
   const location = useLocation();
@@ -57,6 +59,9 @@ function AppWrapper() {
         <Route path='ViewfullProducttem' element={<ProductFullView />} />
         <Route path="/blogFullView/:id" element={<BlogFullView />} />
         <Route path="/viewFullNews" element={<ViewNews />} /> 
+        <Route path='/calender' element={<Calendar/>} />
+        <Route path='/newsdetails/:news_id' element={<NewsDetailView />} />
+
         
         {/* <Route path="/user/blogs" element={<BlogsPage />} /> */}
         <Route

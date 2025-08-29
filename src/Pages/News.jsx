@@ -3,7 +3,7 @@ import { ChevronDown, Calendar } from 'lucide-react';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import 'react-datepicker/dist/react-datepicker.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Breadcrumb from "../components/breadcrumb/BreadCrumb";
 import Pagination from '../components/pagination/Pagination';
 
@@ -128,13 +128,14 @@ const News = () => {
     <div className="mt-24 px-6 md:px-20 mb-10 relative">
       <Breadcrumb />
       <div ref={calendarBtnRef} className="absolute left-0 m-2 ml-20">
-        <button
-          onClick={() => setShowCalendar(!showCalendar)}
+       
+        <Link
+          to={'/calender'}
           className="flex items-center gap-2 px-4 py-2 bg-[#1B7B19] text-gray-100 rounded-md hover:bg-green-800 transition-colors"
         >
           <Calendar size={20} />
           Calendar
-        </button>
+        </Link>
       </div>
 
       <h1 className="text-4xl font-bold text-center text-green-700 pt-15 mb-12">
@@ -290,7 +291,7 @@ const News = () => {
             </div>
           ))}
 
-          {/* ✅ Pagination rendered here */}
+          {/*  Pagination rendered here */}
           {filteredNews.length > newsPerPage && (
             <Pagination
               totalBlogs={filteredNews.length}

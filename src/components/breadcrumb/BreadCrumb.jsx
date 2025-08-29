@@ -4,11 +4,12 @@ import axios from 'axios';
 
 const Breadcrumb = () => {
   const location = useLocation();
-  const { id } = useParams(); // For blogFullView/:id
+  const { id, news_id } = useParams(); // destructure both blog id and news id if needed
   const pathnames = location.pathname.split('/').filter(Boolean);
   const [blogTitle, setBlogTitle] = useState('');
+  const [newsTitle, setNewsTitle] = useState('');
 
-  // Fetch blog title using blog ID
+  // Fetch titles if needed
   useEffect(() => {
     const fetchTitle = async () => {
       if (location.pathname.includes('blogFullView') && id) {
@@ -18,6 +19,13 @@ const Breadcrumb = () => {
         } catch (error) {
           console.error('Failed to fetch blog title:', error);
         }
+      } else if (location.pathname.includes('newsdetails') && id) {
+        try {
+          const res = await axios.get(`http://localhost:8000/api/news/${id}/`);
+          setNewsTitle(res.data.title);
+        } catch (error) {
+          console.error('Failed to fetch news title:', error);
+        }
       }
     };
     fetchTitle();
@@ -25,16 +33,13 @@ const Breadcrumb = () => {
 
   // Custom route mapping
   const routeMap = {
-    blogFullView: {
-      label: 'Blog',
-      to: '/blog',
-    },
+    blogFullView: { label: 'Blog', to: '/blog' },
+    newsdetails: { label: 'Calendar', to: '/calender' }, // <-- here
   };
 
   return (
     <nav aria-label="breadcrumb" className="text-sm text-gray-600 mb-6 pl-6 font-serif">
       <ol className="flex space-x-2 items-center">
-        {/* Home */}
         <li>
           <Link to="/" className="hover:underline text-black">Home</Link>
           <span className="mx-1 text-gray-400">›</span>
@@ -49,7 +54,9 @@ const Breadcrumb = () => {
             label = routeMap[segment].label;
             to = routeMap[segment].to;
           } else if (segment === id && blogTitle) {
-            label = blogTitle; // show blog title instead of ID
+            label = blogTitle;
+          } else if (segment === id && newsTitle) {
+            label = newsTitle;
           } else {
             label = decodeURIComponent(segment)
               .replace(/-/g, ' ')
