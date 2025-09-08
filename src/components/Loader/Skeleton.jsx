@@ -54,6 +54,58 @@ const Skeleton = ({ type }) => {
           ))}
         </div>
       );
+  case "product-full":
+  return (
+    <div className="w-3/4 mx-auto p-10 animate-pulse">
+      {/* Title Skeleton */}
+      <div className="bg-gray-300 h-6 w-2/3 rounded mb-6"></div>
+
+      {/* Image Skeleton */}
+      <div className="bg-gray-300 h-[300px] w-full rounded mb-6"></div>
+
+      {/* Description Skeleton */}
+      <div className="space-y-4 mb-6">
+        <div className="bg-gray-300 h-4 w-full rounded"></div>
+        <div className="bg-gray-300 h-4 w-5/6 rounded"></div>
+        <div className="bg-gray-300 h-4 w-2/3 rounded"></div>
+      </div>
+
+      {/* Price Skeleton */}
+      <div className="bg-gray-300 h-5 w-1/4 rounded"></div>
+    </div>
+  );
+
+  case "cart":
+  return (
+    <div className="max-w-4xl mx-auto p-6 animate-pulse">
+      {/* Title */}
+      <div className="bg-gray-300 h-8 w-1/3 rounded mb-6"></div>
+
+      {/* Simulate cart items */}
+      {[...Array(3)].map((_, idx) => (
+        <div key={idx} className="flex items-center justify-between border-b pb-4 mb-4">
+          <div className="flex items-center gap-4">
+            <div className="bg-gray-300 w-20 h-20 rounded-md"></div>
+            <div className="space-y-2">
+              <div className="bg-gray-300 h-4 w-40 rounded"></div>
+              <div className="bg-gray-300 h-4 w-24 rounded"></div>
+              <div className="bg-gray-300 h-4 w-28 rounded"></div>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="bg-gray-300 h-8 w-8 rounded"></div>
+            <div className="bg-gray-300 h-6 w-6 rounded"></div>
+            <div className="bg-gray-300 h-8 w-8 rounded"></div>
+          </div>
+        </div>
+      ))}
+
+      {/* Total Section */}
+      <div className="bg-gray-300 h-6 w-32 rounded ml-auto mt-6"></div>
+    </div>
+  );
+
+
 
   }
 };

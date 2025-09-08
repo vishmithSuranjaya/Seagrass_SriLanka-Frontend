@@ -12,7 +12,7 @@ const UserSettings = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [profileImage, setProfileImage] = useState(null);
-  const [previewImage, setPreviewImage] = useState(user?.profile_image || null);
+  const [previewImage, setPreviewImage] = useState(user?.image || null);
   const [loading, setLoading] = useState(false);
 
   const handleProfileImageChange = (e) => {
@@ -23,36 +23,39 @@ const UserSettings = () => {
     }
   };
 
-  const handleProfileUpdate = async () => {
-    setLoading(true);
-    try {
-      const token = localStorage.getItem("access_token");
-      const formData = new FormData();
-      formData.append("fname", fname);
-      formData.append("lname", lname);
-      formData.append("email", email);
-      if (profileImage) formData.append("profile_image", profileImage);
+ 
+// Update after successful save
+const handleProfileUpdate = async () => {
+  setLoading(true);
+  try {
+    const token = localStorage.getItem("access_token");
+    const formData = new FormData();
+    formData.append("fname", fname);
+    formData.append("lname", lname);
+    formData.append("email", email);
+    if (profileImage) formData.append("profile_image", profileImage); // matches serializer
 
-      const response = await axios.put(
-        `http://localhost:8000/api/auth/profile/update/${user.user_id}/`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+    const response = await axios.put(
+      `http://localhost:8000/api/auth/profile/update/${user.user_id}/`,
+      formData,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
 
-      toast.success("Profile updated successfully!");
-      updateUser(response.data.user); // ✅ update global user context
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to update profile.");
-    } finally {
-      setLoading(false);
-    }
-  };
+    toast.success("Profile updated successfully!");
+
+    // Update user context
+    updateUser(response.data.user);
+
+    // Update preview to backend image
+    setPreviewImage(response.data.user.image); 
+  } catch (error) {
+    console.error(error);
+    toast.error("Failed to update profile.");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const handleChangePassword = async () => {
     if (newPassword !== confirmPassword) {

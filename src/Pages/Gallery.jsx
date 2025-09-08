@@ -102,11 +102,11 @@ const Gallery = () => {
                     onError={() => handleImageError(img.image_id)}
                   />
                 </div>
-                {img.caption && (
+                {/* {img.caption && (
                   <div className="text-sm p-2 text-center text-gray-700">
                     {img.caption}
                   </div>
-                )}
+                )} */}
               </div>
             ))}
           </div>
