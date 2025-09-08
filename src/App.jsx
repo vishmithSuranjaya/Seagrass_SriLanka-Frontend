@@ -38,6 +38,8 @@ import BlogsPage from './components/userProfile/BlogsPage';
 import UserSettings from './components/userProfile/UserSettings';
 import Calendar from './components/calender/Calender';
 import NewsDetailView from './components/calender/NewsDetailView';
+import CartPage from './Pages/CartPage';
+import UserHome from './components/userProfile/UserHome';
 
 function AppWrapper() {
   const location = useLocation();
@@ -56,11 +58,12 @@ function AppWrapper() {
         <Route path="/product" element={<Products />} />
         <Route path="/about" element={<About />} />
         <Route path="/identify seagrass" element={<SeagrassIdentify />} />
-        <Route path='ViewfullProducttem' element={<ProductFullView />} />
+        <Route path='/productfulldetails/:product_id' element={<ProductFullView />} />
         <Route path="/blogFullView/:id" element={<BlogFullView />} />
         <Route path="/viewFullNews" element={<ViewNews />} /> 
         <Route path='/calender' element={<Calendar/>} />
         <Route path='/newsdetails/:news_id' element={<NewsDetailView />} />
+        <Route path='/cart' element={<CartPage />} />
 
         
         {/* <Route path="/user/blogs" element={<BlogsPage />} /> */}
@@ -75,6 +78,7 @@ function AppWrapper() {
           <Route path="dashboard" element={<DashboardLayout />} />
           <Route path="blogs" element={<BlogsPage />} />
           <Route path="/user/settings" element={<UserSettings />} />
+          <Route path="/user" element={<UserHome />} />
         </Route>
         
         {/* ← Changed /admin route to be wrapped in ProtectedRoute */}

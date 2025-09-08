@@ -2,6 +2,7 @@ import React from 'react';
 import Sidebar from './Sidebar';
 import { useAuth } from '../Login_Register/AuthContext';
 import { Outlet } from 'react-router-dom';
+import UserHome from './UserHome';
 
 const DashboardLayout = () => {
   const { user } = useAuth();

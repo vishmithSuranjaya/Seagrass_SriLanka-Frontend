@@ -7,26 +7,31 @@ const Sidebar = () => {
   const location = useLocation();
 
   const navItems = [
-    { name: 'Home', path: '/user/', icon: 'fas fa-home' },
-    { name: 'Blogs', path: '/user/blogs', icon: 'fas fa-chart-bar' },
+    { name: 'Home', path: '/user', icon: 'fas fa-home' },
+    { name: 'Blogs', path: '/user/blogs', icon: 'fas fa-newspaper' },
     { name: 'Settings', path: '/user/settings', icon: 'fas fa-cog' },
+    { name: 'cart', path: '/cart', icon: 'fas fa-cart'}
     
   ];
 
   return (
-    <aside className="w-64 bg-[#1B7B19] text-white h-screen p-6 flex flex-col">
+    <aside className="w-64 bg-[#1B7B19] text-white  h-screen flex flex-col shadow-lg font-sans">
       {/* User Profile Section */}
-      <div className="text-center mb-10">
-        <div className="w-20 h-20 bg-gray-600 rounded-full mx-auto mb-3 flex items-center justify-center">
-          <i className="fas fa-user text-4xl text-white"></i>
+      <div className="text-center py-8 border-b  border-green-700">
+        <div className="w-20 h-20 bg-gray-100 rounded-full mx-auto mb-3 flex items-center justify-center text-[#1B7B19] text-3xl font-bold font-serif">
+          <img 
+            src={user.image}  
+            alt="profile_image" 
+            className="w-20 h-20 bg-gray-100 rounded-full mx-auto mb-3 flex items-center justify-center text-[#1B7B19] text-3xl font-bold font-serif"
+            />
         </div>
-        <p className="text-white text-lg font-semibold">
+        <p className="text-3xl font-bold tracking-wide font-serif">
           {user?.fname} {user?.lname}
         </p>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1">
+      <nav className="flex-1 px-4 py-6">
         <ul className="space-y-2">
           {navItems.map((item) => {
             const isActive = location.pathname === item.path;
@@ -35,15 +40,12 @@ const Sidebar = () => {
               <li key={item.name}>
                 <Link
                   to={item.path}
-                  className={`flex items-center py-3 px-4 rounded-lg transition-colors duration-200 relative
-                    ${isActive ? 'bg-[#2ED42B] text-white' : 'hover:bg-[#2ED42B]'}
+                  className={`flex items-center py-3 px-4 text-xl font-semibold rounded-lg transition-all duration-200 font-medium tracking-wide
+                    ${isActive ? 'bg-green-600 font-bold shadow-md' : 'hover:bg-green-500 hover:pl-6'}
                   `}
                 >
                   <i className={`${item.icon} text-lg mr-4`}></i>
-                  <span className="font-medium">{item.name}</span>
-                  {isActive && (
-                    <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-8 bg-white rounded-l-lg"></div>
-                  )}
+                  <span>{item.name}</span>
                 </Link>
               </li>
             );

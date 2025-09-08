@@ -3,6 +3,7 @@ import Breadcrumb from '../components/breadcrumb/BreadCrumb';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from "axios";
+import PayButton from '../components/Payment/PayButton';
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -28,14 +29,17 @@ const Products = () => {
     }
   };
 
-  const handleItemClick = (index) => {
-    navigate(`ViewfullProducttem/${index}`);
+  // Navigate to full product view
+  const handleItemClick = (productId) => {
+    navigate(`/productfulldetails/${productId}`); // Update route as per your routing setup
   };
 
+  // Handle image load errors
   const handleProductImgError = (imagePath) => {
     setProductImgError((prev) => ({ ...prev, [imagePath]: true }));
   };
 
+  // Get image URL (backend path or placeholder)
   const getImageUrl = (product) => {
     const image = product.image;
 
@@ -51,13 +55,13 @@ const Products = () => {
       return image;
     }
 
-    // Default: relative path returned by backend (e.g. /images/products/...)
+    // Default: relative path returned by backend
     return `http://localhost:8000${image}`;
   };
 
   return (
     <div className="mt-24 px-20 min-h-screen">
-      {/* Breadcrumb navigation */}
+      {/* Breadcrumb */}
       <div>
         <Breadcrumb />
       </div>
@@ -74,18 +78,18 @@ const Products = () => {
         ) : products.length === 0 ? (
           <p className="text-center col-span-full text-xl">No products available.</p>
         ) : (
-          products.map((product, index) => (
+          products.map((product) => (
             <div
               key={product.product_id}
-              className="rounded-xl overflow-hidden shadow-md hover:shadow-xl transition duration-300 cursor-pointer"
-              // onClick={() => setPopupImage(img)}
+              className="rounded-xl overflow-hidden shadow-md hover:shadow-xl transition duration-300"
             >
               <div className="aspect-square overflow-hidden">
                 <img
                   src={getImageUrl(product)}
                   alt={product.title}
-                  className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                  onError={() => handleImageError(product.image)}
+                  className="w-full h-full object-cover transition-transform duration-300 hover:scale-105 cursor-pointer"
+                  onError={() => handleProductImgError(product.image)}
+                  onClick={() => handleItemClick(product.product_id)}
                 />
               </div>
               {product.title && (

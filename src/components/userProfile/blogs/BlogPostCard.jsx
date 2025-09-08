@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../Login_Register/AuthContext";
 import { toast } from "react-toastify";
 import EditBlogModal from "./EditBlogModel";
+import Swal from "sweetalert2";
 
 const BlogPostCard = () => {
   const [blogs, setBlogs] = useState([]);
@@ -33,24 +34,35 @@ const BlogPostCard = () => {
     }
   };
 
-  const handleDelete = async (blog_id) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this blog?");
-    if (!confirmDelete) return;
+ 
 
-    try {
-      const token = localStorage.getItem("access_token");
-      await axios.delete(`http://localhost:8000/api/blogs/${blog_id}/delete/`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      toast.success("Blog deleted successfully!");
-      setBlogs((prev) => prev.filter((b) => b.blog_id !== blog_id));
-    } catch (error) {
-      console.error("Failed to delete blog:", error);
-      toast.error("Failed to delete blog.");
-    }
-  };
+const handleDelete = async (blog_id) => {
+  const result = await Swal.fire({
+    title: "Are you sure?",
+    text: "You won't be able to revert this!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Yes",
+  });
+
+  if (!result.isConfirmed) return;
+
+  try {
+    const token = localStorage.getItem("access_token");
+    await axios.delete(`http://localhost:8000/api/blogs/${blog_id}/delete/`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    toast.success("Blog deleted successfully!");
+    setBlogs((prev) => prev.filter((b) => b.blog_id !== blog_id));
+  } catch (error) {
+    console.error("Failed to delete blog:", error);
+    toast.error("Failed to delete blog.");
+  }
+};
+
 
   const handleEdit = (blog) => {
     setSelectedBlog(blog);

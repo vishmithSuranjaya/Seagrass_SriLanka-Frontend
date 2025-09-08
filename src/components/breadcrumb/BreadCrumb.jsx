@@ -34,7 +34,8 @@ const Breadcrumb = () => {
   // Custom route mapping
   const routeMap = {
     blogFullView: { label: 'Blog', to: '/blog' },
-    newsdetails: { label: 'Calendar', to: '/calender' }, // <-- here
+    newsdetails: { label: 'Calendar', to: '/calender' }, 
+    productfulldetails: { label: 'Products', to: '/product'},
   };
 
   return (

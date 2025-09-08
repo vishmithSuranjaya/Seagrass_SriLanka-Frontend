@@ -7,6 +7,7 @@ import { HiMenu, HiX } from "react-icons/hi";
 import LoginForm from "../Login_Register/LoginForm";
 import RegisterForm from "../Login_Register/RegisterForm";
 import { AuthContext } from "../Login_Register/AuthContext";
+import { FaShoppingCart, FaUser } from "react-icons/fa";
 
 const Navbar = () => {
   const [isDark, setIsDark] = useState(false);
@@ -49,8 +50,22 @@ const Navbar = () => {
               </li>
             ))}
           </ul>
-
+     
           <div className="flex items-center gap-4">
+
+            {user && (
+              <div className="flex space-x-5 text-xl">
+
+                <Link to="/cart" >
+                  <FaShoppingCart />
+                </Link>
+
+                <Link to="/user">
+                  <FaUser />
+                </Link>
+
+              </div>
+            )}
             <button
               onClick={toggleMode}
               className="text-xl hover:scale-110 transition duration-200"
@@ -110,6 +125,19 @@ const Navbar = () => {
                 </Link>
               </li>
             ))}
+
+            {user && (
+              <div className="flex space-x-5 text-xl mb-4">
+                <Link to="/cart" >
+                  <FaShoppingCart />
+                </Link>
+
+                <Link to="/user">
+                  <FaUser />
+                </Link>
+              </div>
+            )}
+
             {user ? (
               <button
                 onClick={() => {
