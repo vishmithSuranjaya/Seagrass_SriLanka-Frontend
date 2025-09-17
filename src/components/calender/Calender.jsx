@@ -10,6 +10,7 @@ const localizer = momentLocalizer(moment);
 
 const Calendar = () => {
   const [events, setEvents] = useState([]);
+  const [currentDate, setCurrentDate] = useState(new Date());
   const navigate = useNavigate(); 
 
   useEffect(() => {
@@ -47,6 +48,8 @@ const Calendar = () => {
           events={events}
           startAccessor="start"
           endAccessor="end"
+          date={currentDate} // ✅ controlled date
+          onNavigate={(newDate) => setCurrentDate(newDate)} //
           style={{ height: 500 }}
           onSelectEvent={handleEventClick} // click on event title
           selectable
