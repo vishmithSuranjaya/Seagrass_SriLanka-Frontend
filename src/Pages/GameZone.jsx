@@ -16,7 +16,7 @@ const GameZone = () => {
       image: Cover_Image,
       url: 'https://pasanramyanath.github.io/Seagrass-Sri-Lanka-Game/',
       Instructions: 'Instructions for playing',
-      InstructionDescription: 'Use W, A, S, D to move, and right-click + mouse to look around. When you get close to trash, a "Press E to collect trash" prompt will appear. Collect as much trash as possible within 150 seconds.',
+      InstructionDescription: 'Use W, A, S, D to move, and right-click + mouse to look around. Use Shift + move to sprint. When you get close to trash, a "Press E to collect trash" prompt will appear. Collect as much trash as possible within 150 seconds.',
     },
   ]);
 
