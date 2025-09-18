@@ -1,534 +1,431 @@
-import React, { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, Package, DollarSign, X, Save, Eye, EyeOff, ShoppingCart, Image } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { Pencil, Trash2 } from "lucide-react";
 
-function AdminProducts() {
+const AdminProducts = () => {
   const [products, setProducts] = useState([]);
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    price: "",
+    image: null,
+  });
+  const [imagePreview, setImagePreview] = useState(null);
+  const [originalImageUrl, setOriginalImageUrl] = useState(null);
+  const [editingId, setEditingId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchInput, setSearchInput] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [priceFilter, setPriceFilter] = useState('all');
+  const [showModal, setShowModal] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 5;
 
-  // Mock data - replace with actual API calls
+  const token = localStorage.getItem("access_token");
+  const adminId = localStorage.getItem("admin_id");
+
   useEffect(() => {
-    // Simulate fetching products from API
-    const mockProducts = [
-      {
-        product_id: 'PROD001',
-        title: 'Official T-Shirt',
-        description: 'High-quality cotton t-shirt with official logo',
-        price: 25.99,
-        image: null,
-        admin_id: 'ADMIN001'
-      },
-      {
-        product_id: 'PROD002',
-        title: 'Coffee Mug',
-        description: 'Ceramic coffee mug with premium finish',
-        price: 12.50,
-        image: null,
-        admin_id: 'ADMIN001'
-      },
-      {
-        product_id: 'PROD003',
-        title: 'Laptop Sticker Pack',
-        description: 'Set of 10 premium vinyl stickers',
-        price: 8.99,
-        image: null,
-        admin_id: 'ADMIN001'
-      },
-      {
-        product_id: 'PROD004',
-        title: 'Branded Cap',
-        description: 'Adjustable cap with embroidered logo',
-        price: 18.75,
-        image: null,
-        admin_id: 'ADMIN001'
-      }
-    ];
-    setProducts(mockProducts);
+    fetchProducts();
   }, []);
 
-  const handleAddProduct = () => {
-    setSelectedProduct(null);
-    setShowAddModal(true);
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:8000/api/products/admin/list/",
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (!response.ok) throw new Error("Failed to fetch products");
+      const data = await response.json();
+      setProducts(Array.isArray(data) ? data : data.data || []);
+      setLoading(false);
+    } catch (err) {
+      setError("Error fetching products");
+      setTimeout(() => setError(null), 4000);
+      setLoading(false);
+    }
   };
 
-  const handleEditProduct = (product) => {
-    setSelectedProduct(product);
-    setShowEditModal(true);
+  const getImageUrl = (image) => {
+    if (!image) return "https://via.placeholder.com/150?text=No+Image";
+    if (image.startsWith("http://") || image.startsWith("https://")) return image;
+    return `http://localhost:8000${image}`;
   };
 
-  const handleDeleteProduct = (product) => {
-    setSelectedProduct(product);
-    setShowDeleteModal(true);
-  };
+  const handleInputChange = (e) => {
+    const { name, value, files } = e.target;
 
-  const filteredProducts = products.filter(product => {
-    const matchesSearch = product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         product.product_id.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesPrice = priceFilter === 'all' ||
-                        (priceFilter === 'low' && product.price < 15) ||
-                        (priceFilter === 'medium' && product.price >= 15 && product.price < 30) ||
-                        (priceFilter === 'high' && product.price >= 30);
-    
-    return matchesSearch && matchesPrice;
-  });
+    if (name === "image") {
+      const file = files[0];
+      setFormData({ ...formData, image: file });
 
-  const totalProducts = products.length;
-  const totalValue = products.reduce((sum, product) => sum + parseFloat(product.price), 0);
-
-  return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Products Management</h1>
-              <p className="text-gray-600 mt-2">Manage your merchandise and products</p>
-            </div>
-            <button
-              onClick={handleAddProduct}
-              className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg flex items-center gap-2 transition-colors"
-            >
-              <Plus size={20} />
-              Add New Product
-            </button>
-          </div>
-          
-          {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 pt-6 border-t">
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <div className="flex items-center gap-3">
-                <Package size={24} className="text-blue-600" />
-                <div>
-                  <p className="text-sm text-blue-600">Total Products</p>
-                  <p className="text-2xl font-bold text-blue-900">{totalProducts}</p>
-                </div>
-              </div>
-            </div>
-            <div className="bg-green-50 p-4 rounded-lg">
-              <div className="flex items-center gap-3">
-                <DollarSign size={24} className="text-green-600" />
-                <div>
-                  <p className="text-sm text-green-600">Total Value</p>
-                  <p className="text-2xl font-bold text-green-900">${totalValue.toFixed(2)}</p>
-                </div>
-              </div>
-            </div>
-            <div className="bg-purple-50 p-4 rounded-lg">
-              <div className="flex items-center gap-3">
-                <ShoppingCart size={24} className="text-purple-600" />
-                <div>
-                  <p className="text-sm text-purple-600">Avg Price</p>
-                  <p className="text-2xl font-bold text-purple-900">
-                    ${totalProducts > 0 ? (totalValue / totalProducts).toFixed(2) : '0.00'}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Filters */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1">
-              <input
-                type="text"
-                placeholder="Search products by name, description, or ID..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              />
-            </div>
-            <div>
-              <select
-                value={priceFilter}
-                onChange={(e) => setPriceFilter(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              >
-                <option value="all">All Prices</option>
-                <option value="low">Under $15</option>
-                <option value="medium">$15 - $30</option>
-                <option value="high">Over $30</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        {/* Products Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredProducts.map((product) => (
-            <ProductCard
-              key={product.product_id}
-              product={product}
-              onEdit={handleEditProduct}
-              onDelete={handleDeleteProduct}
-            />
-          ))}
-        </div>
-
-        {filteredProducts.length === 0 && products.length > 0 && (
-          <div className="text-center py-12">
-            <Package size={64} className="mx-auto text-gray-400 mb-4" />
-            <h3 className="text-xl font-semibold text-gray-600 mb-2">No products match your filters</h3>
-            <p className="text-gray-500">Try adjusting your search or filter criteria</p>
-          </div>
-        )}
-
-        {products.length === 0 && (
-          <div className="text-center py-12">
-            <Package size={64} className="mx-auto text-gray-400 mb-4" />
-            <h3 className="text-xl font-semibold text-gray-600 mb-2">No products found</h3>
-            <p className="text-gray-500 mb-6">Start by adding your first product</p>
-            <button
-              onClick={handleAddProduct}
-              className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg inline-flex items-center gap-2"
-            >
-              <Plus size={20} />
-              Add New Product
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* Modals */}
-      {showAddModal && (
-        <ProductModal
-          isOpen={showAddModal}
-          onClose={() => setShowAddModal(false)}
-          product={null}
-          onSave={(productData) => {
-            // Add product logic here
-            const newProductId = `PROD${(products.length + 1).toString().padStart(3, '0')}`;
-            const newProduct = {
-              ...productData,
-              product_id: newProductId,
-              admin_id: 'ADMIN001' // Replace with actual admin ID
-            };
-            setProducts([...products, newProduct]);
-            setShowAddModal(false);
-          }}
-          title="Add New Product"
-        />
-      )}
-
-      {showEditModal && (
-        <ProductModal
-          isOpen={showEditModal}
-          onClose={() => setShowEditModal(false)}
-          product={selectedProduct}
-          onSave={(productData) => {
-            // Update product logic here
-            setProducts(products.map(p => 
-              p.product_id === selectedProduct.product_id 
-                ? { ...selectedProduct, ...productData }
-                : p
-            ));
-            setShowEditModal(false);
-          }}
-          title="Edit Product"
-        />
-      )}
-
-      {showDeleteModal && (
-        <DeleteConfirmModal
-          isOpen={showDeleteModal}
-          onClose={() => setShowDeleteModal(false)}
-          product={selectedProduct}
-          onConfirm={() => {
-            // Delete product logic here
-            setProducts(products.filter(p => p.product_id !== selectedProduct?.product_id));
-            setShowDeleteModal(false);
-          }}
-        />
-      )}
-    </div>
-  );
-}
-
-// Product Card Component
-function ProductCard({ product, onEdit, onDelete }) {
-  return (
-    <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden">
-      <div className="aspect-w-16 aspect-h-12 bg-gray-100 flex items-center justify-center">
-        {product.image ? (
-          <img
-            src={product.image}
-            alt={product.title}
-            className="w-full h-48 object-cover"
-          />
-        ) : (
-          <div className="w-full h-48 bg-gray-100 flex items-center justify-center">
-            <Image size={48} className="text-gray-400" />
-          </div>
-        )}
-      </div>
-      
-      <div className="p-4">
-        <div className="flex items-start justify-between mb-2">
-          <h3 className="text-lg font-semibold text-gray-900 truncate flex-1">
-            {product.title}
-          </h3>
-          <span className="text-lg font-bold text-green-600 ml-2">
-            ${product.price}
-          </span>
-        </div>
-        
-        <p className="text-sm text-gray-500 mb-2">ID: {product.product_id}</p>
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2">{product.description}</p>
-        
-        <div className="flex justify-between items-center pt-3 border-t">
-          <div className="text-xs text-gray-500">
-            Admin: {product.admin_id}
-          </div>
-          <div className="flex gap-2">
-            <button
-              onClick={() => onEdit(product)}
-              className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-              title="Edit product"
-            >
-              <Edit size={16} />
-            </button>
-            <button
-              onClick={() => onDelete(product)}
-              className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-              title="Delete product"
-            >
-              <Trash2 size={16} />
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Product Modal Component
-function ProductModal({ isOpen, onClose, product, onSave, title }) {
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    price: ''
-  });
-
-  const [errors, setErrors] = useState({});
-
-  useEffect(() => {
-    if (product) {
-      setFormData({
-        title: product.title || '',
-        description: product.description || '',
-        price: product.price?.toString() || ''
-      });
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = () => setImagePreview(reader.result);
+        reader.readAsDataURL(file);
+      } else {
+        setImagePreview(originalImageUrl || null);
+      }
     } else {
-      setFormData({
-        title: '',
-        description: '',
-        price: ''
-      });
-    }
-    setErrors({});
-  }, [product]);
-
-  const validateForm = () => {
-    const newErrors = {};
-    
-    if (!formData.title.trim()) {
-      newErrors.title = 'Product title is required';
-    } else if (formData.title.length > 100) {
-      newErrors.title = 'Title must be 100 characters or less';
-    }
-    
-    if (!formData.description.trim()) {
-      newErrors.description = 'Product description is required';
-    } else if (formData.description.length > 200) {
-      newErrors.description = 'Description must be 200 characters or less';
-    }
-    
-    if (!formData.price) {
-      newErrors.price = 'Price is required';
-    } else if (isNaN(parseFloat(formData.price)) || parseFloat(formData.price) <= 0) {
-      newErrors.price = 'Price must be a valid positive number';
-    } else if (parseFloat(formData.price) > 99999999.99) {
-      newErrors.price = 'Price is too high';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = () => {
-    if (validateForm()) {
-      onSave({
-        ...formData,
-        price: parseFloat(formData.price)
-      });
+      setFormData({ ...formData, [name]: value });
     }
   };
 
-  if (!isOpen) return null;
+  const handleResetImage = () => {
+    setFormData({ ...formData, image: null });
+    setImagePreview(originalImageUrl || null);
+    const fileInput = document.getElementById("image-input");
+    if (fileInput) fileInput.value = "";
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formPayload = new FormData();
+    formPayload.append("title", formData.title);
+    formPayload.append("description", formData.description);
+    formPayload.append("price", formData.price);
+    formPayload.append("admin_id", adminId);
+
+    if (formData.image) {
+      formPayload.append("image", formData.image);
+    } else if (!editingId) {
+      setError("Image is required.");
+      setTimeout(() => setError(null), 4000);
+      return;
+    }
+
+    const url = editingId
+      ? `http://localhost:8000/api/products/admin/${editingId}/update/`
+      : "http://localhost:8000/api/products/admin/add/";
+    const method = editingId ? "PUT" : "POST";
+
+    try {
+      const response = await fetch(url, {
+        method,
+        headers: { Authorization: `Bearer ${token}` },
+        body: formPayload,
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        fetchProducts();
+        resetForm();
+        alert(editingId ? "Product updated" : "Product created");
+      } else {
+        setError(result.message || "Failed to save product");
+        setTimeout(() => setError(null), 4000);
+      }
+    } catch (err) {
+      setError("Error saving product");
+      setTimeout(() => setError(null), 4000);
+    }
+  };
+
+  const handleEdit = (product) => {
+    setFormData({
+      title: product.title,
+      description: product.description,
+      price: product.price,
+      image: null,
+    });
+    setEditingId(product.product_id);
+
+    const url = product.image ? getImageUrl(product.image) : null;
+    setImagePreview(url);
+    setOriginalImageUrl(url);
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this product?")) return;
+
+    try {
+      const response = await fetch(
+        `http://localhost:8000/api/products/admin/${id}/delete/`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (response.ok) {
+        fetchProducts();
+        alert("Product deleted");
+      } else {
+        const result = await response.json();
+        setError(result.message || "Failed to delete product");
+        setTimeout(() => setError(null), 4000);
+      }
+    } catch (err) {
+      setError("Error deleting product");
+      setTimeout(() => setError(null), 4000);
+    }
+  };
+
+  const resetForm = () => {
+    setFormData({ title: "", description: "", price: "", image: null });
+    setEditingId(null);
+    setImagePreview(null);
+    setOriginalImageUrl(null);
+    const fileInput = document.getElementById("image-input");
+    if (fileInput) fileInput.value = "";
+  };
+
+  const filteredProducts = products.filter(
+    (p) =>
+      p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+  const currentProducts = filteredProducts.slice(
+    (currentPage - 1) * productsPerPage,
+    currentPage * productsPerPage
+  );
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="text-2xl font-semibold text-gray-900">{title}</h2>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-          >
-            <X size={20} />
-          </button>
-        </div>
+    <div className="p-4 max-w-6xl mx-auto">
+      <h1 className="text-4xl font-bold text-center text-green-700 mb-12">
+        Admin Product Management
+      </h1>
 
-        <div className="p-6 space-y-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Product Title *
-            </label>
-            <input
-              type="text"
-              value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent ${
-                errors.title ? 'border-red-300' : 'border-gray-300'
-              }`}
-              maxLength={100}
-            />
-            {errors.title && (
-              <p className="text-red-600 text-sm mt-1">{errors.title}</p>
-            )}
-            <p className="text-gray-500 text-xs mt-1">
-              {formData.title.length}/100 characters
-            </p>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Description *
-            </label>
-            <textarea
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              rows={4}
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent ${
-                errors.description ? 'border-red-300' : 'border-gray-300'
-              }`}
-              maxLength={200}
-            />
-            {errors.description && (
-              <p className="text-red-600 text-sm mt-1">{errors.description}</p>
-            )}
-            <p className="text-gray-500 text-xs mt-1">
-              {formData.description.length}/200 characters
-            </p>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Price ($) *
-            </label>
-            <input
-              type="number"
-              step="0.01"
-              min="0"
-              max="99999999.99"
-              value={formData.price}
-              onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent ${
-                errors.price ? 'border-red-300' : 'border-gray-300'
-              }`}
-              placeholder="0.00"
-            />
-            {errors.price && (
-              <p className="text-red-600 text-sm mt-1">{errors.price}</p>
-            )}
-          </div>
-
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            <div className="flex items-center gap-2">
-              <Image size={16} className="text-yellow-600" />
-              <p className="text-sm text-yellow-800">
-                Image upload functionality will be implemented with backend integration
-              </p>
-            </div>
-          </div>
-
-          <div className="flex justify-end gap-3 pt-6 border-t">
-            <button
-              onClick={onClose}
-              className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleSubmit}
-              className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center gap-2 transition-colors"
-            >
-              <Save size={16} />
-              {product ? 'Update Product' : 'Create Product'}
-            </button>
-          </div>
-        </div>
+      {/* Search */}
+      <div className="flex justify-center mb-8 gap-2">
+        <input
+          type="text"
+          placeholder="Search by title or description..."
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          className="w-full max-w-xl px-4 py-2 border rounded-md"
+        />
+        <button
+          onClick={() => {
+            setSearchTerm(searchInput);
+            setCurrentPage(1);
+          }}
+          className="bg-green-600 text-white px-4 py-2 rounded-md"
+        >
+          Search
+        </button>
+        <button
+          onClick={() => {
+            setSearchInput("");
+            setSearchTerm("");
+            setCurrentPage(1);
+          }}
+          className="bg-gray-300 text-gray-800 px-4 py-2 rounded-md"
+        >
+          Clear
+        </button>
       </div>
+
+      {/* Form */}
+      <div className="mb-12 bg-white p-6 rounded-lg shadow-md">
+        <h2 className="text-2xl font-semibold mb-4">
+          {editingId ? "Edit Product" : "Create New Product"}
+        </h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            name="title"
+            value={formData.title}
+            onChange={handleInputChange}
+            placeholder="Title"
+            className="w-full px-4 py-2 border rounded-md"
+            required
+          />
+          <textarea
+            name="description"
+            value={formData.description}
+            onChange={handleInputChange}
+            placeholder="Description"
+            className="w-full px-4 py-2 border rounded-md"
+            rows="4"
+            required
+          />
+          <input
+            type="number"
+            name="price"
+            value={formData.price}
+            onChange={handleInputChange}
+            placeholder="Price"
+            className="w-full px-4 py-2 border rounded-md"
+            step="0.01"
+            required
+          />
+
+          <div className="flex items-center gap-4">
+            <input
+              id="image-input"
+              type="file"
+              name="image"
+              accept="image/*"
+              onChange={handleInputChange}
+              className="w-full px-4 py-2 border rounded-md"
+            />
+            {(formData.image || editingId) && (
+              <button
+                type="button"
+                onClick={handleResetImage}
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-3 py-2 rounded-md"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+
+          {imagePreview && (
+            <img
+              src={imagePreview}
+              alt="Preview"
+              className="mt-2 w-32 h-32 object-cover rounded"
+            />
+          )}
+
+          <div className="flex gap-4">
+            <button
+              type="submit"
+              className="bg-green-700 text-white px-6 py-2 rounded-md"
+            >
+              {editingId ? "Update" : "Create"}
+            </button>
+            {editingId && (
+              <button
+                type="button"
+                onClick={resetForm}
+                className="bg-gray-400 text-white px-6 py-2 rounded-md"
+              >
+                Cancel
+              </button>
+            )}
+          </div>
+        </form>
+        {error && <p className="text-red-500 mt-4">{error}</p>}
+      </div>
+
+      {/* Products */}
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <h2 className="text-2xl font-semibold mb-4">Products</h2>
+        {loading ? (
+          <p>Loading...</p>
+        ) : currentProducts.length === 0 ? (
+          <p className="text-gray-500">No products found.</p>
+        ) : (
+          <div className="space-y-4">
+            {currentProducts.map((product) => (
+              <div
+                key={product.product_id}
+                className="flex justify-between items-center border-b py-4"
+              >
+                <div
+                  onClick={() => {
+                    setSelectedProduct(product);
+                    setShowModal(true);
+                  }}
+                  className="cursor-pointer flex items-center gap-4"
+                >
+                  {product.image && (
+                    <img
+                      src={getImageUrl(product.image)}
+                      alt={product.title}
+                      className="w-16 h-16 object-cover rounded"
+                    />
+                  )}
+                  <div>
+                    <h3 className="font-semibold">{product.title}</h3>
+                    <p className="text-sm text-gray-600 truncate w-[500px]">
+                      {product.description}
+                    </p>
+                    <p className="text-green-700 font-bold">${product.price}</p>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <button onClick={() => handleEdit(product)} className="text-blue-600">
+                    <Pencil size={20} />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(product.product_id)}
+                    className="text-red-600"
+                  >
+                    <Trash2 size={20} />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex justify-center mt-6 gap-2">
+            <button
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className={`px-3 py-1 rounded ${
+                currentPage === 1
+                  ? "bg-gray-200 text-gray-400"
+                  : "bg-green-100 text-green-700 hover:bg-green-200"
+              }`}
+            >
+              Prev
+            </button>
+            {[...Array(totalPages)].map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setCurrentPage(idx + 1)}
+                className={`px-3 py-1 rounded ${
+                  currentPage === idx + 1
+                    ? "bg-green-600 text-white"
+                    : "bg-green-100 text-green-700 hover:bg-green-200"
+                }`}
+              >
+                {idx + 1}
+              </button>
+            ))}
+            <button
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+              className={`px-3 py-1 rounded ${
+                currentPage === totalPages
+                  ? "bg-gray-200 text-gray-400"
+                  : "bg-green-100 text-green-700 hover:bg-green-200"
+              }`}
+            >
+              Next
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Modal */}
+      {showModal && selectedProduct && (
+        <div
+          className="fixed inset-0 flex items-center justify-center z-50"
+          style={{ backdropFilter: "blur(6px)" }}
+        >
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full relative max-h-[90vh] overflow-y-auto">
+            <button
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-2xl"
+              onClick={() => setShowModal(false)}
+            >
+              &times;
+            </button>
+            {selectedProduct.image && (
+              <img
+                src={getImageUrl(selectedProduct.image)}
+                alt={selectedProduct.title}
+                className="w-full h-64 object-cover rounded mb-4"
+              />
+            )}
+            <h2 className="text-2xl font-bold mb-4">{selectedProduct.title}</h2>
+            <p className="text-gray-700 mb-4 whitespace-pre-line">
+              {selectedProduct.description}
+            </p>
+            <p className="text-green-700 font-bold mb-4">
+              ${selectedProduct.price}
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
-}
-
-// Delete Confirmation Modal Component
-function DeleteConfirmModal({ isOpen, onClose, product, onConfirm }) {
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg max-w-md w-full">
-        <div className="p-6">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-              <Trash2 size={24} className="text-red-600" />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900">Delete Product</h3>
-              <p className="text-gray-600">This action cannot be undone.</p>
-            </div>
-          </div>
-
-          <div className="mb-6 bg-gray-50 p-4 rounded-lg">
-            <p className="text-gray-600 mb-2">
-              Are you sure you want to delete this product?
-            </p>
-            <div className="text-sm text-gray-700">
-              <p><span className="font-medium">Product:</span> {product?.title}</p>
-              <p><span className="font-medium">ID:</span> {product?.product_id}</p>
-              <p><span className="font-medium">Price:</span> ${product?.price}</p>
-            </div>
-          </div>
-
-          <div className="flex justify-end gap-3">
-            <button
-              onClick={onClose}
-              className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={onConfirm}
-              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
-            >
-              Delete Product
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+};
 
 export default AdminProducts;

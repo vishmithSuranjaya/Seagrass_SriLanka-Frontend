@@ -27,7 +27,7 @@ const Navbar = () => {
 
   const navLinks = [
     "Home", "News", "Reports", "Blog", "Gallery",
-     "Product", "About", "Identify Seagrass","Mini Game"
+     "Product", "About", "Identify Seagrass","Game Zone"
   ];
 
   return (

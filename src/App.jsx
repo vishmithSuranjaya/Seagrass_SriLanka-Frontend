@@ -28,7 +28,7 @@ import { AuthProvider } from './components/Login_Register/AuthContext';
 import ProductFullView from './Pages/ProductFullView';
 import BlogFullView from './Pages/BlogFullView';
 import AdminResearch from './Pages/Admin/AdminResearch';
-
+import GameZone from './Pages/GameZone';
 
 
 // ← Added import for ProtectedRoute
@@ -64,6 +64,7 @@ function AppWrapper() {
         <Route path='/calender' element={<Calendar/>} />
         <Route path='/newsdetails/:news_id' element={<NewsDetailView />} />
         <Route path='/cart' element={<CartPage />} />
+        <Route path="/game zone" element={<GameZone />} />
 
         
         {/* <Route path="/user/blogs" element={<BlogsPage />} /> */}
