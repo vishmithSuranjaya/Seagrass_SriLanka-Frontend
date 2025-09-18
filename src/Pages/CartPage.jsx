@@ -101,7 +101,21 @@ const CartPage = () => {
   // ✅ Empty cart state
   if (!cart || !cart.items || cart.items.length === 0) {
     return (
-      <p className="text-center mt-20 text-gray-500">Your cart is empty.</p>
+       <div className="mt-24 px-20">
+      <Breadcrumb />
+      <div className="max-w-2xl mx-auto p-10 text-center flex flex-col items-center justify-center h-[50vh]">
+        <h2 className="text-2xl font-semibold mb-4 text-gray-700">
+           Your cart is empty
+        </h2>
+        
+        <a
+          href="/products"
+          className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
+        >
+          Browse Products
+        </a>
+      </div>
+    </div>
     );
   }
 
@@ -111,7 +125,7 @@ const CartPage = () => {
 
   // ✅ Main cart UI
   return (
-    <div className="mt-24 px-20">
+    <div className="mt-24 px-20 min-h-screen">
       <Breadcrumb />
       <div className="max-w-4xl mx-auto p-6 mb-20">
         <h1 className="text-3xl font-bold mb-15 text-[#1B7B19]">
