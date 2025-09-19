@@ -12,29 +12,62 @@ const PayButton = ({ items, totalAmount }) => {
       document.body.removeChild(script);
     };
   }, []);
+
+  
   const startPayment = async () => {
-    try {
-      const token = localStorage.getItem("access_token");
+  const currentItems = [...items]; // copy the items array
+  const currentTotal = totalAmount;
 
-      const res = await axios.post(
-        "http://localhost:8000/api/products/payment/create_payment/",
-        { items, total_amount: totalAmount }, // dynamic items
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+  try {
+    const token = localStorage.getItem("access_token");
 
-      const payment = res.data;
+    const res = await axios.post(
+      "http://localhost:8000/api/products/payment/create_payment/",
+      { items: currentItems, total_amount: currentTotal },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
 
-      if (window.payhere) {
-        console.log(payment)
-        window.payhere.startPayment(payment);
-      } else {
-        alert("PayHere SDK not loaded. Please refresh the page.");
+    const payment = res.data;
+
+    if (!window.payhere) return alert("PayHere SDK not loaded.");
+
+    console.log("PayHere Payload:", payment);
+
+    window.payhere.onCompleted = async function onCompleted(orderId) {
+      console.log("Payment completed. OrderID:", orderId);
+
+      try {
+        await axios.post(
+          "http://localhost:8000/api/products/payment/save_payment/",
+          {
+            product_id: currentItems[0].product_id, // now defined
+            amount: currentTotal,
+            payment_id: orderId,
+          },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        alert("Payment recorded successfully!");
+      } catch (err) {
+        console.error("Error saving payment:", err);
+        alert("Failed to save payment to backend.");
       }
-    } catch (err) {
-      console.error("Payment error:", err);
-      alert("Payment initiation failed. Try again.");
-    }
-  };
+    };
+
+    window.payhere.onDismissed = function () {
+      console.log("Payment dismissed");
+    };
+
+    window.payhere.onError = function (error) {
+      console.error("PayHere Error:", error);
+    };
+
+    window.payhere.startPayment(payment);
+
+  } catch (err) {
+    console.error("Payment initiation error:", err);
+    alert("Payment initiation failed.");
+  }
+};
 
   return (
     <button

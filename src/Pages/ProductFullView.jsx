@@ -53,9 +53,15 @@ const ProductFullView = () => {
   const handleAddToCart = async () => {
   const token = localStorage.getItem("access_token")
   if (!token) {
-    navigate("/login")
-    return
-  }
+  Swal.fire({
+    icon: "error",
+    title: "Unauthorized",
+    text: "Please log in to continue.",
+    confirmButtonColor: "#3085d6",
+  });
+  return;
+}
+
 
   try {
     const response = await axios.post(
@@ -113,7 +119,7 @@ const ProductFullView = () => {
         </button>
 
         <PayButton 
-         items={product.name}
+         items={product.title}
          totalAmount={product.price}
         />
         </div>

@@ -109,7 +109,7 @@ const CartPage = () => {
         </h2>
         
         <a
-          href="/products"
+          href="/product"
           className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
         >
           Browse Products
