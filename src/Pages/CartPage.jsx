@@ -41,16 +41,16 @@ const CartPage = () => {
     const token = localStorage.getItem("access_token");
 
     const result = await Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#d33",
-        cancelButtonColor: "#3085d6",
-        confirmButtonText: "Yes",
-      });
-    
-      if (!result.isConfirmed) return;
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes",
+    });
+
+    if (!result.isConfirmed) return;
 
     try {
       await axios.delete(
@@ -86,11 +86,11 @@ const CartPage = () => {
   // ✅ Loading state
   if (loading) {
     return (
-    <div className="mt-24 px-20">
-      <Breadcrumb />
-      <Skeleton type="cart" />
-    </div>
-  );
+      <div className="mt-24 px-20">
+        <Breadcrumb />
+        <Skeleton type="cart" />
+      </div>
+    );
   }
 
   // ✅ Error state
@@ -101,27 +101,27 @@ const CartPage = () => {
   // ✅ Empty cart state
   if (!cart || !cart.items || cart.items.length === 0) {
     return (
-       <div className="mt-24 px-20">
-      <Breadcrumb />
-      <div className="max-w-2xl mx-auto p-10 text-center flex flex-col items-center justify-center h-[50vh]">
-        <h2 className="text-2xl font-semibold mb-4 text-gray-700">
-           Your cart is empty
-        </h2>
-        
-        <a
-          href="/product"
-          className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
-        >
-          Browse Products
-        </a>
+      <div className="mt-24 px-20">
+        <Breadcrumb />
+        <div className="max-w-2xl mx-auto p-10 text-center flex flex-col items-center justify-center h-[50vh]">
+          <h2 className="text-2xl font-semibold mb-4 text-gray-700">
+            Your cart is empty
+          </h2>
+
+          <a
+            href="/product"
+            className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
+          >
+            Browse Products
+          </a>
+        </div>
       </div>
-    </div>
     );
   }
 
   if (loading) {
-  return <Skeleton type="cart" />;
-}
+    return <Skeleton type="cart" />;
+  }
 
   // ✅ Main cart UI
   return (
@@ -205,12 +205,16 @@ const CartPage = () => {
               ${Number(cart.total_amount).toFixed(2)}
             </span>
           </h2>
-          
+
           <div className="mt-5">
             <PayButton
-            items={cart.items} // array of items in the cart
-            totalAmount={cart.total_amount} // total amount
-          />
+              items={cart.items.map((item) => ({
+                product_id: item.product_id,
+                quantity: item.count || 1, // send count
+                product_price: item.product_price, // optional: price snapshot
+              }))} // array of items in the cart
+              totalAmount={cart.total_amount} // total amount
+            />
           </div>
         </div>
       </div>

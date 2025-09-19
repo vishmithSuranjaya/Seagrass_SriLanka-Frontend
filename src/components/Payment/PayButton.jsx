@@ -15,7 +15,7 @@ const PayButton = ({ items, totalAmount }) => {
 
   
   const startPayment = async () => {
-  const currentItems = [...items]; // copy the items array
+  const currentItems = [...items]; 
   const currentTotal = totalAmount;
 
   try {
@@ -31,25 +31,25 @@ const PayButton = ({ items, totalAmount }) => {
 
     if (!window.payhere) return alert("PayHere SDK not loaded.");
 
-    console.log("PayHere Payload:", payment);
+
 
     window.payhere.onCompleted = async function onCompleted(orderId) {
-      console.log("Payment completed. OrderID:", orderId);
-
+     
       try {
         await axios.post(
           "http://localhost:8000/api/products/payment/save_payment/",
           {
-            product_id: currentItems[0].product_id, // now defined
+            items:currentItems,
+            product_id: currentItems[0].product_id, 
             amount: currentTotal,
             payment_id: orderId,
           },
           { headers: { Authorization: `Bearer ${token}` } }
         );
-        alert("Payment recorded successfully!");
+        console.log("Payment recorded successfully!");
       } catch (err) {
         console.error("Error saving payment:", err);
-        alert("Failed to save payment to backend.");
+        console.log("Failed to save payment to backend.");
       }
     };
 
@@ -65,7 +65,7 @@ const PayButton = ({ items, totalAmount }) => {
 
   } catch (err) {
     console.error("Payment initiation error:", err);
-    alert("Payment initiation failed.");
+    console.log("Payment initiation failed.");
   }
 };
 
