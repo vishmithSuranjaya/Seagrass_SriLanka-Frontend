@@ -10,7 +10,8 @@ const Sidebar = () => {
     { name: 'Home', path: '/user', icon: 'fas fa-home' },
     { name: 'Blogs', path: '/user/blogs', icon: 'fas fa-newspaper' },
     { name: 'Settings', path: '/user/settings', icon: 'fas fa-cog' },
-    { name: 'cart', path: '/cart', icon: 'fas fa-cart'}
+    { name: 'Cart', path: '/cart', icon: 'fas fa-cart'},
+    { name: 'Orders', path: '/user/orders', icon: 'fas fa-cart'},
     
   ];
 

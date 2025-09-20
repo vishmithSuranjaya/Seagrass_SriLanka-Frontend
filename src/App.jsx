@@ -40,6 +40,7 @@ import Calendar from './components/calender/Calender';
 import NewsDetailView from './components/calender/NewsDetailView';
 import CartPage from './Pages/CartPage';
 import UserHome from './components/userProfile/UserHome';
+import Orders from './components/userProfile/Orders';
 
 function AppWrapper() {
   const location = useLocation();
@@ -80,6 +81,7 @@ function AppWrapper() {
           <Route path="blogs" element={<BlogsPage />} />
           <Route path="/user/settings" element={<UserSettings />} />
           <Route path="/user" element={<UserHome />} />
+          <Route path="/user/orders" element={<Orders />} />
         </Route>
         
         {/* ← Changed /admin route to be wrapped in ProtectedRoute */}
