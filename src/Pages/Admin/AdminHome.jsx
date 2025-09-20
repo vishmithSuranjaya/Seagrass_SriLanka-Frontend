@@ -153,6 +153,7 @@ const AdminHome = () => {
           </nav>
         </motion.aside>
       )}
+      
 
       <div className={`flex-1 flex flex-col ${mobileMenuOpen ? 'blur-sm pointer-events-none select-none' : ''} transition-all duration-300`}>
         <motion.header
@@ -166,6 +167,7 @@ const AdminHome = () => {
             className="flex items-center gap-2 cursor-pointer select-none relative"
             onClick={() => setProfileMenuOpen((prev) => !prev)}
           >
+            
             {profileImage ? (
               <img src={profileImage} alt="Profile" className="w-6 h-6 rounded-full object-cover" onError={(e) => { e.target.src = '/no-image.png'; }} />
             ) : (

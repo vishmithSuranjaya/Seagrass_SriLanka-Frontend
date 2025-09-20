@@ -1,1 +1,32 @@
 @import "tailwindcss";
+
+/* Dark theme base styles */
+.dark {
+	background-color: #18181b;
+	color: #e5e7eb;
+}
+
+.dark .bg-white {
+	background-color: #23232a !important;
+}
+.dark .text-gray-800 {
+	color: #e5e7eb !important;
+}
+.dark .bg-gray-100 {
+	background-color: #23232a !important;
+}
+.dark .bg-gray-200 {
+	background-color: #23232a !important;
+}
+.dark .bg-gray-300 {
+	background-color: #23232a !important;
+}
+.dark .bg-gray-400 {
+	background-color: #23232a !important;
+}
+.dark .bg-gray-900 {
+	background-color: #18181b !important;
+}
+.dark .text-white {
+	color: #e5e7eb !important;
+}

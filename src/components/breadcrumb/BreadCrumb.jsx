@@ -39,11 +39,11 @@ const Breadcrumb = () => {
   };
 
   return (
-    <nav aria-label="breadcrumb" className="text-sm text-gray-600 mb-6 pl-6 font-serif">
+    <nav aria-label="breadcrumb" className="text-sm text-600 mb-6 pl-6 font-serif">
       <ol className="flex space-x-2 items-center">
         <li>
-          <Link to="/" className="hover:underline text-black">Home</Link>
-          <span className="mx-1 text-gray-400">›</span>
+          <Link to="/" className="hover:underline text">Home</Link>
+          <span className="mx-1 text-400">›</span>
         </li>
 
         {pathnames.map((segment, index) => {
@@ -65,13 +65,13 @@ const Breadcrumb = () => {
           }
 
           return (
-            <li key={index} className={isLast ? 'font-semibold text-black' : ''}>
+            <li key={index} className={isLast ? 'font-semibold text-900' : ''}>
               {isLast ? (
                 <span>{label}</span>
               ) : (
                 <>
-                  <Link to={to} className="hover:underline text-black">{label}</Link>
-                  <span className="mx-1 text-gray-400">›</span>
+                  <Link to={to} className="hover:underline text-900">{label}</Link>
+                  <span className="mx-1 text-400">›</span>
                 </>
               )}
             </li>

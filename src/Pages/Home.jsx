@@ -53,7 +53,7 @@ const Home = () => {
             <h2 className="text-5xl sm:text-6xl font-bold mb-4 pb-4  text-[#1B7B19] text-center font-serif">
               Nature’s Underwater Wonder: Seagrass
             </h2>
-            <p className="text-gray-900 leading-relaxed text-xl text-left font-serif">
+            <p className="text-gray-600 leading-relaxed text-xl text-left font-serif">
               Beneath the ocean’s surface lies a world of green — seagrass meadows, delicate yet powerful. These flowering plants sway gently with the tides, 
               covering the sea floor like an underwater rainforest.They’re not seaweed, but true plants with roots, leaves, and even tiny blossoms. Quietly working behind the scenes, 
               seagrass brings life to the ocean, offering a home to marine creatures and helping our planet breathe.Seagrass is beauty, balance, and life — all beneath the waves.
