@@ -103,36 +103,46 @@ const ProductFullView = () => {
     return <p className="text-center mt-20 text-red-500">Product not found</p>;
 
   return (
-    <div className="mt-24 px-20">
-      <Breadcrumb />
-      <div className="m-10 max-w-2xl mx-auto">
-        <h1 className="text-2xl font-bold mb-4">{product.name}</h1>
+   <div className="mt-24 px-20">
+  <Breadcrumb />
 
+  <div className="m-10 max-w-5xl mx-auto">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
+      {/* Product Image */}
+      <div className="flex justify-center">
         <img
           src={getImageUrl(product)}
           alt={product.name || "Product Image"}
-          className="w-full h-auto object-cover rounded-lg mb-4"
+          className="w-full max-w-sm h-auto object-cover rounded-lg shadow-md"
           onError={handleImageError}
           loading="lazy"
         />
+      </div>
 
-        <p className="text-gray-600 mb-2">{product.description}</p>
-        <p className="text-lg font-semibold">Price: ${product.price}</p>
+      {/* Product Details */}
+      <div>
+        <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
+
+        <p className="text-gray-600 mb-4">{product.description}</p>
+
+        <p className="text-2xl font-semibold text-green-700 mb-6">
+          Rs. {product.price}
+        </p>
 
         <div className="flex gap-4">
           <button
-            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md"
+            className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md shadow"
             onClick={handleAddToCart}
           >
-            Add to chart
+            Add to Cart
           </button>
 
           <PayButton
             items={[
               {
-                product_id: product.product_id, // send the product id
-                quantity: 1, // default quantity for direct buy
-                product_price: product.price, // optional: price snapshot
+                product_id: product.product_id,
+                quantity: 1,
+                product_price: product.price,
               },
             ]}
             totalAmount={product.price}
@@ -140,6 +150,9 @@ const ProductFullView = () => {
         </div>
       </div>
     </div>
+  </div>
+</div>
+
   );
 };
 
