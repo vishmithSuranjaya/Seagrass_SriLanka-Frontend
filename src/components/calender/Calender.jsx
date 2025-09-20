@@ -48,7 +48,7 @@ const Calendar = () => {
           events={events}
           startAccessor="start"
           endAccessor="end"
-          date={currentDate} // ✅ controlled date
+          date={currentDate} 
           onNavigate={(newDate) => setCurrentDate(newDate)} //
           style={{ height: 500 }}
           onSelectEvent={handleEventClick} // click on event title

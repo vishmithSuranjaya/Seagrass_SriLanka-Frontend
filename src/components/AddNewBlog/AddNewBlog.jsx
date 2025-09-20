@@ -1,132 +1,79 @@
 import React, { useState, useEffect, useRef } from "react";
 import { IoMdClose } from "react-icons/io";
-import { FaUndo, FaRedo } from "react-icons/fa"; // Import for Undo/Redo icons
+import { FaUndo, FaRedo } from "react-icons/fa";
 import { toast } from "react-toastify";
 
 const AddBlogModal = ({ show, onClose, onPost }) => {
-  // Current state for form fields
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [metaDescription, setMetaDescription] = useState("");
 
-  // State for undo/redo history
-  // Each history entry is an object { title: string, content: string }
-  const [pastStates, setPastStates] = useState([]); // Stores previous [title, content] pairs
-  const [futureStates, setFutureStates] = useState([]); // Stores future [title, content] pairs for redo
-  const [isTyping, setIsTyping] = useState(false); // Flag to debounce history saving
+  const [pastStates, setPastStates] = useState([]);
+  const [futureStates, setFutureStates] = useState([]);
+  const [isTyping, setIsTyping] = useState(false);
 
   const debounceTimeoutRef = useRef(null);
-  // Key to solving the "multiple presses" issue:
-  // A ref to signal if the state change is specifically due to an undo/redo action.
   const isNavigatingHistoryRef = useRef(false);
 
-  // Effect to manage history when title or content changes
+  // Track past states for undo/redo
   useEffect(() => {
-    // Determine if the current state is different from the last state in history
     const lastPastState = pastStates[pastStates.length - 1];
     const isCurrentStateDifferent =
       lastPastState?.title !== title || lastPastState?.content !== content;
 
-    // Only save history if:
-    // 1. User has paused typing (`!isTyping`)
-    // 2. The current state is actually different from the last saved state (`isCurrentStateDifferent`)
-    // 3. The change is NOT due to an undo/redo action (`!isNavigatingHistoryRef.current`)
     if (!isTyping && isCurrentStateDifferent && !isNavigatingHistoryRef.current) {
       setPastStates((prev) => {
-        // Add the current state to the pastStates
         const newPast = [...prev, { title, content }];
-        // Limit history size to prevent excessive memory usage
-        // Keeps only the last 50 states, or fewer if the history isn't that long yet
         return newPast.slice(Math.max(newPast.length - 50, 0));
       });
-      // Any new, non-history action (like typing or optimization) clears the redo history
       setFutureStates([]);
     }
-  }, [title, content, isTyping, pastStates]); // Dependencies for useEffect
+  }, [title, content, isTyping, pastStates]);
 
-  // Helper function to handle input changes with debouncing
   const handleStateChange = (setter, value) => {
-    setter(value); // Update the component's state immediately
-
-    setIsTyping(true); // Indicate that the user is actively typing
-
-    // Clear any existing debounce timeout to reset the timer
-    if (debounceTimeoutRef.current) {
-      clearTimeout(debounceTimeoutRef.current);
-    }
-
-    // Set a new timeout. When this timeout fires, it means the user has paused typing.
-    debounceTimeoutRef.current = setTimeout(() => {
-      setIsTyping(false); // Signal that typing has finished, allowing useEffect to save history
-    }, 500); // 500ms debounce time
+    setter(value);
+    setIsTyping(true);
+    if (debounceTimeoutRef.current) clearTimeout(debounceTimeoutRef.current);
+    debounceTimeoutRef.current = setTimeout(() => setIsTyping(false), 500);
   };
 
   const handleUndo = () => {
-    // Ensure there are states in the past to undo to
     if (pastStates.length > 0) {
-      // Set the flag to true to prevent useEffect from recording this state change
       isNavigatingHistoryRef.current = true;
-
-      // Save the *current* state to futureStates, so it can be redone
       setFutureStates((prev) => [{ title, content }, ...prev]);
-
-      // Get the last state from pastStates and remove it from the array
       const newPast = [...pastStates];
       const previousState = newPast.pop();
-      setPastStates(newPast); // Update pastStates
+      setPastStates(newPast);
 
-      // Apply the previous state to the component's title and content
       if (previousState) {
         setTitle(previousState.title);
         setContent(previousState.content);
       }
-
-      // Reset the flag after a short delay (0ms) to ensure the state update has propagated
-      // before allowing new history records. This is crucial for fixing the "multiple presses" issue.
-      setTimeout(() => {
-        isNavigatingHistoryRef.current = false;
-      }, 0);
-    }
-    // Special case: If pastStates is empty but there's still content,
-    // it means we're at the very first state before any recorded changes.
-    // Undo should revert to empty inputs.
-    else if (title !== "" || content !== "") {
+      setTimeout(() => (isNavigatingHistoryRef.current = false), 0);
+    } else if (title !== "" || content !== "") {
       isNavigatingHistoryRef.current = true;
-      setFutureStates((prev) => [{ title, content }, ...prev]); // Save current non-empty state for redo
+      setFutureStates((prev) => [{ title, content }, ...prev]);
       setTitle("");
       setContent("");
-      setTimeout(() => {
-        isNavigatingHistoryRef.current = false;
-      }, 0);
+      setTimeout(() => (isNavigatingHistoryRef.current = false), 0);
     }
   };
 
   const handleRedo = () => {
-    // Ensure there are states in the future to redo
     if (futureStates.length > 0) {
-      // Set the flag to true to prevent useEffect from recording this state change
       isNavigatingHistoryRef.current = true;
-
-      // Save the *current* state to pastStates, so it can be undone again
       setPastStates((prev) => [...prev, { title, content }]);
-
-      // Get the next state from futureStates and remove it from the array
       const newFuture = [...futureStates];
       const nextState = newFuture.shift();
-      setFutureStates(newFuture); // Update futureStates
+      setFutureStates(newFuture);
 
-      // Apply the next state to the component's title and content
       if (nextState) {
         setTitle(nextState.title);
         setContent(nextState.content);
       }
-
-      // Reset the flag after a short delay (0ms)
-      setTimeout(() => {
-        isNavigatingHistoryRef.current = false;
-      }, 0);
+      setTimeout(() => (isNavigatingHistoryRef.current = false), 0);
     }
   };
 
@@ -136,11 +83,6 @@ const AddBlogModal = ({ show, onClose, onPost }) => {
       return;
     }
 
-    // --- IMPORTANT: Save current state BEFORE the optimization API call ---
-    // This allows the user to undo the optimization result if they don't like it.
-    setPastStates((prev) => [...prev, { title, content }]);
-    setFutureStates([]); // Optimization is a new action, so clear redo history
-
     try {
       const response = await fetch(
         "https://rashm-macq7mj4-eastus2.cognitiveservices.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2025-01-01-preview",
@@ -148,17 +90,26 @@ const AddBlogModal = ({ show, onClose, onPost }) => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "api-key":
-              "8hWstobpA36UxyYbYaVvDqDg045OdhhvNcTXcn0VO1faBm95wqUpJQQJ99BEACHYHv6XJ3w3AAAAACOGwu9c", // !!! SECURITY ALERT: Move this API key to an environment variable (.env file) for production !!!
+            "api-key": "8hWstobpA36UxyYbYaVvDqDg045OdhhvNcTXcn0VO1faBm95wqUpJQQJ99BEACHYHv6XJ3w3AAAAACOGwu9c", 
           },
           body: JSON.stringify({
             messages: [
               {
                 role: "system",
-                content:
-                  "You are an expert content writer and SEO specialist. Your task is to: 1. Improve grammar, clarity, and readability of a blog post. 2. Optimize for SEO by incorporating relevant keywords naturally. 3. Suggest a meta description. Return the result as JSON wrapped in ```json with fields `optimized_content`, `meta_description`,`title`",
+                content: `You are an expert content writer, SEO specialist, and marine biologist specializing in seagrass ecosystems.
+Your task is to:
+1. Improve grammar, clarity, and readability of a blog post.
+2. Optimize for SEO by incorporating relevant keywords naturally.
+3. Suggest a meta description.
+4. Suggest a title.
+5. Confirm whether the article is truly about seagrass-related topics.
+
+Return JSON strictly: 
+{ "optimized_content": "...", "meta_description": "...", "title": "...", "is_seagrass_related": true/false, "reason": "short explanation" }
+
+Blog post:
+${content}`,
               },
-              { role: "user", content: `\n${content}` },
             ],
             max_tokens: 3000,
             temperature: 0.7,
@@ -167,46 +118,25 @@ const AddBlogModal = ({ show, onClose, onPost }) => {
       );
 
       const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error?.message || `API error: ${response.status}`);
-      }
-
       let contentStr = data.choices?.[0]?.message?.content || "";
-
-      // Extract JSON from markdown if the API response wraps it
       if (contentStr.includes("```json")) {
-        contentStr = contentStr
-          .replace(/```json\s*/, "")
-          .replace(/\s*```$/, "");
+        contentStr = contentStr.replace(/```json\s*/, "").replace(/\s*```$/, "");
       }
+      const parsed = JSON.parse(contentStr);
 
-      let parsed;
-      try {
-        parsed = JSON.parse(contentStr);
-      } catch (err) {
-        toast.error("Failed to parse AI response.");
-        console.error("Parse error:", err);
-        // If parsing fails, revert the history state that was added before the optimization attempt
-        setPastStates((prev) => prev.slice(0, -1));
+      if (!parsed.is_seagrass_related) {
+        toast.error("Content is Not about seagrass");
         return;
       }
 
-      // Temporarily set the flag to true before updating state from optimization result
-      isNavigatingHistoryRef.current = true;
-      setTitle(parsed.title || title); // Use optimized title, or original if not provided
-      setContent(parsed.optimized_content || content); // Use optimized content, or original if not provided
-      setMetaDescription(parsed.meta_description || ""); // Set meta description
-      toast.success("Content optimized successfully!");
-      // Reset the flag after a short delay
-      setTimeout(() => {
-        isNavigatingHistoryRef.current = false;
-      }, 0);
-    } catch (error) {
+      // Update fields with optimized content
+      setTitle(parsed.title || title);
+      setContent(parsed.optimized_content || content);
+      setMetaDescription(parsed.meta_description || "");
+      toast.success("Content optimized & validated successfully!");
+    } catch (err) {
+      console.error(err);
       toast.error("Optimization failed.");
-      console.error("Optimization error:", error);
-      // If optimization fails, revert the history state that was added before the attempt
-      setPastStates((prev) => prev.slice(0, -1));
     }
   };
 
@@ -218,42 +148,83 @@ const AddBlogModal = ({ show, onClose, onPost }) => {
     }
   };
 
+  // POST with validation before sending to backend
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Save current state BEFORE the submission attempt
-    // This allows undoing the form clear if the post is successful
-    setPastStates((prev) => [...prev, { title, content }]);
-    setFutureStates([]); // Submission is a new action, so clear redo history
+    if (!title.trim() || !content.trim()) {
+      toast.error("Title and content cannot be empty.");
+      return;
+    }
 
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("content", content);
-    formData.append("image", imageFile);
-    formData.append("meta_description", metaDescription);
+    try {
+      // Step 1: Validate content using Azure
+      const validateResponse = await fetch(
+        "https://rashm-macq7mj4-eastus2.cognitiveservices.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2025-01-01-preview",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "api-key": "8hWstobpA36UxyYbYaVvDqDg045OdhhvNcTXcn0VO1faBm95wqUpJQQJ99BEACHYHv6XJ3w3AAAAACOGwu9c", 
+          },
+          body: JSON.stringify({
+            messages: [
+              {
+                role: "system",
+                content: `
+You are a marine biologist.
+Check if this blog is about seagrass.
+Return JSON: { "is_seagrass_related": true/false, "reason": "short explanation" }
 
-    const success = await onPost(formData); // Call the parent's onPost function
+Blog:
+${content}`,
+              },
+            ],
+            max_tokens: 300,
+            temperature: 0,
+          }),
+        }
+      );
 
-    if (success) {
-      // Clear form fields on successful submission
-      setTitle("");
-      setContent("");
-      setImageFile(null);
-      setImagePreview(null);
-      setMetaDescription("");
-      // Clear history completely as a new blog has been posted and form is reset
-      setPastStates([]);
-      setFutureStates([]);
-      toast.success("Blog posted successfully!");
-      onClose(); // Close the modal
-    } else {
-      // If submission failed, revert the history state that was added before the attempt
-      setPastStates((prev) => prev.slice(0, -1));
-      toast.error("Failed to post blog. Please try again.");
+      const validateData = await validateResponse.json();
+      let contentStr = validateData.choices?.[0]?.message?.content || "";
+      if (contentStr.includes("```json")) {
+        contentStr = contentStr.replace(/```json\s*/, "").replace(/\s*```$/, "");
+      }
+      const parsed = JSON.parse(contentStr);
+
+      if (!parsed.is_seagrass_related) {
+        toast.error("Cannot post: Content does not seem related to seagrass. Please revise your blog.");
+        return;
+      }
+
+      // Step 2: Post to backend
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("content", content);
+      formData.append("image", imageFile);
+      formData.append("meta_description", metaDescription);
+
+      const success = await onPost(formData);
+      if (success) {
+        setTitle("");
+        setContent("");
+        setImageFile(null);
+        setImagePreview(null);
+        setMetaDescription("");
+        setPastStates([]);
+        setFutureStates([]);
+        toast.success("Blog posted successfully!");
+        onClose();
+      } else {
+        toast.error("Failed to post blog. Please try again.");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Validation or posting failed.");
     }
   };
 
-  // If the 'show' prop is false, the modal should not be rendered
   if (!show) return null;
 
   return (
@@ -262,22 +233,18 @@ const AddBlogModal = ({ show, onClose, onPost }) => {
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-600 hover:text-red-600 transition"
-          aria-label="Close modal" // Good practice for accessibility
         >
           <IoMdClose size={24} />
         </button>
 
-        <h2 className="text-2xl font-bold mb-4 text-[#1B7B19]">
-          Add a New Blog
-        </h2>
+        <h2 className="text-2xl font-bold mb-4 text-[#1B7B19]">Add a New Blog</h2>
 
         <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-6">
-          {/* Image Upload Section */}
           <div className="w-full md:w-1/3 flex flex-col items-center justify-center border border-dashed border-gray-400 rounded p-4">
             {imagePreview ? (
               <img
                 src={imagePreview}
-                alt="Image Preview" // Accessibility
+                alt="Preview"
                 className="w-full h-48 object-cover rounded mb-4"
               />
             ) : (
@@ -310,7 +277,6 @@ const AddBlogModal = ({ show, onClose, onPost }) => {
             </div>
           </div>
 
-          {/* Text Inputs Section */}
           <div className="w-full md:w-2/3">
             <input
               type="text"
@@ -326,7 +292,6 @@ const AddBlogModal = ({ show, onClose, onPost }) => {
               onChange={(e) => handleStateChange(setContent, e.target.value)}
             ></textarea>
 
-            {/* Optional Meta Description Display */}
             {metaDescription && (
               <div className="mb-4 p-3 bg-blue-50 border-l-4 border-blue-500 text-sm">
                 <strong>Meta Description:</strong> {metaDescription}
@@ -334,22 +299,18 @@ const AddBlogModal = ({ show, onClose, onPost }) => {
             )}
 
             <div className="flex justify-between items-center mt-4">
-              {/* Undo/Redo Buttons */}
               <div className="flex gap-2">
                 <button
                   type="button"
                   onClick={handleUndo}
-                  // Disable if no past states to revert to, OR if currently at initial empty state
                   disabled={pastStates.length === 0 && title === "" && content === ""}
                   className={`px-4 py-2 rounded flex items-center gap-1 ${
-                    (pastStates.length === 0 && title === "" && content === "")
+                    pastStates.length === 0 && title === "" && content === ""
                       ? "bg-gray-200 text-gray-400 cursor-not-allowed"
                       : "bg-blue-500 text-white hover:bg-blue-600"
                   }`}
-                  title="Undo" // Tooltip for accessibility
                 >
-                  <FaUndo /> {/* Undo Icon */}
-                  <span>Undo</span>
+                  <FaUndo /> Undo
                 </button>
                 <button
                   type="button"
@@ -360,14 +321,11 @@ const AddBlogModal = ({ show, onClose, onPost }) => {
                       ? "bg-gray-200 text-gray-400 cursor-not-allowed"
                       : "bg-blue-500 text-white hover:bg-blue-600"
                   }`}
-                  title="Redo" // Tooltip for accessibility
                 >
-                  <FaRedo /> {/* Redo Icon */}
-                  <span>Redo</span>
+                  <FaRedo /> Redo
                 </button>
               </div>
 
-              {/* Optimize and Post Buttons */}
               <div className="flex gap-2">
                 <button
                   type="button"

@@ -71,12 +71,12 @@ const Blog = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      toast.success("Blog posted successfully!");
+      // toast.success("Blog posted successfully!");
       setShowModal(false);
       fetchBlogs(); // Refresh blogs after successful post
       return true; // Indicate success to modal
     } catch (err) {
-      toast.error("Failed to post blog.");
+      // toast.error("Failed to post blog.");
       console.error(err);
       return false; // Indicate failure to modal
     }

@@ -56,23 +56,39 @@ const Skeleton = ({ type }) => {
       );
   case "product-full":
   return (
-    <div className="w-3/4 mx-auto p-10 animate-pulse">
-      {/* Title Skeleton */}
-      <div className="bg-gray-300 h-6 w-2/3 rounded mb-6"></div>
-
+    <div className="mt-24 px-20">
+  <div className="m-10 max-w-5xl mx-auto animate-pulse">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
       {/* Image Skeleton */}
-      <div className="bg-gray-300 h-[300px] w-full rounded mb-6"></div>
-
-      {/* Description Skeleton */}
-      <div className="space-y-4 mb-6">
-        <div className="bg-gray-300 h-4 w-full rounded"></div>
-        <div className="bg-gray-300 h-4 w-5/6 rounded"></div>
-        <div className="bg-gray-300 h-4 w-2/3 rounded"></div>
+      <div className="flex justify-center">
+        <div className="bg-gray-300 w-full max-w-sm h-[300px] rounded-lg"></div>
       </div>
 
-      {/* Price Skeleton */}
-      <div className="bg-gray-300 h-5 w-1/4 rounded"></div>
+      {/* Details Skeleton */}
+      <div className="space-y-6">
+        {/* Title */}
+        <div className="bg-gray-300 h-8 w-2/3 rounded"></div>
+
+        {/* Description */}
+        <div className="space-y-3">
+          <div className="bg-gray-300 h-4 w-full rounded"></div>
+          <div className="bg-gray-300 h-4 w-5/6 rounded"></div>
+          <div className="bg-gray-300 h-4 w-2/3 rounded"></div>
+        </div>
+
+        {/* Price */}
+        <div className="bg-gray-300 h-6 w-1/4 rounded"></div>
+
+        {/* Buttons */}
+        <div className="flex gap-4">
+          <div className="bg-gray-300 h-10 w-32 rounded-md"></div>
+          <div className="bg-gray-300 h-10 w-32 rounded-md"></div>
+        </div>
+      </div>
     </div>
+  </div>
+</div>
+
   );
 
   case "cart":
