@@ -1,7 +1,11 @@
 import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const PayButton = ({ items, totalAmount }) => {
+
+  const navigate = useNavigate();
+
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://sandbox.payhere.lk/lib/payhere.js";
@@ -47,6 +51,7 @@ const PayButton = ({ items, totalAmount }) => {
           { headers: { Authorization: `Bearer ${token}` } }
         );
         console.log("Payment recorded successfully!");
+        navigate("/user/orders")
       } catch (err) {
         console.error("Error saving payment:", err);
         console.log("Failed to save payment to backend.");

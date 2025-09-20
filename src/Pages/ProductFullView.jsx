@@ -111,7 +111,7 @@ const ProductFullView = () => {
         <img
           src={getImageUrl(product)}
           alt={product.name || "Product Image"}
-          className="w-full h-64 object-cover rounded-lg mb-4"
+          className="w-full h-auto object-cover rounded-lg mb-4"
           onError={handleImageError}
           loading="lazy"
         />
