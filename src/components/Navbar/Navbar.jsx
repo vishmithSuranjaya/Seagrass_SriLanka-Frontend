@@ -9,20 +9,14 @@ import RegisterForm from "../Login_Register/RegisterForm";
 import { AuthContext } from "../Login_Register/AuthContext";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
 
-const Navbar = () => {
-  const [isDark, setIsDark] = useState(false);
+
+const Navbar = ({ isDark, toggleTheme }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
 
   const { user, logout } = useContext(AuthContext);
 
-  const toggleMode = () => {
-    // setIsDark((prev) => !prev)
-    const newMode = !isDark;
-    setIsDark(newMode);
-    localStorage.setItem("theme", newMode ? "light" : "dark"); /// theme saved in localstorage
-  };
   const toggleMenu = () => setMenuOpen((prev) => !prev);
 
   const navLinks = [
@@ -67,7 +61,7 @@ const Navbar = () => {
               </div>
             )}
             <button
-              onClick={toggleMode}
+              onClick={toggleTheme}
               className="text-xl hover:scale-110 transition duration-200"
               aria-label="Toggle dark mode"
             >

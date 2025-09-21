@@ -152,7 +152,7 @@ const News = () => {
                 type="text"
                 value={year}
                 readOnly
-                className="bg-gray-300 text-black px-4 py-3 rounded-l-md w-full text-lg cursor-pointer"
+                className="bg-gray-300  px-4 py-3 rounded-l-md w-full text-lg cursor-pointer"
                 placeholder="YYYY"
               />
               <button
@@ -190,7 +190,7 @@ const News = () => {
                 type="text"
                 value={months.find(m => m.number === parseInt(month))?.name || ''}
                 readOnly
-                className="bg-gray-300 text-black px-4 py-3 rounded-l-md w-full text-lg cursor-pointer"
+                className="bg-gray-300  px-4 py-3 rounded-l-md w-full text-lg cursor-pointer"
                 placeholder="MM"
               />
               <button
@@ -272,10 +272,10 @@ const News = () => {
               <div className="flex-1 flex flex-col justify-between">
                 <div>
                   <h2 className="text-green-700 font-semibold mb-2 text-xl">{news.title}</h2>
-                  <p className="mb-3 font-medium text-gray-600">
+                  <p className="mb-3 font-medium text-gray-500">
                     {new Date(news.updated_at || news.created_at).toDateString()}
                   </p>
-                  <div className="text-gray-700 mb-3 leading-relaxed line-clamp-4">
+                  <div className="mb-3 leading-relaxed line-clamp-4">
                     {news.content}
                   </div>
                 </div>

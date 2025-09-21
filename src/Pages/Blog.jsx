@@ -178,7 +178,7 @@ const Blog = () => {
                 <h3 className="text-2xl font-bold text-[#1B7B19] mb-2">
                   {blog.title}
                 </h3>
-                <p className="text-lg text-gray-900 mb-2 line-clamp-3 font-serif">
+                <p className="text-lg  mb-2 line-clamp-3 font-serif">
                   {blog.content}
                 </p>
                 <button

@@ -93,7 +93,7 @@ const SeagrassIdentify = () => {
       </div>
 
       <div className="max-w-full mb-10">
-        <p className="text-gray-900 text-sm sm:text-xl font-poppins leading-relaxed font-serif">
+        <p className="text-900 text-sm sm:text-xl font-poppins leading-relaxed font-serif">
           Seagrasses are flowering marine plants found in shallow coastal waters,
           forming dense underwater meadows. Sri Lanka hosts about 15 species of
           seagrasses, distributed along its northern, eastern, western, and southern

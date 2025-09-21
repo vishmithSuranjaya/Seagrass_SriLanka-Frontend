@@ -7,6 +7,7 @@ import {
 } from 'react-router-dom';
 import Home from './Pages/Home';
 import Navbar from './components/Navbar/Navbar';
+import React, { useState, useEffect } from 'react';
 import Footer from './components/Footer/Footer';
 import News from './Pages/News';
 import Reports from './Pages/Reports';
@@ -46,9 +47,27 @@ function AppWrapper() {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
 
+  // Dark theme state
+  const [isDark, setIsDark] = useState(() => {
+    const saved = localStorage.getItem('theme');
+    return saved === 'dark';
+  });
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (isDark) {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  }, [isDark]);
+
+  const toggleTheme = () => setIsDark((prev) => !prev);
+
   return (
     <>
-      {!isAdminRoute && <Navbar />}
+      {!isAdminRoute && <Navbar isDark={isDark} toggleTheme={toggleTheme} />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/news" element={<News />} />

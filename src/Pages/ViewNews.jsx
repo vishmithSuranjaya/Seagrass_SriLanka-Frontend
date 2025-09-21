@@ -52,7 +52,7 @@ const ViewFullNews = () => {
       </button>
 
       <h1 className="text-3xl md:text-4xl font-bold text-green-700 mb-4">{newsData.title}</h1>
-      <p className="text-gray-600 mb-4 font-medium">{new Date(newsData.created_at).toDateString()}</p>
+      <p className="text-gray-500 mb-4 font-medium">{new Date(newsData.created_at).toDateString()}</p>
       
       <img
         src={getImageUrl(newsData)}
