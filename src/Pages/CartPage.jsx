@@ -140,14 +140,17 @@ const CartPage = () => {
             >
               <div className="flex items-center gap-4">
                 <img
-                  src={
-                    item.product_image?.startsWith("http")
-                      ? item.product_image
-                      : `http://localhost:8000${item.product_image}`
-                  }
-                  alt={item.product_name}
-                  className="w-20 h-20 object-cover rounded-md"
-                />
+  src={
+    item.product_image
+      ? item.product_image.startsWith("http")
+        ? item.product_image
+        : `http://localhost:8000${item.product_image}`
+      : "https://via.placeholder.com/80x80?text=No+Image"
+  }
+  alt={item.product_name}
+  className="w-20 h-20 object-cover rounded-md"
+/>
+
                 <div>
                   <h2 className="text-lg font-semibold">{item.product_name}</h2>
                   <p className="text-gray-600">
