@@ -18,16 +18,19 @@ const Products = () => {
   }, []);
 
   const fetchProducts = async () => {
-    try {
-      const response = await axios.get("http://localhost:8000/api/products/list/");
-      setProducts(response.data);
-    } catch (error) {
-      toast.error("Failed to fetch products.");
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const token = localStorage.getItem("access_token");
+  try {
+    const response = await axios.get("http://localhost:8000/api/products/list/");
+    
+    setProducts(response.data);
+    console.log(response.data)
+  } catch (error) {
+    toast.error("Failed to fetch products.");
+    console.log(error);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   // Navigate to full product view
   const handleItemClick = (productId) => {
@@ -60,8 +63,8 @@ const Products = () => {
   };
 
   return (
-    <div className="mt-24 px-20 min-h-screen">
-      {/* Breadcrumb */}
+   <div className="mt-24 px-20 min-h-screen">
+      
       <div>
         <Breadcrumb />
       </div>
@@ -78,27 +81,37 @@ const Products = () => {
         ) : products.length === 0 ? (
           <p className="text-center col-span-full text-xl">No products available.</p>
         ) : (
-          products.map((product) => (
-            <div
-              key={product.product_id}
-              className="rounded-xl overflow-hidden shadow-md hover:shadow-xl transition duration-300"
-            >
-              <div className="aspect-square overflow-hidden">
-                <img
-                  src={getImageUrl(product)}
-                  alt={product.title}
-                  className="w-full h-full object-cover transition-transform duration-300 hover:scale-105 cursor-pointer"
-                  onError={() => handleProductImgError(product.image)}
-                  onClick={() => handleItemClick(product.product_id)}
-                />
-              </div>
-              {product.title && (
-                <div className="text-sm p-2 text-center text-gray-700">
-                  {product.title}
+          products.map((product) => {
+          
+            const productImage =
+              product.images && product.images.length > 0
+                ? product.images[0].image
+                : "/images/default-product.png"; // fallback
+
+            return (
+              <div
+                key={product.product_id}
+                className="rounded-xl overflow-hidden shadow-md hover:shadow-xl transition duration-300"
+              >
+                <div className="aspect-square overflow-hidden">
+                  <img
+                    
+                    src={`http://localhost:8000/${productImage}`}
+                    alt={product.title || "Product"} 
+                    className="w-full h-full object-cover transition-transform duration-300 hover:scale-105 cursor-pointer"
+                    
+                    onError={() => handleProductImgError(productImage)}
+                    onClick={() => handleItemClick(product.product_id)}
+                  />
                 </div>
-              )}
-            </div>
-          ))
+                {product.title && (
+                  <div className="text-sm p-2 text-center text-gray-700">
+                    {product.title}
+                  </div>
+                )}
+              </div>
+            );
+          })
         )}
       </div>
     </div>

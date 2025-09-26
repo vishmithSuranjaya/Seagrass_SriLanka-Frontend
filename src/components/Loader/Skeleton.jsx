@@ -60,8 +60,16 @@ const Skeleton = ({ type }) => {
   <div className="m-10 max-w-5xl mx-auto animate-pulse">
     <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
       {/* Image Skeleton */}
-      <div className="flex justify-center">
-        <div className="bg-gray-300 w-full max-w-sm h-[300px] rounded-lg"></div>
+      <div className="flex flex-col gap-4">
+        {/* Main Image */}
+        <div className="bg-gray-300 w-full h-96 rounded-lg"></div>
+
+        {/* Thumbnails */}
+        <div className="flex flex-row gap-2 overflow-x-auto mt-2">
+          {Array.from({ length: 4 }).map((_, idx) => (
+            <div key={idx} className="bg-gray-300 w-20 h-20 rounded-md flex-shrink-0"></div>
+          ))}
+        </div>
       </div>
 
       {/* Details Skeleton */}
