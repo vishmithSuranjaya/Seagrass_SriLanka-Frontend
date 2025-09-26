@@ -158,7 +158,7 @@ const UserHome = () => {
 
       {/* Right: Recent Comments */}
       <div className="w-1/3">
-        <div className="p-6 bg-gray-50 rounded-xl shadow h-full">
+        <div className="p-6 bg-gray-100 rounded-xl shadow h-full">
           <h2 className="text-2xl font-bold text-green-700 mb-4">
             Recent Comments
           </h2>
@@ -169,8 +169,8 @@ const UserHome = () => {
                   key={index}
                   className="p-6 bg-white rounded-md shadow-sm border"
                 >
-                  <p className="text-gray-700 font-bold">{c.text || c.content}</p>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-gray-800 font-bold">{c.text || c.content}</p>
+                  <p className="text-sm .text-white">
                     on blog{" "}
                     <Link
                       to={`/blogs/${c.blog_id}`}

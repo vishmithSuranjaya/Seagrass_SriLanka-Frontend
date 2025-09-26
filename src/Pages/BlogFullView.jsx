@@ -16,25 +16,24 @@ const BlogFullView = () => {
   const user_id = location.state?.user_id;
 
 
-  // useEffect(() => {
-    // if (!blog) {
-      const fetchBlog = async () => {
-        try {
-          const response = await fetch(`http://localhost:8000/api/blogs/${id}/`);
-          if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-          const data = await response.json();
-          setBlog(data);
-    
-        } catch (err) {
-          setError(err.message);
-        } finally {
-          setLoading(false);
-        }
-      };
+  const fetchBlog = async () => {
+    try {
+      const response = await fetch(`http://localhost:8000/api/blogs/${id}/`);
+      if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+      const data = await response.json();
+      setBlog(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
+    if (!blog) {
       fetchBlog();
-    // }
-  // }, [blog, id]);
+    }
+  }, [id]);
 
   if (error) {
     return <p className="text-center mt-10 text-red-500">Error: {error}</p>;
@@ -60,11 +59,11 @@ const BlogFullView = () => {
               <>
                 <img src={testImg} alt="profile" className="w-16 h-16 rounded-full" />
                 <div>
-                  <h5 className="font-bold font-serif text-lg">{blog.full_name|| "Unknown Author"}</h5>
+                  <h5 className="font-bold font-serif text-lg">{blog.user_fname} {blog.user_lname || "Unknown Author"}</h5>
                   <h1>{blog.user_has_liked}</h1>
                   <time className="text-sm font-semibold">
                     {blog.date} <br />
-                    {blog.time}
+                    {new Date(`1970-01-01T${blog.time}`).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </time>
                 </div>
               </>

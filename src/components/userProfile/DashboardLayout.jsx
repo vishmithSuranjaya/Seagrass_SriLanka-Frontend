@@ -8,7 +8,7 @@ const DashboardLayout = () => {
   const { user } = useAuth();
 
   return (
-    <div className="flex h-screen bg-gray-100 mt-20">
+    <div className="flex h-screen mt-20">
       <Sidebar />
       <main className="flex-1 p-8 overflow-y-auto">
         {/*

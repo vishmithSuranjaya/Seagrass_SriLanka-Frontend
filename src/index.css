@@ -30,3 +30,10 @@
 .dark .text-white {
 	color: #e5e7eb !important;
 }
+
+.fill-bg {
+  fill: #fff;
+}
+.dark .fill-bg {
+  fill: #18181b;
+}
