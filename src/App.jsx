@@ -25,6 +25,7 @@ import AdminSettings from './Pages/Admin/AdminSettings';
 import AdminBlogs from './Pages/Admin/AdminBlogs';
 import AdminDashboard from './Pages/Admin/AdminDashboard';
 import AdminProducts from './Pages/Admin/AdminProducts';
+import AdminGallery from './Pages/Admin/AdminGallery';
 import { AuthProvider } from './components/Login_Register/AuthContext';
 import ProductFullView from './Pages/ProductFullView';
 import BlogFullView from './Pages/BlogFullView';
@@ -117,6 +118,7 @@ function AppWrapper() {
           <Route path="adminDashboard" element={<AdminDashboard />} />
           <Route path="adminnews" element={<AdminNews />} />
           <Route path="adminblogs" element={<AdminBlogs />} />
+          <Route path="admingallery" element={<AdminGallery />} />
           <Route path="adminsettings" element={<AdminSettings />} />
           <Route path="adminusers" element={<AdminUsers />} />
         </Route>
