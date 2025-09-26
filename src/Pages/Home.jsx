@@ -3,7 +3,7 @@ import Banner from "../assets/banner.webp"; // Make sure this path is correct
 import imag1 from "../assets/Photo-1.jpg";
 import imag2 from "../assets/PC290412.jpg";
 import imag3 from "../assets/Photo-6.jpg";
-import imag4 from "../assets/seagrass_leaves.jpg";
+import imag4 from "../assets/seagrass_leaves.png";
 import NewsHomepage from "../components/news_homepage/NewsHomepage";
 import Blogs_Homepage from "../components/blogs_Homepage/Blogs_Homepage";
 
@@ -30,7 +30,7 @@ const Home = () => {
     >
       <path
         d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z"
-        className="fill-white"
+        className="fill-bg"
       />
     </svg>
   </div>
@@ -104,7 +104,7 @@ const Home = () => {
 
         {/* Right Column - Paragraph */}
         <div className="w-full md:w-1/2 flex items-center">
-          <p className="text-gray-900 leading-relaxed text-xl font-serif">
+          <p className="text-gray-600 leading-relaxed text-xl font-serif">
             Seagrasses are the ocean’s hidden heroes.They fight climate change by absorbing carbon faster than rainforests, protect coastlines from erosion, and keep our waters clean. 
             These underwater plants are home to fish, turtles, and countless marine creatures—and support millions of people who depend on the sea.
             But seagrasses are disappearing fast due to pollution and human activity.Saving seagrass means saving marine life, protecting coastlines, and securing our planet’s future

@@ -655,6 +655,7 @@ const AdminBlogs = () => {
               </div>
               <div className="flex flex-col sm:flex-row sm:justify-between text-gray-500 text-sm border-t pt-3 mt-4">
                 <span>{selectedBlog.date} | {selectedBlog.status}</span>
+                <span>{new Date(`1970-01-01T${selectedBlog.time}`).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                 <span>By: {selectedBlog.user_fname && selectedBlog.user_lname
                   ? `${selectedBlog.user_fname} ${selectedBlog.user_lname}`
                   : (selectedBlog.user_fname || 'Admin')}

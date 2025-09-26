@@ -10,7 +10,7 @@ const FloatingIcon = ({ src, style }) => (
 
 const About = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-green-100 text-gray-800 font-serif px-4 pt-36 pb-24 relative overflow-hidden">
+    <div className="min-h-screen  text-gray-800 font-serif px-4 pt-36 pb-24 relative overflow-hidden">
       {/*  Decorative Wave Top */}
       <svg className="absolute top-0 left-0 w-full" viewBox="0 0 1440 320">
         <path
@@ -27,7 +27,7 @@ const About = () => {
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="flex flex-col md:flex-row items-center justify-between bg-white/80 backdrop-blur-md rounded-3xl overflow-hidden shadow-xl border border-green-100 mb-10 mt-[-100px] relative z-10"
+        className="flex flex-col md:flex-row items-center justify-between bg-white/10 backdrop-blur-md rounded-3xl overflow-hidden shadow-xl border border-green-100 mb-10 mt-[-100px] relative z-10"
       >
         <div className="md:w-1/2 w-full p-10 text-gray-800">
           {/* Breadcrumb Navigation */}
@@ -109,20 +109,20 @@ const About = () => {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.3 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="bg-gradient-to-b from-blue-50 to-green-100 py-16 px-6 md:px-12 mt-25 relative z-5" // same as About Us background
+        className=" py-16 px-6 md:px-12 mt-25 relative z-5" // same as About Us background
       >
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
+        <div className="bg-white py-16 px-6 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 bg-white/70 backdrop-blur-md p-8 rounded-3xl shadow-xl border border-white relative z-10">
           {/* Left Side: Contact Form */}
           <form className="space-y-5">
             <input
               type="text"
               placeholder="Your Name"
-              className="w-full bg-gradient-to-b from-blue-50 to-green-100 border border-gray-300 p-3 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full bg-gray-100 from-blue-50 to-green-100 border border-gray-300 p-3 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
             />
             <input
               type="email"
               placeholder="Your Email"
-              className="w-full bg-gradient-to-b from-blue-50 to-green-100 border border-gray-300 p-3 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full bg-gray-100 from-blue-50 to-green-100 border border-gray-300 p-3 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
             />
             <input
               type="tel"
