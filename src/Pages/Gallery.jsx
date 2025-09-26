@@ -120,7 +120,10 @@ const Gallery = () => {
             <button
               onClick={() => setPopupImage(null)}
               aria-label="Close popup"
-              className="absolute top-2 right-3 text-gray-600 text-3xl hover:text-black transition-colors cursor-pointer bg-transparent border-none"
+              className="absolute top-3 right-3 w-10 h-10 flex items-center justify-center 
+             rounded-full bg-red-500 text-white text-2xl font-bold 
+             hover:bg-red-600 active:bg-red-700 
+             shadow-lg transition-all cursor-pointer"
             >
               &times;
             </button>

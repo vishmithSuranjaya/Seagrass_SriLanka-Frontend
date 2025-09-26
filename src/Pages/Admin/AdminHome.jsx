@@ -3,8 +3,11 @@ import { motion } from 'framer-motion';
 import {
   FiHome, FiUsers, FiFileText,
   FiSettings, FiGlobe, FiLogOut,
-  FiChevronLeft, FiChevronRight, FiMenu,
+  FiChevronLeft, FiChevronRight, FiMenu, 
 } from 'react-icons/fi';
+import { RiGalleryFill } from "react-icons/ri";
+
+
 import { FaShoppingCart, FaBookReader } from 'react-icons/fa';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../components/Login_Register/AuthContext';
@@ -16,6 +19,7 @@ const navLinks = [
   { icon: <FaBookReader />, label: 'Research Articles', path: '/admin/adminResearch' },
   { icon: <FiUsers />, label: 'Users', path: '/admin/adminusers' },
   { icon: <FiFileText />, label: 'Blogs', path: '/admin/adminblogs' },
+  { icon: <RiGalleryFill />, label: 'Gallery', path: '/admin/admingallery' },
   { icon: <FiSettings />, label: 'Settings', path: '/admin/adminsettings' },
 ];
 
