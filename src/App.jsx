@@ -43,6 +43,7 @@ import NewsDetailView from './components/calender/NewsDetailView';
 import CartPage from './Pages/CartPage';
 import UserHome from './components/userProfile/UserHome';
 import Orders from './components/userProfile/Orders';
+import CheckoutForm from './components/Payment/CheckoutForm';
 
 function AppWrapper() {
   const location = useLocation();
@@ -86,6 +87,7 @@ function AppWrapper() {
         <Route path='/newsdetails/:news_id' element={<NewsDetailView />} />
         <Route path='/cart' element={<CartPage />} />
         <Route path="/game zone" element={<GameZone />} />
+        <Route path="/checkout" element={<CheckoutForm />} />
 
         
         {/* <Route path="/user/blogs" element={<BlogsPage />} /> */}
