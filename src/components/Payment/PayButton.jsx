@@ -1,10 +1,12 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Swal from "sweetalert2";
 
-const PayButton = ({ items, totalAmount }) => {
+const PayButton = ({ items, totalAmount,checkoutData }) => {
 
   const navigate = useNavigate();
+  console.log("Checkout Data (from props):", checkoutData);
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -27,7 +29,7 @@ const PayButton = ({ items, totalAmount }) => {
 
     const res = await axios.post(
       "http://localhost:8000/api/products/payment/create_payment/",
-      { items: currentItems, total_amount: currentTotal },
+      { items: currentItems, total_amount: currentTotal,checkoutData: checkoutData },
       { headers: { Authorization: `Bearer ${token}` } }
     );
 
@@ -47,14 +49,27 @@ const PayButton = ({ items, totalAmount }) => {
             product_id: currentItems[0].product_id, 
             amount: currentTotal,
             payment_id: orderId,
+            checkoutData: checkoutData,
           },
           { headers: { Authorization: `Bearer ${token}` } }
         );
         console.log("Payment recorded successfully!");
+        Swal.fire({
+                title: "Success!",
+                text: "Payment Succesfull !",
+                icon: "success",
+                confirmButtonColor: "#1B7B19",
+              });
         navigate("/user/orders")
       } catch (err) {
         console.error("Error saving payment:", err);
         console.log("Failed to save payment to backend.");
+        Swal.fire({
+                title: "Failure!",
+                text: "Failed to complete the payment",
+                icon: "error",
+                confirmButtonColor: "#1B7B19",
+              });
       }
     };
 
