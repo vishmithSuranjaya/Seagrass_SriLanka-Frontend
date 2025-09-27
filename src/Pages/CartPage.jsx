@@ -4,6 +4,7 @@ import Breadcrumb from "../components/breadcrumb/BreadCrumb";
 import PayButton from "../components/Payment/PayButton";
 import Skeleton from "../components/Loader/Skeleton";
 import CheckoutForm from "../components/Payment/CheckoutForm";
+import Swal from "sweetalert2";
 
 const CartPage = () => {
   const [cart, setCart] = useState(null);
@@ -39,19 +40,49 @@ const CartPage = () => {
     }
   };
 
-  const updateCartItem = async (productId, action) => {
+  const handleQuantityChange = async (productId, newCount) => {
+    if (newCount < 1) return; // no negatives or zero
+    const token = localStorage.getItem("access_token");
     try {
-      const token = localStorage.getItem("access_token");
-      await axios.post(
-        "http://localhost:8000/api/products/cart/update/",
-        { product_id: productId, action }, // action = "increment" | "decrement" | "remove"
+      await axios.put(
+        `http://localhost:8000/api/products/cart/update_item_count/${productId}/`, // pass productId in URL
+        { count: newCount },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      fetchCart(); // refresh cart after update
+      fetchCart();
     } catch (err) {
-      console.error("Failed to update cart:", err);
+      console.error("Error updating quantity:", err);
+    }
+  
+  };
+
+  const handleRemoveItem = async (productId) => {
+    const token = localStorage.getItem("access_token");
+
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes",
+    });
+
+    if (!result.isConfirmed) return;
+
+    try {
+      await axios.delete(
+        `http://localhost:8000/api/products/cart/remove_cart_item/${productId}/`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      fetchCart();
+    } catch (err) {
+      console.error("Error removing item:", err);
     }
   };
 
@@ -108,10 +139,10 @@ const CartPage = () => {
                       {item.product_name}
                     </h2>
                     <p className="text-gray-600">
-                      Price: ${item.product_price}
+                      Price: Rs: {item.product_price}
                     </p>
                     <p className="text-gray-600">
-                      Line Total: ${item.line_total}
+                      Line Total: Rs: {item.line_total}
                     </p>
                   </div>
                 </div>
@@ -120,8 +151,11 @@ const CartPage = () => {
                 <div className="flex items-center gap-3">
                   {/* Decrement */}
                   <button
-                    onClick={() => updateCartItem(item.product_id, "decrement")}
-                    className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                    onClick={() =>
+                      handleQuantityChange(item.product_id, item.count - 1)
+                    }
+                    disabled={item.count === 1} // disable if count is 1
+                    className="px-3 py-2 bg-green-200 text-green-800 rounded hover:bg-green-300"
                   >
                     −
                   </button>
@@ -131,15 +165,18 @@ const CartPage = () => {
 
                   {/* Increment */}
                   <button
-                    onClick={() => updateCartItem(item.product_id, "increment")}
-                    className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                    onClick={() =>
+                      handleQuantityChange(item.product_id, item.count + 1)
+                    }
+                    className="px-3 py-2 bg-green-200 text-green-800 rounded hover:bg-green-300"
+                    
                   >
                     +
                   </button>
 
                   {/* Remove */}
                   <button
-                    onClick={() => updateCartItem(item.product_id, "remove")}
+                    onClick={() => handleRemoveItem(item.product_id)}
                     className="ml-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
                   >
                     Remove
@@ -152,7 +189,7 @@ const CartPage = () => {
           {/* Cart Total & Checkout */}
           <div className="mt-6 text-right flex justify-end gap-4 items-center">
             <p className="text-lg font-semibold">
-              Total: ${cart.total_amount}
+              Total: Rs: {cart.total_amount}
             </p>
 
             {!checkoutData && (
