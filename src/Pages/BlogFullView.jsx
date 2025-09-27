@@ -6,6 +6,7 @@ import Breadcrumb from "../components/breadcrumb/BreadCrumb";
 import testImg from "../assets/Photo-1.jpg";
 import placeholderBlogImg from "../assets/blog.jpg";
 import LikeCommentComp from "../components/Reactions/LikeCommentComp";
+import { useNavigate } from "react-router-dom";
 
 const BlogFullView = () => {
   const { id } = useParams();
@@ -13,6 +14,7 @@ const BlogFullView = () => {
   const [blog, setBlog] = useState(location.state?.blog || null);
   const [loading, setLoading] = useState(!blog);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
   const user_id = location.state?.user_id;
 
 
@@ -32,6 +34,9 @@ const BlogFullView = () => {
   useEffect(() => {
     if (!blog) {
       fetchBlog();
+    }else {
+      
+      navigate('/blog');
     }
   }, [id]);
 
@@ -42,8 +47,14 @@ const BlogFullView = () => {
   return (
     <div className="mt-24 px-20">
       <Breadcrumb />
+      <button
+        onClick={() => navigate(-1)}
+        className="mb-6 text-white bg-[#1B7B19] px-4 py-2 rounded hover:bg-green-800 transition-colors"
+      >
+        ← Back
+      </button>
 
-      <div className="w-3/4 mx-auto p-10">
+      <div className="w-3/4 mx-auto p-10 pt-0">
         {/* Profile and Title Section */}
         <div className="grid gap-4 mb-6">
           <div className="flex items-center gap-4">
