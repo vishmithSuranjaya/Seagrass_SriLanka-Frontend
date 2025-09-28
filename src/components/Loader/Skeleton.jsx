@@ -128,9 +128,20 @@ const Skeleton = ({ type }) => {
       <div className="bg-gray-300 h-6 w-32 rounded ml-auto mt-6"></div>
     </div>
   );
-
-
-
+  case "gallery_list":
+      return (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 animate-pulse">
+          {[...Array(8)].map((_, idx) => (
+            <div
+              key={idx}
+              className="rounded-xl overflow-hidden shadow-md border border-gray-200"
+            >
+              <div className="aspect-square bg-gray-300"></div>
+              <div className="bg-gray-300 h-4 w-3/4 mx-auto my-3 rounded"></div>
+            </div>
+          ))}
+        </div>
+      );
   }
 };
 

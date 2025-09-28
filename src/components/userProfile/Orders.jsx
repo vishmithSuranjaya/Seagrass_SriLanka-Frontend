@@ -73,7 +73,7 @@ export default function Orders() {
                       >
                         <div className="flex justify-between items-center mb-2">
                           <h4 className="font-semibold text-gray-600">
-                            Order ID: {order.order_id}
+                           
                           </h4>
 
                           {/* Order Status */}

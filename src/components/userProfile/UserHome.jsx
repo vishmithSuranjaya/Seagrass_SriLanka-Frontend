@@ -5,6 +5,7 @@ import axios from "axios";
 import AddBlogModal from "../AddNewBlog/AddNewBlog";
 import { ToastContainer, toast } from "react-toastify";
 import { FaTrashCan } from "react-icons/fa6";
+import Swal from "sweetalert2";
 
 const UserHome = () => {
   const { user } = useAuth();
@@ -78,27 +79,54 @@ const UserHome = () => {
     }
   };
 
-  const handleDeleteComment = async (comment_id) => {
-    try {
-      const token = localStorage.getItem("access_token");
-      await axios.delete(
-        `http://localhost:8000/api/blogs/user/delete_comment/${comment_id}/`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+  
 
-      // Update UI (remove deleted comment)
-      setRecentComments((prev) =>
-        prev.filter((c) => c.comment_id !== comment_id)
-      );
+const handleDeleteComment = async (comment_id) => {
+  const token = localStorage.getItem("access_token");
 
-      toast.success("Comment deleted successfully!");
-    } catch (err) {
-      console.error("Failed to delete comment:", err);
-      toast.error("Failed to delete comment.");
-    }
-  };
+  // Show confirmation popup
+  const result = await Swal.fire({
+    title: "Are you sure?",
+    text: "This comment will be permanently deleted!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Yes, delete it!",
+  });
+
+  if (!result.isConfirmed) return; // user clicked cancel
+
+  try {
+    await axios.delete(
+      `http://localhost:8000/api/blogs/user/delete_comment/${comment_id}/`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+
+    // Update UI (remove deleted comment)
+    setRecentComments((prev) =>
+      prev.filter((c) => c.comment_id !== comment_id)
+    );
+
+    Swal.fire({
+      icon: "success",
+      title: "Deleted!",
+      text: "Your comment has been removed.",
+      timer: 2000,
+      showConfirmButton: false,
+    });
+  } catch (err) {
+    console.error("Failed to delete comment:", err);
+    Swal.fire({
+      icon: "error",
+      title: "Failed",
+      text: "Something went wrong while deleting the comment.",
+    });
+  }
+};
+
 
   return (
     <div className="max-w-6xl mx-auto p-6 flex gap-8">

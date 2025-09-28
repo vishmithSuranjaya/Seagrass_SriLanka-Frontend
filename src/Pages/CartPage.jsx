@@ -5,6 +5,7 @@ import PayButton from "../components/Payment/PayButton";
 import Skeleton from "../components/Loader/Skeleton";
 import CheckoutForm from "../components/Payment/CheckoutForm";
 import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 
 const CartPage = () => {
   const [cart, setCart] = useState(null);
@@ -29,6 +30,7 @@ const CartPage = () => {
 
       if (res.data && res.data.items && res.data.items.length > 0) {
         setCart(res.data); // cart with items
+        console.log(res.data)
       } else {
         setCart({ items: [], total_amount: 0 }); // empty cart, not an error
       }
@@ -55,7 +57,6 @@ const CartPage = () => {
     } catch (err) {
       console.error("Error updating quantity:", err);
     }
-  
   };
 
   const handleRemoveItem = async (productId) => {
@@ -88,7 +89,6 @@ const CartPage = () => {
 
   const handleCheckoutSubmit = (data) => {
     setCheckoutData(data);
-    console.log("Checkout Data:", data);
     setShowCheckoutForm(false);
   };
 
@@ -104,12 +104,12 @@ const CartPage = () => {
       {!hasItems ? (
         <div className="mt-24 px-20 text-center">
           <h2 className="text-2xl font-semibold mb-4">Your cart is empty</h2>
-          <a
-            href="/product"
+          <Link
+            to="/product"
             className="px-6 py-2 bg-green-600 text-white rounded-md"
           >
             Browse Products
-          </a>
+          </Link>
         </div>
       ) : (
         <div className="max-w-4xl mx-auto p-6 mb-20">
@@ -136,8 +136,11 @@ const CartPage = () => {
                   />
                   <div>
                     <h2 className="text-lg font-semibold">
-                      {item.product_name}
+                      {item.product_name || "no"}
                     </h2>
+
+                    
+
                     <p className="text-gray-600">
                       Price: Rs: {item.product_price}
                     </p>
@@ -169,7 +172,6 @@ const CartPage = () => {
                       handleQuantityChange(item.product_id, item.count + 1)
                     }
                     className="px-3 py-2 bg-green-200 text-green-800 rounded hover:bg-green-300"
-                    
                   >
                     +
                   </button>
