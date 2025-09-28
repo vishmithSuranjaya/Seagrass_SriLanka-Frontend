@@ -15,7 +15,7 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="w-64 bg-[#1B7B19] text-white  h-screen flex flex-col shadow-lg font-sans">
+    <aside className="w-64 bg-[#1B7B18] text-white  h-screen flex flex-col shadow-lg font-sans">
       {/* User Profile Section */}
       <div className="text-center py-8 border-b  border-green-700">
         <div className="w-20 h-20 bg-gray-100 rounded-full mx-auto mb-3 flex items-center justify-center text-[#1B7B19] text-3xl font-bold font-serif">

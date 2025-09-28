@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Breadcrumb from "../components/breadcrumb/BreadCrumb";
+import Skeleton from "../components/Loader/Skeleton";
 
 const Gallery = () => {
   const [images, setImages] = useState([]);
@@ -9,11 +10,14 @@ const Gallery = () => {
   const [popupImage, setPopupImage] = useState(null);
   const [imageErrors, setImageErrors] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchGalleryImages = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/api/core/gallery/");
+        const response = await axios.get(
+          "http://localhost:8000/api/core/gallery/"
+        );
         if (response.data && response.data.data) {
           setImages(response.data.data);
           setFilteredImages(response.data.data);
@@ -23,16 +27,17 @@ const Gallery = () => {
       } catch (error) {
         setErrorMessage("Failed to load images from the server.");
         console.error("Error fetching gallery images:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchGalleryImages();
   }, []);
 
-  // Filter images based on search query
   useEffect(() => {
     const query = searchQuery.toLowerCase();
-    const filtered = images.filter(img =>
+    const filtered = images.filter((img) =>
       img.caption?.toLowerCase().includes(query)
     );
     setFilteredImages(filtered);
@@ -61,8 +66,7 @@ const Gallery = () => {
   return (
     <div className="mt-24 px-20 relative min-h-screen">
       <Breadcrumb />
-      <div className=" sm:px-10 lg:px-20 pb-20 max-w-7xl mx-auto transition duration-200">
-        
+      <div className="sm:px-10 lg:px-20 pb-20 max-w-7xl mx-auto transition duration-200">
         <h1 className="text-4xl font-bold text-center text-green-700 mb-12">
           Gallery
         </h1>
@@ -78,13 +82,14 @@ const Gallery = () => {
           />
         </div>
 
-        {errorMessage && (
+        {/* Conditional Rendering */}
+        {loading ? (
+          <Skeleton type="gallery_list" />
+        ) : errorMessage ? (
           <div className="text-red-600 text-center mb-6 font-semibold">
             {errorMessage}
           </div>
-        )}
-
-        {filteredImages.length === 0 ? (
+        ) : filteredImages.length === 0 ? (
           <p className="text-center text-gray-600">No images found.</p>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -102,11 +107,6 @@ const Gallery = () => {
                     onError={() => handleImageError(img.image_id)}
                   />
                 </div>
-                {/* {img.caption && (
-                  <div className="text-sm p-2 text-center text-gray-700">
-                    {img.caption}
-                  </div>
-                )} */}
               </div>
             ))}
           </div>
