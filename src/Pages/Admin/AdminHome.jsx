@@ -6,8 +6,6 @@ import {
   FiChevronLeft, FiChevronRight, FiMenu, 
 } from 'react-icons/fi';
 import { RiGalleryFill } from "react-icons/ri";
-
-
 import { FaShoppingCart, FaBookReader } from 'react-icons/fa';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../components/Login_Register/AuthContext';
@@ -15,6 +13,7 @@ import { AuthContext } from '../../components/Login_Register/AuthContext';
 const navLinks = [
   { icon: <FiHome />, label: 'Dashboard', path: '/admin/adminDashboard' },
   { icon: <FiGlobe />, label: 'News', path: '/admin/adminnews' },
+  { icon: <FaShoppingCart />, label: 'Orders', path: '/admin/adminorders' },
   { icon: <FaShoppingCart />, label: 'Products', path: '/admin/adminProducts' },
   { icon: <FaBookReader />, label: 'Research Articles', path: '/admin/adminResearch' },
   { icon: <FiUsers />, label: 'Users', path: '/admin/adminusers' },
@@ -28,6 +27,7 @@ const AdminHome = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const profileMenuRef = useRef(null);
 
   const location = useLocation();
@@ -66,7 +66,12 @@ const AdminHome = () => {
   }, []);
 
   const displayName = currentUser?.full_name || currentUser?.username || 'Admin';
-  const profileImage = currentUser?.image || currentUser?.profileImage || currentUser?.profile_image || null;
+  const profileImage = currentUser?.image || currentUser?.profileImage || currentUser?.profile_image || '/no-image.png';
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -109,11 +114,7 @@ const AdminHome = () => {
               transition={{ delay: 0.25, duration: 0.35 }}
               className="flex items-center gap-3 mb-8"
             >
-              {profileImage ? (
-                <img src={profileImage} alt="Profile" className="w-12 h-12 rounded-full object-cover" onError={(e) => { e.target.src = '/no-image.png'; }} />
-              ) : (
-                <div className="w-12 h-12 bg-gray-300 rounded-full" />
-              )}
+              <img src={profileImage} alt="Profile" className="w-12 h-12 rounded-full object-cover" />
               <div>
                 <div className="text-sm">Welcome!</div>
                 <div className="font-bold text-lg">{displayName}</div>
@@ -144,12 +145,7 @@ const AdminHome = () => {
               whileHover={{ scale: 1.05, x: 5 }}
               transition={{ type: 'spring', stiffness: 260, damping: 20 }}
               className="hover:text-gray-300 flex items-center gap-3 mt-6 cursor-pointer"
-              onClick={() => {
-                console.log('Sidebar Logout Clicked');
-                logout();
-                setMobileMenuOpen(false);
-                navigate('/login');
-              }}
+              onClick={() => setShowLogoutConfirm(true)}
             >
               <FiLogOut />
               {!collapsed && <span>Logout</span>}
@@ -157,7 +153,6 @@ const AdminHome = () => {
           </nav>
         </motion.aside>
       )}
-      
 
       <div className={`flex-1 flex flex-col ${mobileMenuOpen ? 'blur-sm pointer-events-none select-none' : ''} transition-all duration-300`}>
         <motion.header
@@ -171,12 +166,7 @@ const AdminHome = () => {
             className="flex items-center gap-2 cursor-pointer select-none relative"
             onClick={() => setProfileMenuOpen((prev) => !prev)}
           >
-            
-            {profileImage ? (
-              <img src={profileImage} alt="Profile" className="w-6 h-6 rounded-full object-cover" onError={(e) => { e.target.src = '/no-image.png'; }} />
-            ) : (
-              <div className="w-6 h-6 bg-white rounded-full" />
-            )}
+            <img src={profileImage} alt="Profile" className="w-6 h-6 rounded-full object-cover" />
             <span className="text-sm font-semibold">{displayName}</span>
           </div>
 
@@ -190,7 +180,6 @@ const AdminHome = () => {
               <button
                 onMouseDown={(e) => {
                   e.stopPropagation();
-                  console.log('Popup Settings Clicked');
                   setProfileMenuOpen(false);
                   setTimeout(() => navigate('/admin/adminsettings'), 50);
                 }}
@@ -201,12 +190,8 @@ const AdminHome = () => {
               <button
                 onMouseDown={(e) => {
                   e.stopPropagation();
-                  console.log('Popup Logout Clicked');
                   setProfileMenuOpen(false);
-                  setTimeout(() => {
-                    logout();
-                    navigate('/login');
-                  }, 50);
+                  setShowLogoutConfirm(true);
                 }}
                 className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-800"
               >
@@ -225,6 +210,30 @@ const AdminHome = () => {
           <Outlet />
         </motion.main>
       </div>
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-white rounded-lg p-6 max-w-sm w-full text-center shadow-2xl">
+            <h2 className="text-xl font-bold mb-4">Confirm Logout</h2>
+            <p className="mb-6">Are you sure you want to logout?</p>
+            <div className="flex justify-center gap-4">
+              <button
+                onClick={() => setShowLogoutConfirm(false)}
+                className="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded text-gray-800"
+              >
+                No
+              </button>
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 bg-green-600 hover:bg-green-700 rounded text-white"
+              >
+                Yes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

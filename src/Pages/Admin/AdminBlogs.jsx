@@ -582,11 +582,9 @@ const AdminBlogs = () => {
                         {blog.date} | {blog.status}
                       </p>
                       <p className="text-gray-600 text-xs">
-                        By: {blog.user_id && blog.user_id.fname && blog.user_id.lname
-                          ? `${blog.user_id.fname} ${blog.user_id.lname}`
-                          : (blog.user_id && blog.user_id.fname
-                              ? blog.user_id.fname
-                              : (blog.user_id ? blog.user_id : 'Admin'))}
+                        By: {blog.user_fname && blog.user_lname
+                          ? `${blog.user_fname} ${blog.user_lname}`
+                          : (blog.user_fname || 'User')}
                       </p>
                     </div>
                   </div>
