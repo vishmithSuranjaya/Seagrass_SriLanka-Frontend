@@ -131,12 +131,12 @@ const CartPage = () => {
                         ? item.product_image
                         : `http://localhost:8000${item.product_image}`
                     }
-                    alt={item.product_name}
+                    alt={item.product_title}
                     className="w-20 h-20 object-cover rounded-md"
                   />
                   <div>
                     <h2 className="text-lg font-semibold">
-                      {item.product_name || "no"}
+                      {item.product_title || "no"}
                     </h2>
 
                     

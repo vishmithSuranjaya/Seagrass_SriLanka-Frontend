@@ -28,6 +28,10 @@ const Blogs_Homepage = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const handleScrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <motion.div
       className="px-6 mt-10"
@@ -54,9 +58,7 @@ const Blogs_Homepage = () => {
           hidden: { opacity: 0 },
           show: {
             opacity: 1,
-            transition: {
-              staggerChildren: 0.2,
-            },
+            transition: { staggerChildren: 0.2 },
           },
         }}
       >
@@ -91,6 +93,7 @@ const Blogs_Homepage = () => {
                 </p>
                 <Link
                   to={`/blogFullView/${blog.blog_id}`}
+                  onClick={handleScrollToTop}
                   className="text-[#1B7B19] hover:underline"
                 >
                   read more

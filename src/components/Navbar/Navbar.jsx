@@ -30,16 +30,23 @@ const Navbar = ({ isDark, toggleTheme }) => {
     setMenuOpen(false);
   };
 
+  const handleNavClick = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setMenuOpen(false);
+  };
+
   return (
     <>
       <nav className={`fixed top-0 left-0 w-full z-50 shadow-md ${isDark ? "bg-gray-900" : "bg-white"}`}>
         <div className="flex items-center justify-between px-6 lg:px-12 h-20">
           <img src={logo} alt="Logo" className="h-16 w-auto" />
+          
           <ul className={`hidden md:flex space-x-6 text-base font-semibold ${isDark ? "text-white" : "text-gray-800"}`}>
             {navLinks.map((item) => (
               <li key={item}>
                 <Link
                   to={`/${item.toLowerCase() === "home" ? "" : item.toLowerCase()}`}
+                  onClick={handleNavClick}
                   className="hover:text-green-500 hover:underline underline-offset-4 transition duration-200"
                 >
                   {item}
@@ -51,10 +58,10 @@ const Navbar = ({ isDark, toggleTheme }) => {
           <div className="flex items-center gap-4">
             {user && (
               <div className="flex space-x-5 text-xl">
-                <Link to="/cart">
+                <Link to="/cart" onClick={handleNavClick}>
                   <FaShoppingCart />
                 </Link>
-                <Link to="/user">
+                <Link to="/user" onClick={handleNavClick}>
                   <FaUser />
                 </Link>
               </div>
@@ -107,7 +114,7 @@ const Navbar = ({ isDark, toggleTheme }) => {
               <li key={item}>
                 <Link
                   to={`/${item.toLowerCase() === "home" ? "" : item.toLowerCase()}`}
-                  onClick={() => setMenuOpen(false)}
+                  onClick={handleNavClick}
                   className="hover:text-green-500 hover:underline underline-offset-4 transition duration-200"
                 >
                   {item}
@@ -117,10 +124,10 @@ const Navbar = ({ isDark, toggleTheme }) => {
 
             {user && (
               <div className="flex space-x-5 text-xl mb-4">
-                <Link to="/cart">
+                <Link to="/cart" onClick={handleNavClick}>
                   <FaShoppingCart />
                 </Link>
-                <Link to="/user">
+                <Link to="/user" onClick={handleNavClick}>
                   <FaUser />
                 </Link>
               </div>
@@ -136,9 +143,9 @@ const Navbar = ({ isDark, toggleTheme }) => {
             ) : (
               <button
                 onClick={() => {
-                  setMenuOpen(false);
                   setShowRegister(false);
                   setShowLogin(true);
+                  setMenuOpen(false);
                 }}
                 className="bg-[#1B7B19] text-white px-5 py-2 rounded-md hover:bg-green-800 transition duration-200"
               >

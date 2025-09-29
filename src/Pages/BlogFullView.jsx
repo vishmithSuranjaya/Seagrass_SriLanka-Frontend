@@ -68,7 +68,7 @@ const BlogFullView = () => {
               </>
             ) : (
               <>
-                <img src={testImg} alt="profile" className="w-16 h-16 rounded-full" />
+                <img src={blog.user_profile_picture} alt="profile" className="w-16 h-16 rounded-full" />
                 <div>
                   <h5 className="font-bold font-serif text-lg">{blog.user_fname} {blog.user_lname || "Unknown Author"}</h5>
                   <h1>{blog.user_has_liked}</h1>
@@ -130,8 +130,8 @@ const BlogFullView = () => {
   ) : (
     blog.comments.map((c) => (
       <div key={c.comment_id} className="mb-2 p-2 bg-gray-100 rounded">
-        <div className="flex felx-wrap gap-5 items-center">
-          <img src={c.author_image} alt={c.author_image} className="rounded-full w-16 h-16 bg-gray-300"/>
+        <div className="flex flex-wrap gap-5 items-center">
+          <img src={c.author_image} alt={c.author_image} className="rounded-full object-cover w-16 h-16 bg-gray-300"/>
           <div>
             <h4 className="text-md font-bold">{c.author_full_name}</h4>
           <p className="text-lg font-serif">{c.content}</p>
