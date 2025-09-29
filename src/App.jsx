@@ -31,6 +31,7 @@ import ProductFullView from './Pages/ProductFullView';
 import BlogFullView from './Pages/BlogFullView';
 import AdminResearch from './Pages/Admin/AdminResearch';
 import GameZone from './Pages/GameZone';
+import AdminOrders from './Pages/Admin/AdminOrders';
 
 
 // ← Added import for ProtectedRoute
@@ -123,6 +124,7 @@ function AppWrapper() {
           <Route path="admingallery" element={<AdminGallery />} />
           <Route path="adminsettings" element={<AdminSettings />} />
           <Route path="adminusers" element={<AdminUsers />} />
+          <Route path="adminorders" element={<AdminOrders />} />
         </Route>
       </Routes>
       {!isAdminRoute && <Footer />}

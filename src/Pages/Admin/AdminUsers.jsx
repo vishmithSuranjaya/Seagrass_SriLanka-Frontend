@@ -11,6 +11,8 @@ const AdminUsers = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [showDeactivatedAdmins, setShowDeactivatedAdmins] = useState(false);
   const [showDeactivatedUsers, setShowDeactivatedUsers] = useState(false);
+  // Confirmation dialog state
+  const [confirmAction, setConfirmAction] = useState(null); // { type, user, payload }
   
   // Pagination state
   const [adminPage, setAdminPage] = useState(1);
@@ -73,6 +75,8 @@ const AdminUsers = () => {
     window.location.href = '/login'; // Change if your login route is different
   };
 
+
+  // Confirmed handler for toggling active status
   const handleToggleActiveUser = async (userId, isActive) => {
     try {
       const response = await fetch(`http://localhost:8000/api/auth/admin/${userId}/toggle-active/`, {
@@ -101,9 +105,14 @@ const AdminUsers = () => {
     } catch (err) {
       alert(`Error updating user active status: ${err.message}`);
       setError('Error updating user active status');
+    } finally {
+      setShowUserModal(false);
+      setConfirmAction(null);
     }
   };
 
+
+  // Confirmed handler for toggling admin status
   const handleToggleAdmin = async (userId, isStaff) => {
     try {
       const response = await fetch(`http://localhost:8000/api/auth/admin/${userId}/update/`, {
@@ -143,6 +152,9 @@ const AdminUsers = () => {
     } catch (err) {
       alert(`Error updating admin status: ${err.message}`);
       setError('Error updating admin status');
+    } finally {
+      setShowUserModal(false);
+      setConfirmAction(null);
     }
   };
 
@@ -240,10 +252,10 @@ const AdminUsers = () => {
                   }}
                 >
                   <img
-                    src={user.image || '/no-image.png'}
+                    src={user.image}
                     alt={user.full_name}
                     className="w-16 h-16 object-cover rounded-full"
-                    onError={(e) => (e.target.src = '/no-image.png')}
+                    
                   />
                   <div>
                     <h3 className="font-semibold">{user.full_name}</h3>
@@ -323,10 +335,10 @@ const AdminUsers = () => {
                   }}
                 >
                   <img
-                    src={user.image || '/no-image.png'}
+                    src={user.image}
                     alt={user.full_name}
                     className="w-16 h-16 object-cover rounded-full"
-                    onError={(e) => (e.target.src = '/no-image.png')}
+                    
                   />
                   <div>
                     <h3 className="font-semibold">{user.full_name}</h3>
@@ -384,10 +396,10 @@ const AdminUsers = () => {
             </button>
             <div className="flex flex-col items-center mb-4">
               <img
-                src={selectedUser.image || '/no-image.png'}
+                src={selectedUser.image}
                 alt={selectedUser.full_name}
                 className="w-24 h-24 object-cover rounded-full mb-2 border"
-                onError={(e) => (e.target.src = '/no-image.png')}
+                
               />
               <h2 className="text-2xl font-bold mb-2 text-center break-words">{selectedUser.full_name}</h2>
               <p className="text-gray-600 text-sm">{selectedUser.email}</p>
@@ -409,43 +421,98 @@ const AdminUsers = () => {
                 {selectedUser.last_login ? new Date(selectedUser.last_login).toLocaleString() : 'Never logged in'}
               </p>
               <div className="flex gap-2 mt-4 flex-wrap">
-                {!selectedUser.is_superuser && 
-                !(
-                  // Prevent is_staff but not superuser from seeing "Deactivate Admin"
-                  selectedUser.is_staff &&
-                  currentUser?.is_staff &&
-                  !currentUser?.is_superuser
-                ) && (
-                  <button
-                    onClick={() => handleToggleActiveUser(selectedUser.user_id, selectedUser.is_active)}
-                    className={`px-4 py-2 rounded-md ${
-                      selectedUser.is_active ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-green-600 hover:bg-green-700'
-                    } text-white`}
-                    disabled={currentUser?.user_id === selectedUser.user_id}
-                    title={currentUser?.user_id === selectedUser.user_id ? "You can't deactivate yourself from here" : ''}
-                  >
-                    {selectedUser.is_active ? 
-                    selectedUser.is_staff
-                      ? 'Deactivate Admin'
-                      : 'Deactivate User'
-                    : selectedUser.is_staff
-                      ? 'Activate Admin'
-                      : 'Activate User'}
-                  </button>
-                )}
+
+                {!selectedUser.is_superuser &&
+                  !(
+                    // Prevent is_staff but not superuser from seeing "Deactivate Admin"
+                    selectedUser.is_staff &&
+                    currentUser?.is_staff &&
+                    !currentUser?.is_superuser
+                  ) && (
+                    <button
+                      onClick={() => setConfirmAction({
+                        type: 'toggle-active',
+                        user: selectedUser,
+                        payload: { userId: selectedUser.user_id, isActive: selectedUser.is_active }
+                      })}
+                      className={`px-4 py-2 rounded-md ${
+                        selectedUser.is_active ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-green-600 hover:bg-green-700'
+                      } text-white`}
+                      disabled={currentUser?.user_id === selectedUser.user_id}
+                      title={currentUser?.user_id === selectedUser.user_id ? "You can't deactivate yourself from here" : ''}
+                    >
+                      {selectedUser.is_active ?
+                        selectedUser.is_staff
+                          ? 'Deactivate Admin'
+                          : 'Deactivate User'
+                        : selectedUser.is_staff
+                          ? 'Activate Admin'
+                          : 'Activate User'}
+                    </button>
+                  )}
 
                 {currentUser?.is_superuser && !selectedUser.is_superuser && (
                   <button
-                    onClick={() => handleToggleAdmin(selectedUser.user_id, selectedUser.is_staff)}
+                    onClick={() => setConfirmAction({
+                      type: 'toggle-admin',
+                      user: selectedUser,
+                      payload: { userId: selectedUser.user_id, isStaff: selectedUser.is_staff }
+                    })}
                     className={`bg-blue-600 hover:bg-blue-800 text-white px-4 py-2 rounded-md ${
                       selectedUser.is_active ? '' : 'opacity-50 cursor-not-allowed'
                     }`}
-                    disabled={!selectedUser.is_active || currentUser?.user_id === selectedUser.user_id} 
+                    disabled={!selectedUser.is_active || currentUser?.user_id === selectedUser.user_id}
                     title={currentUser?.user_id === selectedUser.user_id ? "You can't remove your own admin privileges here" : ''}
                   >
                     {selectedUser.is_staff ? 'Remove Admin' : 'Make Admin'}
                   </button>
                 )}
+      {/* Confirmation Dialog */}
+      {confirmAction && (
+        <div className="fixed inset-0 flex items-center justify-center z-50" style={{ backdropFilter: 'blur(6px)' }}>
+          <div className="bg-white rounded-lg p-8 max-w-sm w-full relative shadow-2xl">
+            <h2 className="text-xl font-bold mb-4 text-center">Confirm Action</h2>
+            <p className="mb-6 text-center">
+              {confirmAction.type === 'toggle-active' && (
+                confirmAction.payload.isActive
+                  ? confirmAction.user.is_staff
+                    ? 'Are you sure you want to deactivate this admin?'
+                    : 'Are you sure you want to deactivate this user?'
+                  : confirmAction.user.is_staff
+                    ? 'Are you sure you want to activate this admin?'
+                    : 'Are you sure you want to activate this user?'
+              )}
+              {confirmAction.type === 'toggle-admin' && (
+                confirmAction.payload.isStaff
+                  ? 'Are you sure you want to remove admin privileges from this user?'
+                  : 'Are you sure you want to make this user an admin?'
+              )}
+            </p>
+            <div className="flex justify-center gap-4">
+              <button
+                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md"
+                onClick={async () => {
+                  if (confirmAction.type === 'toggle-active') {
+                    await handleToggleActiveUser(confirmAction.payload.userId, confirmAction.payload.isActive);
+                  } else if (confirmAction.type === 'toggle-admin') {
+                    await handleToggleAdmin(confirmAction.payload.userId, confirmAction.payload.isStaff);
+                  }
+                  setConfirmAction(null);
+                  setShowUserModal(false);
+                }}
+              >
+                Yes
+              </button>
+              <button
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md"
+                onClick={() => setConfirmAction(null)}
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
               </div>
             </div>
           </div>

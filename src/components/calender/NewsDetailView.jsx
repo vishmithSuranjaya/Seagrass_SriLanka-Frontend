@@ -3,10 +3,12 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import Breadcrumb from "../breadcrumb/BreadCrumb";
 import Skeleton from "../Loader/Skeleton";
+import { useNavigate } from "react-router-dom";
 
 const NewsDetailView = () => {
   const { news_id } = useParams();
   const [news, setNews] = useState(null);
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -37,6 +39,12 @@ const NewsDetailView = () => {
   return (
     <div className="mt-24 px-20">
          <Breadcrumb />
+         <button
+        onClick={() => navigate(-1)}
+        className=" ml-20 mb-6 text-white bg-[#1B7B19] px-4 py-2 rounded hover:bg-green-800 transition-colors"
+      >
+        ← Back
+      </button>
         <div className="p-6 max-w-4xl mx-auto">
        
       {/* Display title */}
