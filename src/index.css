@@ -41,3 +41,7 @@
 .dark .bg-\[\#1B7B18\] {
   background-color: #23232a  !important;
 }
+
+.dark .text-gray-700 {
+	color: #e5e7eb !important;
+}
