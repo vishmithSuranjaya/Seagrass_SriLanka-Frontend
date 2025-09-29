@@ -45,8 +45,10 @@ const Blog = () => {
     fetchBlogs();
   }, []);
 
-  const handleSeeMore = (blog_id, user_id) =>
+  const handleSeeMore = (blog_id, user_id) => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
     navigate(`/blogFullView/${blog_id}`, { state: { user_id } });
+  };
 
   // Modified handlePost to accept formData directly from AddBlogModal
   const handlePost = async (formData) => {

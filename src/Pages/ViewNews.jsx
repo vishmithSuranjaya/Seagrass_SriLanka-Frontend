@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import Breadcrumb from '../components/breadcrumb/BreadCrumb';
 
 const ViewFullNews = () => {
   const location = useLocation();
@@ -43,13 +44,16 @@ const ViewFullNews = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6 mt-20">
+    <div className="mx-auto p-6 mt-20">
       <button
         onClick={() => navigate(-1)}
-        className="mb-6 text-white bg-[#1B7B19] px-4 py-2 rounded hover:bg-green-800 transition-colors"
+        className=" ml-20 mb-6 text-white bg-[#1B7B19] px-4 py-2 rounded hover:bg-green-800 transition-colors"
       >
         ← Back
       </button>
+      <div className="max-w-4xl mx-auto">
+      
+      
 
       <h1 className="text-3xl md:text-4xl font-bold text-green-700 mb-4">{newsData.title}</h1>
       <p className="text-gray-500 mb-4 font-medium">{new Date(newsData.created_at).toDateString()}</p>
@@ -66,6 +70,7 @@ const ViewFullNews = () => {
         {newsData.content}
       </div>
     </div>
+  </div>
   );
 };
 

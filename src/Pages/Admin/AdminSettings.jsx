@@ -41,29 +41,24 @@ const AdminSettings = () => {
   const handleSave = async () => {
     setSaving(true);
     setError('');
+
     try {
-      const res = await fetch('http://localhost:8000/api/auth/profile/update/', {
+      const formData = new FormData();
+      formData.append('fname', firstName);
+      formData.append('lname', lastName);
+      if (imageFile) formData.append('image', imageFile);
+
+      const res = await fetch(`http://localhost:8000/api/auth/profile/update/${admin.user_id}/`, {
         method: 'PATCH',
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ fname: firstName, lname: lastName }),
+        body: formData,
       });
+
       if (!res.ok) throw new Error('Failed to update profile');
 
-      if (imageFile) {
-        const formData = new FormData();
-        formData.append('image', imageFile);
-        const imgRes = await fetch('http://localhost:8000/api/auth/profile/image/upload/', {
-          method: 'POST',
-          headers: { Authorization: `Bearer ${token}` },
-          body: formData,
-        });
-        if (!imgRes.ok) throw new Error('Failed to upload image');
-      }
-
-      await fetchAdminProfile();
+      window.location.reload();
       alert('Profile updated successfully!');
     } catch {
       setError('Update failed.');
@@ -76,19 +71,20 @@ const AdminSettings = () => {
     const file = e.target.files[0];
     if (file) {
       setImageFile(file);
-      const preview = URL.createObjectURL(file);
-      setPreviewUrl(preview);
+      setPreviewUrl(URL.createObjectURL(file));
     }
   };
 
   const handleDeleteImage = async () => {
     if (!window.confirm('Are you sure you want to delete your profile picture?')) return;
+
     try {
       const res = await fetch('http://localhost:8000/api/auth/profile/image/delete/', {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (!res.ok) throw new Error();
+      if (!res.ok) throw new Error('Failed to delete image');
+
       setImageUrl('');
       setImageFile(null);
       setPreviewUrl('');
@@ -101,6 +97,7 @@ const AdminSettings = () => {
 
   const handleDeactivate = async () => {
     if (!window.confirm('Are you sure you want to deactivate your account?')) return;
+
     try {
       const res = await fetch(`http://localhost:8000/api/auth/admin/${admin.user_id}/toggle-active/`, {
         method: 'PATCH',
@@ -193,17 +190,15 @@ const AdminSettings = () => {
         {saving ? 'Saving...' : 'Save Changes'}
       </button>
 
-      
-
       {!admin.is_superuser && (
         <>
-        <hr className="my-6"/>
-        <button
-          onClick={handleDeactivate}
-          className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded"
-        >
-          Deactivate Account
-        </button>
+          <hr className="my-6"/>
+          <button
+            onClick={handleDeactivate}
+            className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded"
+          >
+            Deactivate Account
+          </button>
         </>
       )}
     </div>
