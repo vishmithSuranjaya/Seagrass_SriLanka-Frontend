@@ -92,6 +92,12 @@ const ProductFullView = () => {
   return (
     <div className="mt-24 px-20">
       <Breadcrumb />
+      <button
+        onClick={() => navigate(-1)}
+        className=" ml-20 mb-6 text-white bg-[#1B7B19] px-4 py-2 rounded hover:bg-green-800 transition-colors"
+      >
+        ← Back
+      </button>
 
       <div className="m-10 max-w-5xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">

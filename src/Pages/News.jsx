@@ -101,12 +101,12 @@ const News = () => {
     let results = allNews;
     if (year) {
       results = results.filter(item =>
-        new Date(item.created_at).getFullYear() === parseInt(year)
+        new Date(item.updated_at).getFullYear() === parseInt(year)
       );
     }
     if (month) {
       results = results.filter(item =>
-        new Date(item.created_at).getMonth() + 1 === parseInt(month)
+        new Date(item.updated_at).getMonth() + 1 === parseInt(month)
       );
     }
     setFilteredNews(results);
