@@ -252,7 +252,7 @@ const AdminOrders = () => {
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {ordersToShow.map((order) => (
-                      <tr key={order.order_id} className="hover:bg-gray-800 transition-colors" onClick={() => {
+                      <tr key={order.order_id} className="hover:bg-gray-400 transition-colors" onClick={() => {
                               setSelectedOrder(order);
                               setShowOrderModal(true);
                               title="View Details"
@@ -266,7 +266,7 @@ const AdminOrders = () => {
                               </div>
                             </div>
                             <div className="ml-4">
-                              <div className="text-sm font-medium text-gray-800">
+                              <div className="text-sm font-medium ">
                                 {order.user.full_name || "No Name"}
                               </div>
                               <div className="text-sm text-gray-500">

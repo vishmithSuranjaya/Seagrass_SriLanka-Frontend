@@ -330,7 +330,7 @@ const AdminNews = () => {
                       }
                       alt={news.title}
                       className="w-24 h-16 object-cover rounded-md"
-                      onError={(e) => (e.target.src = '/no-image.png')}
+                      
                     />
                     <div>
                       <h3 className="font-semibold">{news.title}</h3>
@@ -412,7 +412,7 @@ const AdminNews = () => {
                 src={selectedNews.image ? `http://localhost:8000${selectedNews.image}` : '/no-image.png'}
                 alt={selectedNews.title}
                 className="w-full h-64 object-cover rounded-md mb-6 border"
-                onError={(e) => (e.target.src = '/no-image.png')}
+                
               />
               <div className="mb-4 max-h-60 overflow-y-auto px-1">
                 <p className="text-gray-700 whitespace-pre-line text-lg">{selectedNews.content}</p>

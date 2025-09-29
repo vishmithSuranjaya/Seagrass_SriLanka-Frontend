@@ -60,3 +60,8 @@
     background-color: #292c29 !important; /* your desired color */
 }
 
+
+
+.dark .text-gray-600 {
+	color: #9ca3af !important;
+}
