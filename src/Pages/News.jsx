@@ -25,7 +25,7 @@ const News = () => {
   const monthRef = useRef(null);
   const calendarBtnRef = useRef(null);
 
-  const years = Array.from({ length: 91 }, (_, i) => 2000 + i);
+  const years = Array.from({ length: 10 }, (_, i) => 2020 + i);
   const months = [
     { name: 'January', number: 1 },
     { name: 'February', number: 2 },

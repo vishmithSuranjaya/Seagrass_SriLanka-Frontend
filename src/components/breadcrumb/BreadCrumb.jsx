@@ -47,36 +47,48 @@ const Breadcrumb = () => {
         </li>
 
         {pathnames.map((segment, index) => {
-          const isLast = index === pathnames.length - 1;
-          let label = segment;
-          let to = '/' + pathnames.slice(0, index + 1).join('/');
+  const isLast = index === pathnames.length - 1;
+  let label = segment;
+  let to = '/' + pathnames.slice(0, index + 1).join('/');
 
-          if (routeMap[segment]) {
-            label = routeMap[segment].label;
-            to = routeMap[segment].to;
-          } else if (segment === id && blogTitle) {
-            label = blogTitle;
-          } else if (segment === id && newsTitle) {
-            label = newsTitle;
-          } else {
-            label = decodeURIComponent(segment)
-              .replace(/-/g, ' ')
-              .replace(/\b\w/g, (char) => char.toUpperCase());
-          }
+  // Route mappings
+  if (routeMap[segment]) {
+    label = routeMap[segment].label;
+    to = routeMap[segment].to;
 
-          return (
-            <li key={index} className={isLast ? 'font-semibold text-900' : ''}>
-              {isLast ? (
-                <span>{label}</span>
-              ) : (
-                <>
-                  <Link to={to} className="hover:underline text-900">{label}</Link>
-                  <span className="mx-1 text-400">›</span>
-                </>
-              )}
-            </li>
-          );
-        })}
+  // Blog ID case
+  } else if (pathnames[index - 1] === "blogFullView") {
+    label = blogTitle || "Blog Details";
+
+  // News ID case
+  } else if (pathnames[index - 1] === "newsdetails") {
+    label = newsTitle || "News Details";
+
+  // Product ID case
+  } else if (pathnames[index - 1] === "productfulldetails") {
+    label = "Product Details"; // 👉 can fetch actual product name if needed
+
+  // Default: prettify text
+  } else {
+    label = decodeURIComponent(segment)
+      .replace(/-/g, " ")
+      .replace(/\b\w/g, (char) => char.toUpperCase());
+  }
+
+  return (
+    <li key={index} className={isLast ? "font-semibold text-900" : ""}>
+      {isLast ? (
+        <span>{label}</span>
+      ) : (
+        <>
+          <Link to={to} className="hover:underline text-900">{label}</Link>
+          <span className="mx-1 text-400">›</span>
+        </>
+      )}
+    </li>
+  );
+})}
+
       </ol>
     </nav>
   );
