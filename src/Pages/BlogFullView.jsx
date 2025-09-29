@@ -68,7 +68,7 @@ const BlogFullView = () => {
               </>
             ) : (
               <>
-                <img src={blog.user_profile_picture} alt="profile" className="w-16 h-16 rounded-full" />
+                <img src={blog.user_profile_picture} alt="profile" className="w-16 h-16 rounded-full object-cover" />
                 <div>
                   <h5 className="font-bold font-serif text-lg">{blog.user_fname} {blog.user_lname || "Unknown Author"}</h5>
                   <h1>{blog.user_has_liked}</h1>

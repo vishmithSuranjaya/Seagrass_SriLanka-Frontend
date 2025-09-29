@@ -201,7 +201,7 @@ const handleDeleteComment = async (comment_id) => {
                   <p className="text-sm .text-white">
                     on blog{" "}
                     <Link
-                      to={`/blogs/${c.blog_id}`}
+                      to={`/blogFullView/${c.blog_id}`}
                       className="text-green-600 hover:underline font-semibold"
                     >
                       {c.blog_title}
