@@ -167,7 +167,7 @@ const SeagrassIdentify = () => {
                   className="text-md text-gray-700 font-serif"
                 >
                   <p>
-                    <strong>Prediction:</strong> {result.prediction}
+                    <strong>Prediction:</strong> {result.prediction.replace(/_/g, " ")}
                   </p>
                   <p>
                     <strong>Confidence:</strong> {result.confidence}
