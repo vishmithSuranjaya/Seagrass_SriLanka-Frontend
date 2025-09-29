@@ -39,9 +39,24 @@
 }
 
 .dark .bg-\[\#1B7B18\] {
-  background-color: #23232a  !important;
+  background-color: #202024  !important;
 }
 
 .dark .text-gray-700 {
 	color: #e5e7eb !important;
 }
+
+.dark .text-gray-600 {
+	color: #e5e7eb !important;
+}
+
+
+
+.dark .hover\:bg-gray-100:hover {
+    background-color: #292c29 !important; /* your desired color */
+}
+
+.dark .bg-green-100 {
+    background-color: #292c29 !important; /* your desired color */
+}
+
