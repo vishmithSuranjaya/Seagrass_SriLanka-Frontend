@@ -99,7 +99,7 @@ const BlogFullView = () => {
         </div>
 
         {/* Blog Content */}
-        <div className="prose max-w-none text-gray-800 text-lg leading-relaxed font-serif leading-relxed text-justify">
+        <div className="prose max-w-none text-gray-800 text-lg font-serif text-justify whitespace-pre-wrap leading-relaxed">
           {loading ? (
             <>
               <Skeleton count={5} />
@@ -109,7 +109,6 @@ const BlogFullView = () => {
             blog.content
           )}
         </div>
-
         {/* Like and Comment Buttons */}
         <div className="text-base font-normal not-prose">
           {!loading && (
