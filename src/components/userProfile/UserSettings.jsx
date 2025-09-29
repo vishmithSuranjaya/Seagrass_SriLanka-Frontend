@@ -33,6 +33,7 @@ const handleProfileUpdate = async () => {
     formData.append("fname", fname);
     formData.append("lname", lname);
     formData.append("email", email);
+    formData.append("image", profileImage);
     if (profileImage) formData.append("profile_image", profileImage); // matches serializer
 
     const response = await axios.put(
