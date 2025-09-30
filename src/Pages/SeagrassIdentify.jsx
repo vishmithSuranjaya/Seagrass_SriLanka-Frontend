@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import BreadCrumb from "../components/breadcrumb/BreadCrumb";
 import { motion, AnimatePresence } from "framer-motion";
@@ -9,6 +9,8 @@ const SeagrassIdentify = () => {
   const [result, setResult] = useState(null);
   const [annotatedImage, setAnnotatedImage] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  const fileInputRef = useRef(null); // ref for file input
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -27,6 +29,10 @@ const SeagrassIdentify = () => {
     setPreview(null);
     setResult(null);
     setAnnotatedImage(null);
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""; // reset input so same file can be re-uploaded
+    }
   };
 
   useEffect(() => {
@@ -64,7 +70,7 @@ const SeagrassIdentify = () => {
 
       setResult({
         prediction: data.prediction.replace(/_/g, " "),
-        confidence: (data.confidence * 100).toFixed(2), // convert to percentage
+        confidence: (data.confidence * 100).toFixed(2),
       });
 
       if (data.annotated_image) setAnnotatedImage(data.annotated_image);
@@ -86,8 +92,8 @@ const SeagrassIdentify = () => {
       <div className="max-w-full mb-10">
         <p className="text-900 text-sm sm:text-xl font-poppins leading-relaxed font-serif">
           Seagrasses are flowering marine plants found in shallow coastal waters, forming dense underwater meadows. Sri Lanka hosts about 15 species of seagrasses, distributed along its northern, eastern, western, and southern coastlines. These plants play a crucial role in maintaining healthy marine ecosystems by providing habitat and nursery grounds for fish, sea turtles, and other marine life.
-
-Beyond biodiversity support, seagrass meadows help stabilize coastlines, prevent erosion, and capture significant amounts of carbon, contributing to climate change mitigation. However, seagrasses face threats from coastal development, pollution, and climate change, making their identification and conservation critical for sustaining coastal environments.
+          <br /><br />
+          Beyond biodiversity support, seagrass meadows help stabilize coastlines, prevent erosion, and capture significant amounts of carbon, contributing to climate change mitigation. However, seagrasses face threats from coastal development, pollution, and climate change, making their identification and conservation critical for sustaining coastal environments.
         </p>
       </div>
 
@@ -100,6 +106,7 @@ Beyond biodiversity support, seagrass meadows help stabilize coastlines, prevent
                 type="file"
                 accept="image/*"
                 onChange={handleImageChange}
+                ref={fileInputRef} // attach ref here
                 className="hidden"
               />
               <label

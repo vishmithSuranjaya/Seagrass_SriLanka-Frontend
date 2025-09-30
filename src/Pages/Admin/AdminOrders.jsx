@@ -138,7 +138,7 @@ const AdminOrders = () => {
           <h1 className="text-4xl font-bold text-center text-green-700 mb-12">
         Orders Management
         </h1>
-          <p className="text-gray-600">Manage and track all customer orders</p>
+          
         </div>
 
         {/* Stats Cards */}
@@ -262,7 +262,7 @@ const AdminOrders = () => {
                             <div className="flex-shrink-0 h-10 w-12">
                                 <div className="flex items-center">
                               <img src={`http://localhost:8000/${order.user.image}`} alt={order.user.full_name} className="w-12 h-12 rounded-full object-cover" />
-                                <User className="h-5 w-5 text-green-600" />
+                                
                               </div>
                             </div>
                             <div className="ml-4">

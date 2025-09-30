@@ -79,7 +79,7 @@ export default function Orders() {
                           {/* Order Status */}
                           {order.status ? (
                             <span className="text-green-600 font-semibold">
-                              Order Confirmed{" "}
+                              Order Dispatched{" "}
                             </span>
                           ) : (
                             <span className="text-yellow-600 font-semibold">

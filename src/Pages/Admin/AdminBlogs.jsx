@@ -307,16 +307,21 @@ const AdminBlogs = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchInput, setSearchInput] = useState("");
 
-  // Filtered blogs based on search
+  // Sort/Filter by status
+  const [statusFilter, setStatusFilter] = useState('all'); // 'all', 'active', 'inactive'
+
+  // Filtered blogs based on search and status
   const filteredAdminBlogs = adminBlogs.filter(
     (blog) =>
-      blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      blog.content.toLowerCase().includes(searchTerm.toLowerCase())
+      (statusFilter === 'all' || blog.status === statusFilter) &&
+      (blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        blog.content.toLowerCase().includes(searchTerm.toLowerCase()))
   );
   const filteredUserBlogs = userBlogs.filter(
     (blog) =>
-      blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      blog.content.toLowerCase().includes(searchTerm.toLowerCase())
+      (statusFilter === 'all' || blog.status === statusFilter) &&
+      (blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        blog.content.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   // Pagination logic for filtered blogs
@@ -330,8 +335,8 @@ const AdminBlogs = () => {
       <h1 className="text-4xl font-bold text-center text-green-700 mb-12">
         Admin Blog Management
       </h1>
-      {/* Blog Search Bar */}
-      <div className="flex justify-center mb-8 gap-2">
+      {/* Blog Search & Sort Bar */}
+      <div className="flex flex-col sm:flex-row justify-center mb-8 gap-2 items-center">
         <input
           type="text"
           placeholder="Search blogs by title or content..."
@@ -360,6 +365,19 @@ const AdminBlogs = () => {
         >
           Clear
         </button>
+        <select
+          value={statusFilter}
+          onChange={e => {
+            setStatusFilter(e.target.value);
+            setAdminPage(1);
+            setUserPage(1);
+          }}
+          className="ml-0 sm:ml-4 px-4 py-2 border rounded-md bg-white text-gray-800"
+        >
+          <option value="all">Sorting by Status</option>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
       </div>
       <div className="mb-12 bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-semibold mb-4">
@@ -574,7 +592,6 @@ const AdminBlogs = () => {
                       src={blog.image_url || '/no-image.png'}
                       alt={blog.title}
                       className="w-24 h-16 object-cover rounded-md"
-                      onError={(e) => (e.target.src = '/no-image.png')}
                     />
                     <div>
                       <h3 className="font-semibold">{blog.title}</h3>
