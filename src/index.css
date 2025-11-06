@@ -1,1 +1,67 @@
 @import "tailwindcss";
+
+/* Dark theme base styles */
+.dark {
+	background-color: #18181b;
+	color: #e5e7eb;
+}
+
+.dark .bg-white {
+	background-color: #23232a !important;
+}
+.dark .text-gray-800 {
+	color: #e5e7eb !important;
+}
+.dark .bg-gray-100 {
+	background-color: #23232a !important;
+}
+.dark .bg-gray-200 {
+	background-color: #23232a !important;
+}
+.dark .bg-gray-300 {
+	background-color: #23232a !important;
+}
+.dark .bg-gray-400 {
+	background-color: #23232a !important;
+}
+.dark .bg-gray-900 {
+	background-color: #18181b !important;
+}
+.dark .text-white {
+	color: #e5e7eb !important;
+}
+
+.fill-bg {
+  fill: #fff;
+}
+.dark .fill-bg {
+  fill: #18181b;
+}
+
+.dark .bg-\[\#1B7B18\] {
+  background-color: #202024  !important;
+}
+
+.dark .text-gray-700 {
+	color: #e5e7eb !important;
+}
+
+.dark .text-gray-600 {
+	color: #e5e7eb !important;
+}
+
+
+
+.dark .hover\:bg-gray-100:hover {
+    background-color: #292c29 !important; /* your desired color */
+}
+
+.dark .bg-green-100 {
+    background-color: #292c29 !important; /* your desired color */
+}
+
+
+
+.dark .text-gray-600 {
+	color: #9ca3af !important;
+}
