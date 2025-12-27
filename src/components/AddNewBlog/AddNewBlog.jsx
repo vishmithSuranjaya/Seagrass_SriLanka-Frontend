@@ -85,13 +85,13 @@ const AddBlogModal = ({ show, onClose, onPost }) => {
 
     try {
       const response = await fetch(
-        "https://rashm-macq7mj4-eastus2.cognitiveservices.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2025-01-01-preview",
+        //azure link comes here
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "api-key": "8hWstobpA36UxyYbYaVvDqDg045OdhhvNcTXcn0VO1faBm95wqUpJQQJ99BEACHYHv6XJ3w3AAAAACOGwu9c", 
-          },
+            //"api-key": 
+             },
           body: JSON.stringify({
             messages: [
               {

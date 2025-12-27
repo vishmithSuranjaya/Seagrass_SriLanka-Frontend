@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import Skeleton from "../Loader/Skeleton";
 
 const NewsHomepage = () => {
   const [news, setNews] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [imageErrors, setImageErrors] = useState({});
   const navigate = useNavigate();
 
@@ -14,8 +16,12 @@ const NewsHomepage = () => {
         if (data && data.data) {
           setNews(data.data);
         }
+        setIsLoading(false);
       })
-      .catch((err) => console.error("News fetch error:", err));
+      .catch((err) => {
+        console.error("News fetch error:", err);
+        setIsLoading(false);
+      });
   }, []);
 
   const handleImageError = (index) => {
@@ -63,6 +69,13 @@ const NewsHomepage = () => {
       </motion.h2>
 
       <div className="grid md:grid-cols-3 gap-10">
+        {isLoading ? (
+          // Show a generic list skeleton while loading
+          <div className="md:col-span-3">
+            <Skeleton type="blog_list" />
+          </div>
+        ) : (
+          <>
         {/* Left Column (Other News) */}
         <div className="md:col-span-2 flex flex-col gap-8">
           {latestNews.slice(1, 5).map((item, index) => (
@@ -140,6 +153,8 @@ const NewsHomepage = () => {
             </motion.div>
           )}
         </motion.div>
+          </>
+        )}
       </div>
     </motion.div>
   );

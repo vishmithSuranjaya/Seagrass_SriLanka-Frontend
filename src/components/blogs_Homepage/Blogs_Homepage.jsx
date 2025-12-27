@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import Skeleton from "../Loader/Skeleton";
 
 const Blogs_Homepage = () => {
   const [blogs, setBlogs] = useState([]);
@@ -63,7 +64,7 @@ const Blogs_Homepage = () => {
         }}
       >
         {isLoading ? (
-          <p className="text-center w-full">Loading blogs...</p>
+          <Skeleton type="blog_list" />
         ) : (
           blogs.slice(0, 3).map((blog) => (
             <motion.div
