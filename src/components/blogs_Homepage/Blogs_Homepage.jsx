@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Skeleton from "../Loader/Skeleton";
 
 const Blogs_Homepage = () => {
   const [blogs, setBlogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchBlogs();
@@ -21,6 +22,15 @@ const Blogs_Homepage = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleViewAllBlogs = () => {
+    navigate("/blog");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleScrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -49,9 +59,7 @@ const Blogs_Homepage = () => {
           hidden: { opacity: 0 },
           show: {
             opacity: 1,
-            transition: {
-              staggerChildren: 0.2,
-            },
+            transition: { staggerChildren: 0.2 },
           },
         }}
       >
@@ -86,6 +94,7 @@ const Blogs_Homepage = () => {
                 </p>
                 <Link
                   to={`/blogFullView/${blog.blog_id}`}
+                  onClick={handleScrollToTop}
                   className="text-[#1B7B19] hover:underline"
                 >
                   read more
@@ -103,12 +112,12 @@ const Blogs_Homepage = () => {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, delay: 0.6 }}
       >
-        <Link
-          to="/blog"
+        <button
+          onClick={handleViewAllBlogs}
           className="inline-block bg-[#1B7B19] text-white px-6 py-3 rounded hover:bg-green-800 transition"
         >
           View All Blogs
-        </Link>
+        </button>
       </motion.div>
     </motion.div>
   );

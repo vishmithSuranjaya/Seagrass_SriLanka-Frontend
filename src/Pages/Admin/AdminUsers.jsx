@@ -58,7 +58,7 @@ const AdminUsers = () => {
   // Helper to fetch a single user by ID
   const fetchUserById = async (userId) => {
     try {
-      const response = await fetch(`http://localhost:8000/api/auth/admin/${userId}/`, {
+      const response = await fetch(`http://localhost:8000/api/auth/get_user/${userId}/`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!response.ok) throw new Error('Failed to fetch user');

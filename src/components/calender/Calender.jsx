@@ -13,6 +13,7 @@ const Calendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState(Views.MONTH); 
   const navigate = useNavigate(); 
+  const [view, setView] = useState(Views.MONTH);
 
   useEffect(() => {
     axios
@@ -21,8 +22,8 @@ const Calendar = () => {
         const mappedEvents = res.data.map((event) => ({
           id: event.news_id,
           title: event.title,
-          start: new Date(event.created_at),
-          end: new Date(event.created_at),
+          start: new Date(event.updated_at),
+          end: new Date(event.updated_at),
         }));
         setEvents(mappedEvents);
       })
@@ -39,6 +40,12 @@ const Calendar = () => {
   return (
     <div className="mt-24 px-20">
         <Breadcrumb />
+        <button
+        onClick={() => navigate(-1)}
+        className=" ml-20 mb-6 text-white bg-[#1B7B19] px-4 py-2 rounded hover:bg-green-800 transition-colors"
+      >
+        ← Back
+      </button>
         <div className="p-4">
         
       <h2 className="text-xl font-semibold mt-4">Google Calendar</h2>
@@ -56,6 +63,8 @@ const Calendar = () => {
           style={{ height: 500 }}
           onSelectEvent={handleEventClick} // click on event title
           selectable
+          view={view}               
+          onView={(newView) => setView(newView)}
         />
       </div>
     </div>

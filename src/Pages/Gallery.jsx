@@ -11,6 +11,9 @@ const Gallery = () => {
   const [imageErrors, setImageErrors] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const imagesPerPage = 12;
 
   useEffect(() => {
     const fetchGalleryImages = async () => {
@@ -41,6 +44,7 @@ const Gallery = () => {
       img.caption?.toLowerCase().includes(query)
     );
     setFilteredImages(filtered);
+    setCurrentPage(1); // reset to first page on search
   }, [searchQuery, images]);
 
   const handleImageError = (id) => {
@@ -61,6 +65,23 @@ const Gallery = () => {
       return `http://localhost:8000/media/${img.image}`;
     }
     return "https://via.placeholder.com/400x400?text=No+Image";
+  };
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredImages.length / imagesPerPage);
+  const startIndex = (currentPage - 1) * imagesPerPage;
+  const currentImages = filteredImages.slice(
+    startIndex,
+    startIndex + imagesPerPage
+  );
+
+  const goToPage = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 0);
+    }
   };
 
   return (
@@ -89,27 +110,71 @@ const Gallery = () => {
           <div className="text-red-600 text-center mb-6 font-semibold">
             {errorMessage}
           </div>
-        ) : filteredImages.length === 0 ? (
+        ) : currentImages.length === 0 ? (
           <p className="text-center text-gray-600">No images found.</p>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-            {filteredImages.map((img) => (
-              <div
-                key={img.image_id}
-                className="rounded-xl overflow-hidden shadow-md hover:shadow-xl transition duration-300 cursor-pointer"
-                onClick={() => setPopupImage(img)}
-              >
-                <div className="aspect-square overflow-hidden">
-                  <img
-                    src={getImageUrl(img)}
-                    alt={img.caption}
-                    className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                    onError={() => handleImageError(img.image_id)}
-                  />
+          <>
+            {/* Image Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+              {currentImages.map((img) => (
+                <div
+                  key={img.image_id}
+                  className="rounded-xl overflow-hidden shadow-md hover:shadow-xl transition duration-300 cursor-pointer"
+                  onClick={() => setPopupImage(img)}
+                >
+                  <div className="aspect-square overflow-hidden">
+                    <img
+                      src={getImageUrl(img)}
+                      alt={img.caption}
+                      className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                      onError={() => handleImageError(img.image_id)}
+                    />
+                  </div>
                 </div>
+              ))}
+            </div>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="flex justify-center mt-10 space-x-2">
+                <button
+                  onClick={() => goToPage(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className={`px-4 py-2 rounded-lg ${
+                    currentPage === 1
+                      ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                      : "bg-green-600 text-white hover:bg-green-700"
+                  }`}
+                >
+                  Prev
+                </button>
+                {[...Array(totalPages)].map((_, idx) => (
+                  <button
+                    key={idx + 1}
+                    onClick={() => goToPage(idx + 1)}
+                    className={`px-4 py-2 rounded-lg ${
+                      currentPage === idx + 1
+                        ? "bg-green-700 text-white"
+                        : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+                    }`}
+                  >
+                    {idx + 1}
+                  </button>
+                ))}
+                <button
+                  onClick={() => goToPage(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className={`px-4 py-2 rounded-lg ${
+                    currentPage === totalPages
+                      ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                      : "bg-green-600 text-white hover:bg-green-700"
+                  }`}
+                >
+                  Next
+                </button>
               </div>
-            ))}
-          </div>
+            )}
+          </>
         )}
       </div>
 

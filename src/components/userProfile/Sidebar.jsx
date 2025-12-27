@@ -22,7 +22,7 @@ const Sidebar = () => {
           <img 
             src={user.image}  
             alt="profile_image" 
-            className="w-20 h-20 bg-gray-100 rounded-full mx-auto mb-3 flex items-center justify-center text-[#1B7B19] text-3xl font-bold font-serif"
+            className="w-20 h-20 bg-gray-100 rounded-full mx-auto mb-3 flex items-center justify-center text-[#1B7B19] text-3xl font-bold font-serif object-cover"
             />
         </div>
         <p className="text-3xl font-bold tracking-wide font-serif">

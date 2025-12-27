@@ -9,6 +9,8 @@ import { RiGalleryFill } from "react-icons/ri";
 import { FaShoppingCart, FaBookReader } from 'react-icons/fa';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../components/Login_Register/AuthContext';
+import { MdWbSunny } from "react-icons/md";
+import { IoMdMoon } from "react-icons/io";
 
 const navLinks = [
   { icon: <FiHome />, label: 'Dashboard', path: '/admin/adminDashboard' },
@@ -28,7 +30,30 @@ const AdminHome = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [isDark, setIsDark] = useState(() => {
+    // Prefer localStorage, fallback to system
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('theme');
+      if (stored) return stored === 'dark';
+      return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    return false;
+  });
   const profileMenuRef = useRef(null);
+  // Effect to apply/remove dark class on <html>
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if (isDark) {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+      }
+    }
+  }, [isDark]);
+
+  const toggleTheme = () => setIsDark((prev) => !prev);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -114,6 +139,7 @@ const AdminHome = () => {
               transition={{ delay: 0.25, duration: 0.35 }}
               className="flex items-center gap-3 mb-8"
             >
+              
               <img src={profileImage} alt="Profile" className="w-12 h-12 rounded-full object-cover" />
               <div>
                 <div className="text-sm">Welcome!</div>
@@ -140,6 +166,7 @@ const AdminHome = () => {
                 </Link>
               </motion.div>
             ))}
+            
 
             <motion.div
               whileHover={{ scale: 1.05, x: 5 }}
@@ -161,6 +188,17 @@ const AdminHome = () => {
           transition={{ duration: 0.35 }}
           className="bg-gray-200 px-6 py-4 flex justify-end items-center relative"
         >
+          <button
+                onClick={toggleTheme}
+                className="text-xl hover:scale-110 transition duration-200 pr-5"
+                aria-label="Toggle dark mode"
+              >
+                {isDark ? (
+                  <MdWbSunny className="text-yellow-400" />
+                ) : (
+                  <IoMdMoon className="text-black" />
+                )}
+              </button>
           <div
             ref={profileMenuRef}
             className="flex items-center gap-2 cursor-pointer select-none relative"

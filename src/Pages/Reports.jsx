@@ -12,11 +12,59 @@ const SkeletonReport = () => (
   </div>
 );
 
+// Pagination component
+const Pagination = ({ totalItems, itemsPerPage, currentPage, setCurrentPage }) => {
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  if (totalPages <= 1) return null;
+
+  const pages = [];
+  for (let i = 1; i <= totalPages; i++) {
+    pages.push(i);
+  }
+
+  return (
+    <div className="flex justify-center mt-10 space-x-2">
+      <button
+        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+        disabled={currentPage === 1}
+        className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+      >
+        Prev
+      </button>
+      {pages.map((page) => (
+        <button
+          key={page}
+          onClick={() => setCurrentPage(page)}
+          className={`px-4 py-2 rounded ${
+            currentPage === page
+              ? "bg-green-600 text-white"
+              : "bg-gray-200 hover:bg-gray-300"
+          }`}
+        >
+          {page}
+        </button>
+      ))}
+      <button
+        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+        disabled={currentPage === totalPages}
+        className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+      >
+        Next
+      </button>
+    </div>
+  );
+};
+
 const Reports = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [hasSearched, setHasSearched] = useState(false);
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const reportsPerPage = 4;
 
   // Fetch from backend
   const performSearch = async (query = "") => {
@@ -36,15 +84,25 @@ const Reports = () => {
     setIsLoading(false);
   };
 
-  // Fetch all articles on first load (optional)
+  // Fetch all articles on first load
   useEffect(() => {
     performSearch(""); // Load everything by default
   }, []);
+
+  // Reset page when new results come in
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [results]);
 
   // Trigger search on button click
   const handleSearch = () => {
     performSearch(searchQuery);
   };
+
+  // Pagination calculations
+  const indexOfLastReport = currentPage * reportsPerPage;
+  const indexOfFirstReport = indexOfLastReport - reportsPerPage;
+  const currentReports = results.slice(indexOfFirstReport, indexOfLastReport);
 
   return (
     <div className="mt-24 px-6 md:px-20 mb-10 min-h-screen">
@@ -71,44 +129,66 @@ const Reports = () => {
           >
             {isLoading ? "Loading..." : "Search"}
           </button>
+          <button
+            className="h-full px-4 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors duration-200 ml-2"
+            onClick={() => {
+              setSearchQuery("");
+              performSearch("");
+            }}
+            disabled={isLoading}
+          >
+            Clear
+          </button>
         </div>
       </div>
 
       {/* Search Results */}
       {hasSearched && (
         <div className="space-y-6">
-          {isLoading ?  (
+          {isLoading ? (
             <>
               <SkeletonReport />
               <SkeletonReport />
               <SkeletonReport />
             </>
-          ) : results.length > 0 ? (
-            results.map((report) => (
-              <div
-                key={report.research_id}
-                className="bg-green-100 p-5 rounded-md shadow-md"
-              >
-                <h2 className="text-xl font-bold text-green-800 underline mb-2">
-                    {report.title}
-                </h2>
-
-                <p className="text-gray-700 mb-3">
-                  {report.description.length > 250
-                    ? `${report.description.slice(0, 250)}...`
-                      : report.description}
-                </p>
-
-                <a
-                  href={report.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+          ) : currentReports.length > 0 ? (
+            <>
+              {currentReports.map((report) => (
+                <div
+                  key={report.research_id}
+                  className="bg-green-100 p-5 rounded-md shadow-md"
                 >
-                  View Article
-                </a>
-              </div>
-            ))
+                  <h2 className="text-xl font-bold text-green-800 underline mb-2">
+                    {report.title}
+                  </h2>
+
+                  <p className="text-gray-700 mb-3">
+                    {report.description.length > 250
+                      ? `${report.description.slice(0, 250)}...`
+                      : report.description}
+                  </p>
+
+                  <a
+                    href={report.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+                  >
+                    View Article
+                  </a>
+                </div>
+              ))}
+
+              {/* Pagination */}
+              {results.length > reportsPerPage && (
+                <Pagination
+                  totalItems={results.length}
+                  itemsPerPage={reportsPerPage}
+                  currentPage={currentPage}
+                  setCurrentPage={setCurrentPage}
+                />
+              )}
+            </>
           ) : (
             <p className="text-center text-gray-500">
               No matching reports found.

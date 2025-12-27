@@ -66,7 +66,7 @@ const ViewFullNews = () => {
         loading="lazy"
       />
 
-      <div className="text-lg leading-relaxed text-gray-800 whitespace-pre-line">
+      <div className="prose max-w-none text-gray-800 text-lg font-serif text-justify whitespace-pre-wrap leading-relaxed">
         {newsData.content}
       </div>
     </div>

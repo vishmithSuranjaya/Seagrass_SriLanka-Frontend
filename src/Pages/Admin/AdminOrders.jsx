@@ -138,7 +138,7 @@ const AdminOrders = () => {
           <h1 className="text-4xl font-bold text-center text-green-700 mb-12">
         Orders Management
         </h1>
-          <p className="text-gray-600">Manage and track all customer orders</p>
+          
         </div>
 
         {/* Stats Cards */}
@@ -252,7 +252,7 @@ const AdminOrders = () => {
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {ordersToShow.map((order) => (
-                      <tr key={order.order_id} className="hover:bg-gray-800 transition-colors" onClick={() => {
+                      <tr key={order.order_id} className="hover:bg-gray-400 transition-colors" onClick={() => {
                               setSelectedOrder(order);
                               setShowOrderModal(true);
                               title="View Details"
@@ -262,11 +262,11 @@ const AdminOrders = () => {
                             <div className="flex-shrink-0 h-10 w-12">
                                 <div className="flex items-center">
                               <img src={`http://localhost:8000/${order.user.image}`} alt={order.user.full_name} className="w-12 h-12 rounded-full object-cover" />
-                                <User className="h-5 w-5 text-green-600" />
+                                
                               </div>
                             </div>
                             <div className="ml-4">
-                              <div className="text-sm font-medium text-gray-800">
+                              <div className="text-sm font-medium ">
                                 {order.user.full_name || "No Name"}
                               </div>
                               <div className="text-sm text-gray-500">

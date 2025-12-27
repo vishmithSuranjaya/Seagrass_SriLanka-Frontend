@@ -33,8 +33,11 @@ const handleProfileUpdate = async () => {
     formData.append("fname", fname);
     formData.append("lname", lname);
     formData.append("email", email);
-    formData.append("image", profileImage);
-    if (profileImage) formData.append("profile_image", profileImage); // matches serializer
+
+    // Only append image if the user selected a new one
+    if (profileImage) {
+      formData.append("image", profileImage);
+    }
 
     const response = await axios.put(
       `http://localhost:8000/api/auth/profile/update/${user.user_id}/`,
@@ -43,12 +46,12 @@ const handleProfileUpdate = async () => {
     );
 
     toast.success("Profile updated successfully!");
-
-    // Update user context
     updateUser(response.data.user);
 
-    // Update preview to backend image
-    setPreviewImage(response.data.user.image); 
+    if (response.data.user.image) {
+      setPreviewImage(response.data.user.image);
+    }
+
   } catch (error) {
     console.error(error);
     toast.error("Failed to update profile.");
@@ -56,6 +59,7 @@ const handleProfileUpdate = async () => {
     setLoading(false);
   }
 };
+
 
 
   const handleChangePassword = async () => {

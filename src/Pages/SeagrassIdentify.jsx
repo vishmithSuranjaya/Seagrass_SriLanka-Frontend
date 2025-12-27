@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import BreadCrumb from "../components/breadcrumb/BreadCrumb";
 import { motion, AnimatePresence } from "framer-motion";
@@ -10,12 +10,13 @@ const SeagrassIdentify = () => {
   const [annotatedImage, setAnnotatedImage] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const fileInputRef = useRef(null); // ref for file input
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file && file.type.startsWith("image/")) {
       setImage(file);
-      const previewURL = URL.createObjectURL(file);
-      setPreview(previewURL);
+      setPreview(URL.createObjectURL(file));
       setResult(null);
       setAnnotatedImage(null);
     } else {
@@ -28,13 +29,15 @@ const SeagrassIdentify = () => {
     setPreview(null);
     setResult(null);
     setAnnotatedImage(null);
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""; // reset input so same file can be re-uploaded
+    }
   };
 
   useEffect(() => {
     return () => {
-      if (preview) {
-        URL.revokeObjectURL(preview);
-      }
+      if (preview) URL.revokeObjectURL(preview);
     };
   }, [preview]);
 
@@ -58,7 +61,6 @@ const SeagrassIdentify = () => {
       });
 
       const data = await response.json();
-      console.log("API response:", data);
 
       if (!response.ok) {
         toast.error(data.error || "Failed to get prediction");
@@ -67,16 +69,11 @@ const SeagrassIdentify = () => {
       }
 
       setResult({
-        prediction: data.prediction,
-        confidence: data.confidence,
+        prediction: data.prediction.replace(/_/g, " "),
+        confidence: (data.confidence * 100).toFixed(2),
       });
 
-      if (data.annotated_image) {
-        setAnnotatedImage(data.annotated_image);
-      } else {
-        setAnnotatedImage(null);
-      }
-
+      if (data.annotated_image) setAnnotatedImage(data.annotated_image);
       toast.success("Identification successful!");
     } catch (error) {
       toast.error("Network error: " + error.message);
@@ -94,19 +91,9 @@ const SeagrassIdentify = () => {
 
       <div className="max-w-full mb-10">
         <p className="text-900 text-sm sm:text-xl font-poppins leading-relaxed font-serif">
-          Seagrasses are flowering marine plants found in shallow coastal waters,
-          forming dense underwater meadows. Sri Lanka hosts about 15 species of
-          seagrasses, distributed along its northern, eastern, western, and southern
-          coastlines. These plants play a crucial role in maintaining healthy marine
-          ecosystems by providing habitat and nursery grounds for fish, sea turtles,
-          and other marine life.
-          <br />
-          <br />
-          Beyond biodiversity support, seagrass meadows help stabilize coastlines,
-          prevent erosion, and capture significant amounts of carbon, contributing
-          to climate change mitigation. However, seagrasses face threats from coastal
-          development, pollution, and climate change, making their identification and
-          conservation critical for sustaining coastal environments.
+          Seagrasses are flowering marine plants found in shallow coastal waters, forming dense underwater meadows. Sri Lanka hosts about 15 species of seagrasses, distributed along its northern, eastern, western, and southern coastlines. These plants play a crucial role in maintaining healthy marine ecosystems by providing habitat and nursery grounds for fish, sea turtles, and other marine life.
+          <br /><br />
+          Beyond biodiversity support, seagrass meadows help stabilize coastlines, prevent erosion, and capture significant amounts of carbon, contributing to climate change mitigation. However, seagrasses face threats from coastal development, pollution, and climate change, making their identification and conservation critical for sustaining coastal environments.
         </p>
       </div>
 
@@ -119,6 +106,7 @@ const SeagrassIdentify = () => {
                 type="file"
                 accept="image/*"
                 onChange={handleImageChange}
+                ref={fileInputRef} // attach ref here
                 className="hidden"
               />
               <label
@@ -153,25 +141,36 @@ const SeagrassIdentify = () => {
             {loading ? "Identifying..." : "Identify Seagrass"}
           </button>
 
-          {/* Results Section with Framer Motion */}
-          <div className="bg-white w-full mt-6 p-4 rounded-sm shadow-sm">
-            <h2 className="font-semibold text-lg mb-2">Results</h2>
+          {/* Results Section */}
+          <div className="bg-white w-full mt-6 p-6 rounded-lg shadow-lg border-l-8 border-green-600">
+            <h2 className="font-bold text-2xl mb-4 text-green-800 text-center">
+              Results
+            </h2>
+
             <AnimatePresence>
               {result ? (
                 <motion.div
                   key="result"
-                  initial={{ opacity: 0, y: 10 }}
+                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                  className="text-md text-gray-700 font-serif"
+                  transition={{ duration: 0.4 }}
+                  className="text-gray-700 text-center"
                 >
-                  <p>
-                    <strong>Prediction:</strong> {result.prediction.replace(/_/g, " ")}
+                  <p className="text-xl mb-2">
+                    <span className="font-semibold">Seagrass Type :</span>{" "}
+                    <span className="text-green-700">{result.prediction}</span>
                   </p>
-                  <p>
-                    <strong>Confidence:</strong> {result.confidence}
+                  <p className="text-xl mb-2">
+                    <span className="font-semibold">Confidence:</span>{" "}
+                    <span className="text-blue-600">{result.confidence}%</span>
                   </p>
+                  <div className="w-full bg-gray-200 rounded-full h-4 mt-2 overflow-hidden">
+                    <div
+                      className="bg-blue-500 h-4 rounded-full transition-all duration-500"
+                      style={{ width: `${result.confidence}%` }}
+                    ></div>
+                  </div>
                 </motion.div>
               ) : (
                 <motion.p
@@ -179,7 +178,7 @@ const SeagrassIdentify = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="text-gray-600 italic"
+                  className="text-gray-500 italic text-center"
                 >
                   {image ? "Image ready for analysis." : "No results yet."}
                 </motion.p>
