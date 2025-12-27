@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Calendar as BigCalendar, momentLocalizer } from "react-big-calendar";
+import { Calendar as BigCalendar, momentLocalizer, Views } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useNavigate } from "react-router-dom"; 
@@ -11,6 +11,7 @@ const localizer = momentLocalizer(moment);
 const Calendar = () => {
   const [events, setEvents] = useState([]);
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [view, setView] = useState(Views.MONTH); 
   const navigate = useNavigate(); 
 
   useEffect(() => {
@@ -44,6 +45,8 @@ const Calendar = () => {
 
       <div className="mt-4" style={{ height: "500px" }}>
         <BigCalendar
+          view={view}               
+          onView={(newView) => setView(newView)}
           localizer={localizer}
           events={events}
           startAccessor="start"
